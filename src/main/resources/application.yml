@@ -3,6 +3,8 @@ spring:
     name: mybatis
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mybatis?createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3306/app_store?createDatabaseIfNotExist=true
     username: root
     password: 123456789
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml
