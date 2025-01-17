@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mdv.mybatis.mapper.UserMapper">
+  <resultMap id="findAllResultMap" type="com.mdv.mybatis.model.dto.UserDTO">
+    <id property="id" column="id" />
+    <result property="address" column="address" />
+    <result property="avatar" column="avatar" />
+    <result property="dob" column="dob" />
+    <result property="email" column="email" />
+    <result property="name" column="name" />
+    <result property="password" column="password" />
+    <result property="phone" column="phone" />
+    <result property="createdAt" column="createdAt" />
+    <result property="updatedAt" column="updatedAt" />
+    <collection property="roles" ofType="com.mdv.mybatis.model.dto.RoleDTO"
+      columnPrefix="r_">
+      <id property="id" column="id" />
+      <result property="name" column="name" />
+    </collection>
+  </resultMap>
+
+  <select id="findAll" resultMap="findAllResultMap"> SELECT * FROM user_role_view </select>
+
+  <insert id="createUser">INSERT INTO user (address, avatar, dob, email, name, password, phone)
+    VALUES (#{user.address}, #{user.avatar}, #{user.dob}, #{user.email}, #{user.name},
+    #{user.password}, #{user.phone}) </insert>
+
+  <update id="updateUser"> UPDATE user SET address=#{user.address}, avatar=#{user.avatar},
+    dob=#{user.dob}, name=#{user.name}, password=#{user.password}, phone=#{user.phone} WHERE id =
+    #{id} </update>
+
+  <delete id="deleteUser"> DELETE FROM user WHERE id = #{id} </delete>
+
+  <select id="findById" resultType="com.mdv.mybatis.model.dto.UserDTO">SELECT id, address, avatar,
+    dob, email, name, password, phone, created_at as createdAt, updated_at as updatedAt FROM user
+    WHERE id = #{id} </select>
+
+  <select id="login"> SELECT id, address, avatar, dob, email, name, password, phone, created_at as
+    createdAt, updated_at as updatedAt FROM user WHERE email = #{email} AND password = #{password} </select>
+
+  <select id="findByEmailOrPhone" resultMap="findAllResultMap"> SELECT * FROM user_role_view WHERE
+    email = #{email} OR phone = #{phone} </select>
+</mapper>
