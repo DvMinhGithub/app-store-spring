@@ -21,5 +21,5 @@ public interface ProductMapper {
 
     void softDelete(@Param("id") Long id);
 
-    void restore    (@Param("id") Long id);
+    void restore(@Param("id") Long id);
 }

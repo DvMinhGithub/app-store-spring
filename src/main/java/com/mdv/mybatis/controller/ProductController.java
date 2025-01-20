@@ -4,9 +4,7 @@ import com.mdv.mybatis.model.dto.ProductDTO;
 import com.mdv.mybatis.model.request.ProductRequest;
 import com.mdv.mybatis.model.response.ApiResponse;
 import com.mdv.mybatis.service.ProductService;
-
 import jakarta.validation.Valid;
-
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +27,8 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<Object> createProduct(@ModelAttribute @Valid ProductRequest product) throws IOException {
+    public ApiResponse<Object> createProduct(@ModelAttribute @Valid ProductRequest product)
+            throws IOException {
         productService.createProduct(product);
         return ApiResponse.builder()
                 .code(HttpStatus.CREATED.value())

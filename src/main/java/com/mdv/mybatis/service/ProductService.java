@@ -5,7 +5,6 @@ import com.mdv.mybatis.mapper.ProductMapper;
 import com.mdv.mybatis.model.dto.ProductCreateDTO;
 import com.mdv.mybatis.model.dto.ProductDTO;
 import com.mdv.mybatis.model.request.ProductRequest;
-
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +18,13 @@ public class ProductService {
 
     public void createProduct(ProductRequest product) throws IOException {
         String imageUrl = fileService.storeFile(product.getImage());
-       ProductCreateDTO productDto = ProductCreateDTO.builder()
-                .name(product.getName())
-                .price(product.getPrice())
-                .imageUrl(imageUrl)
-                .brandId(product.getBrandId())
-                .build();
+        ProductCreateDTO productDto =
+                ProductCreateDTO.builder()
+                        .name(product.getName())
+                        .price(product.getPrice())
+                        .imageUrl(imageUrl)
+                        .brandId(product.getBrandId())
+                        .build();
         productMapper.createProduct(productDto);
     }
 
