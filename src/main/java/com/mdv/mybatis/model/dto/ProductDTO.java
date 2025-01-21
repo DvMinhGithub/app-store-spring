@@ -1,5 +1,6 @@
 package com.mdv.mybatis.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,9 @@ public class ProductDTO {
     String imageUrl;
     Integer sold;
     Integer view;
-    boolean hasDeleted;
+
+    @JsonProperty("isDeleted")
+    boolean isDeleted;
+
     BrandDTO brand;
 }

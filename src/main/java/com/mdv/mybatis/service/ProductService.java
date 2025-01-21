@@ -34,26 +34,24 @@ public class ProductService {
 
     public ProductDTO findById(Long id) {
         ProductDTO product = productMapper.findById(id);
-        if (product == null || product.hasDeleted()) {
+        if (product == null || product.isDeleted()) {
             throw new DataNotFoundException("Product not found");
         }
         return product;
     }
 
     public void updateProduct(Long id, ProductRequest product) {
+        findById(id);
         productMapper.updateProduct(id, product);
     }
 
     public void deleteProduct(Long id) {
+        findById(id);
         productMapper.softDelete(id);
     }
 
     public void restoreProduct(Long id) {
-        ProductDTO product = productMapper.findById(id);
-        if (product == null || product.hasDeleted()) {
-            throw new DataNotFoundException("Product not found");
-        }
-
+        findById(id);
         productMapper.restore(id);
     }
 }

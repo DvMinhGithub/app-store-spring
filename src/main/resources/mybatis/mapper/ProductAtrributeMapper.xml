@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mdv.mybatis.mapper.ProductAtrributeMapper">
+
+    <insert id="create"> INSERT INTO product_attribute (attribute_value, attribute_name, product_id)
+        VALUES (#{pad.attributeValue}, #{pad.attributeName}, #{pad.productId}) </insert>
+
+    <resultMap id="selectResultMap" type="com.mdv.mybatis.model.dto.ProductAttributeDTO">
+        <id property="id" column="id" />
+        <result property="attributeValue" column="attribute_value" />
+        <result property="attributeName" column="attribute_name" />
+        <result property="productId" column="product_id" />
+    </resultMap>
+
+    <select id="findById" resultMap="selectResultMap"> SELECT * FROM product_attribute WHERE id =
+        #{id} </select>
+
+    <select id="findAll" resultMap="selectResultMap"> SELECT * FROM product_attribute </select>
+
+    <select id="findAttributesByProductId" resultMap="selectResultMap"> SELECT * FROM
+        product_attribute WHERE product_id = #{productId} </select>
+
+    <update id="update"> UPDATE product_attribute SET attribute_value = #{pad.attributeValue},
+        attribute_name = #{pad.attributeName} WHERE id = #{id} </update>
+
+    <delete id="delete"> DELETE FROM product_attribute WHERE id = #{id} </delete>
+</mapper>

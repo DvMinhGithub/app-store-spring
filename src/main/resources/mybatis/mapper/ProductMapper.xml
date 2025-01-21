@@ -9,7 +9,7 @@
     <id property="id" column="id" />
     <result property="name" column="name" />
     <result property="price" column="price" />
-    <result property="hasDeleted" column="is_deleted" />
+    <result property="isDeleted" column="is_deleted" />
     <association property="brand" javaType="com.mdv.mybatis.model.dto.BrandDTO" columnPrefix="b_">
       <id property="id" column="id" />
       <result property="name" column="name" />
@@ -20,7 +20,7 @@
     p.is_deleted, b.id as b_id, b.name as b_name FROM product p JOIN brand b ON p.brand_id = b.id </select>
 
   <select id="findById" resultType="com.mdv.mybatis.model.dto.ProductDTO"> SELECT id, name, price,
-    p.is_deleted, brand_id FROM product WHERE id = #{id} </select>
+    is_deleted, brand_id FROM product WHERE id = #{id} </select>
 
   <update id="updateProduct"> UPDATE product SET name = #{product.name}, price = #{product.price},
     brand_id = #{product.brandId} WHERE id = #{id} </update>
