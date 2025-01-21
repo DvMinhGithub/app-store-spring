@@ -3,7 +3,7 @@ package com.mdv.mybatis.controller;
 import com.mdv.mybatis.model.dto.BrandDTO;
 import com.mdv.mybatis.model.request.BrandRequest;
 import com.mdv.mybatis.model.response.ApiResponse;
-import com.mdv.mybatis.servicer.BrandService;
+import com.mdv.mybatis.service.BrandService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

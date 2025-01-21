@@ -1,4 +1,4 @@
-package com.mdv.mybatis.servicer;
+package com.mdv.mybatis.service;
 
 import com.mdv.mybatis.exception.DataNotFoundException;
 import com.mdv.mybatis.mapper.UserMapper;

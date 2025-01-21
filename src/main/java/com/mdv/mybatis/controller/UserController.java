@@ -4,7 +4,7 @@ import com.mdv.mybatis.model.dto.UserDTO;
 import com.mdv.mybatis.model.request.LoginRequest;
 import com.mdv.mybatis.model.request.UserRequest;
 import com.mdv.mybatis.model.response.ApiResponse;
-import com.mdv.mybatis.servicer.UserService;
+import com.mdv.mybatis.service.UserService;
 import jakarta.annotation.Nullable;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
