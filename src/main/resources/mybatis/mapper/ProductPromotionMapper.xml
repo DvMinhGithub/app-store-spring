@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mdv.mybatis.mapper.ProductPromotionMapper">
+    <resultMap id="selectPromotionResultMap" type="com.mdv.mybatis.model.dto.ProductPromotionDTO">
+        <id property="id" column="id" />
+        <result property="productId" column="product_id" />
+        <result property="endTime" column="end_time" />
+        <result property="startTime" column="start_time" />
+        <result property="discountPrice" column="discount_price" />
+        <result property="isActive" column="is_active" />
+    </resultMap>
+
+    <select id="findAll" resultMap="selectPromotionResultMap"> SELECT id, product_id, end_time,
+        start_time, discount_price, is_active FROM product_promotion </select>
+
+    <select id="findById" resultMap="selectPromotionResultMap"> SELECT id, product_id, end_time,
+        start_time, discount_price, is_active FROM product_promotion WHERE id = #{id} </select>
+
+    <insert id="create"> INSERT INTO product_promotion (product_id, end_time, start_time,
+        discount_price) VALUES (#{pr.productId}, #{pr.endTime}, #{pr.startTime},
+        #{pr.discountPrice}) </insert>
+
+    <update id="update"> UPDATE product_promotion SET product_id = #{pr.productId}, end_time =
+        #{pr.endTime}, start_time = #{pr.startTime}, discount_price = #{pr.discountPrice}, is_active = #{pr.isActive} WHERE id =
+        #{id} </update>
+
+    <delete id="delete"> DELETE FROM product_promotion WHERE id = #{id} </delete>
+
+    <select id="findActivePromotions" resultMap="selectPromotionResultMap"> SELECT id, product_id,
+        end_time, start_time, discount_price, is_active FROM product_promotion WHERE is_active = 1 </select>
+
+    <select id="findByProductId" resultMap="selectPromotionResultMap"> SELECT id, product_id,
+        end_time, start_time, discount_price, is_active FROM product_promotion WHERE product_id =
+        #{productId} </select>
+
+    <select id="findActivePromotionsByProductId" resultMap="selectPromotionResultMap"> SELECT id,
+        product_id, end_time, start_time, discount_price, is_active FROM product_promotion WHERE
+        product_id = #{productId} AND is_active = 1 </select>
+</mapper>
