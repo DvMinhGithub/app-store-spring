@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mdv.mybatis.mapper.VoucherMapper">
+
+    <sql id="voucherFields">
+        v.id,
+        v.code,
+        v.condition_value,
+        v.discount_price,
+        v.end_time,
+        v.start_time,
+        v.total_quantity,
+        v.used_quantity,
+        v.is_active
+    </sql>
+
+    <insert id="createVoucher">
+        INSERT INTO voucher (code, condition_value, discount_price, end_time, start_time, total_quantity)
+        VALUES (#{v.code}, #{v.conditionValue}, #{v.discountPrice}, #{v.endTime}, #{v.startTime}, #{v.totalQuantity})
+    </insert>
+
+    <resultMap id="selectVoucher" type="com.mdv.mybatis.model.dto.VoucherDTO">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="conditionValue" column="condition_value"/>
+        <result property="discountPrice" column="discount_price"/>
+        <result property="endTime" column="end_time"/>
+        <result property="startTime" column="start_time"/>
+        <result property="totalQuantity" column="total_quantity"/>
+        <result property="usedQuantity" column="used_quantity"/>
+        <result property="isActive" column="is_active"/>
+    </resultMap>
+
+    <select id="selectAllVouchers" resultMap="selectVoucher">
+        SELECT
+            <include refid="voucherFields"/>
+        FROM voucher v
+    </select>
+
+    <select id="selectVoucherById" resultMap="selectVoucher">
+        SELECT
+            <include refid="voucherFields"/>
+        FROM voucher v
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectVoucherByCode" resultMap="selectVoucher">
+        SELECT
+            <include refid="voucherFields"/>
+        FROM voucher v
+        WHERE code = #{code}
+    </select>
+
+    <update id="updateVoucher">
+        UPDATE voucher
+        <set>
+            <if test="v.code != null">code = #{v.code},</if>
+            <if test="v.conditionValue != null">condition_value = #{v.conditionValue},</if>
+            <if test="v.discountPrice != null">discount_price = #{v.discountPrice},</if>
+            <if test="v.endTime != null">end_time = #{v.endTime},</if>
+            <if test="v.startTime != null">start_time = #{v.startTime},</if>
+            <if test="v.totalQuantity != null">total_quantity = #{v.totalQuantity},</if>
+            <if test="v.usedQuantity != null">used_quantity = #{v.usedQuantity},</if>
+            <if test="v.isActive != null">is_active = #{v.isActive},</if>
+            updated_at = now()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteVoucher">
+        DELETE FROM voucher WHERE id = #{id}
+    </delete>
+</mapper>
