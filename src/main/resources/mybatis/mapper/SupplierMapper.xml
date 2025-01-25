@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mdv.mybatis.mapper.SupplierMapper">
+    <sql id="supplierFields">
+        sr.id,
+        sr.name,
+        sr.phone,
+        sr.address,
+        sr.is_deleted
+    </sql>
+
+    <resultMap id="selecttResultMap" type="com.mdv.mybatis.model.dto.SupplierDTO">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="phone" column="phone" />
+        <result property="address" column="address" />
+        <result property="isDeleted" column="is_deleted" />
+    </resultMap>
+
+    <select id="findAll" resultMap="selecttResultMap">
+        SELECT
+            <include refid="supplierFields" />
+        FROM supplier sr
+        WHERE is_deleted = 0
+    </select>
+
+    <select id="findById" resultMap="selecttResultMap">
+        SELECT
+            <include refid="supplierFields" />
+        FROM supplier sr
+        WHERE sr.id = #{id}
+        AND sr.is_deleted = 0
+    </select>
+
+    <insert id="create">
+        INSERT INTO supplier (name, phone, address)
+        VALUES (#{sr.name}, #{sr.phone}, #{sr.address})
+    </insert>
+
+    <update id="update">
+        UPDATE supplier
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="deleteById">
+        UPDATE supplier SET is_deleted = 1 WHERE id = #{id}
+    </update>
+</mapper>
