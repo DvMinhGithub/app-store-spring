@@ -2,30 +2,77 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mdv.mybatis.mapper.ProductMapper">
-  <insert id="createProduct"> INSERT INTO product (name, price, image_url, brand_id) VALUES
-    (#{product.name}, #{product.price}, #{product.imageUrl}, #{product.brandId}) </insert>
+    <insert id="createProduct">
+        INSERT INTO product (name, price, image_url, brand_id)
+        VALUES (#{product.name}, #{product.price}, #{product.imageUrl}, #{product.brandId})
+    </insert>
 
-  <resultMap id="selectProductResultMap" type="com.mdv.mybatis.model.dto.ProductDTO">
-    <id property="id" column="id" />
-    <result property="name" column="name" />
-    <result property="price" column="price" />
-    <result property="isDeleted" column="is_deleted" />
-    <association property="brand" javaType="com.mdv.mybatis.model.dto.BrandDTO" columnPrefix="b_">
-      <id property="id" column="id" />
-      <result property="name" column="name" />
-    </association>
-  </resultMap>
+    <resultMap id="selectProductResultMap" type="com.mdv.mybatis.model.dto.ProductDTO">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="price" column="price" />
+        <result property="imageUrl" column="imageUrl" />
+        <result property="totalQuantity" column="totalQuantity" />
+        <result property="sold" column="sold" />
+        <result property="view" column="view" />
+        <result property="isDeleted" column="is_deleted" />
+        <association property="brand" javaType="com.mdv.mybatis.model.dto.BrandDTO"
+            columnPrefix="b_">
+            <id property="id" column="id" />
+            <result property="name" column="name" />
+        </association>
+    </resultMap>
 
-  <select id="findAll" resultMap="selectProductResultMap"> SELECT p.id as id, p.name as name, price,
-    p.is_deleted, b.id as b_id, b.name as b_name FROM product p JOIN brand b ON p.brand_id = b.id </select>
+    <sql id="selectAllFields">
+        p.id AS id,
+        p.name AS name,
+        p.image_url AS imageUrl,
+        p.price AS price,
+        p.total_quantity AS totalQuantity,
+        p.sold AS sold,
+        p.view AS view,
+        p.is_deleted,
+        b.id AS b_id,
+        b.name AS b_name
+    </sql>
 
-  <select id="findById" resultType="com.mdv.mybatis.model.dto.ProductDTO"> SELECT id, name, price,
-    is_deleted, brand_id FROM product WHERE id = #{id} </select>
+    <select id="findAll" resultMap="selectProductResultMap">
+        SELECT
+            <include refid="selectAllFields" />
+        FROM product p
+        JOIN brand b ON p.brand_id = b.id
+    </select>
 
-  <update id="updateProduct"> UPDATE product SET name = #{product.name}, price = #{product.price},
-    brand_id = #{product.brandId} WHERE id = #{id} </update>
+    <select id="findById" resultType="com.mdv.mybatis.model.dto.ProductDTO">
+        SELECT
+            <include refid="selectAllFields" />
+        FROM product p
+        JOIN brand b ON p.brand_id = b.id
+        WHERE id = # {id}
+    </select>
 
-  <update id="softDelete">UPDATE product SET is_deleted = 1 WHERE id = #{id}</update>
+    <update id="updateProduct">
+        UPDATE product
+        SET name = # {product.name},
+            price = # {product.price},
+            brand_id = # {product.brandId}
+        WHERE  id = # {id} 
+    </update>
+    <update id="softDelete">
+        UPDATE product
+        SET is_deleted = 1
+        WHERE id = #{id}
+    </update>
 
-  <update id="restore"> UPDATE product SET is_deleted = 0 WHERE id = #{id} </update>
+    <update id="restore">
+        UPDATE product
+        SET is_deleted = 0
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateTotalQuantity">
+        UPDATE product
+        SET quantity = quantity + #{totalQuantity}
+        WHERE id = #{id}
+    </update>
 </mapper>

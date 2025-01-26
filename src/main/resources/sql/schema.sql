@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `product`
     `name`          varchar(255) NOT NULL,
     `price`         DECIMAL(10, 2) DEFAULT 0,
     `image_url`     varchar(255) DEFAULT NULL,
+    `total_quantity`int          NOT NULL DEFAULT 0,
     `sold`          int          NOT NULL DEFAULT 0,
     `view`          int          NOT NULL DEFAULT 0,
     `brand_id`      bigint       DEFAULT NULL,
@@ -152,6 +153,19 @@ CREATE TABLE IF NOT EXISTS `inventory`
     CONSTRAINT `fk_inventory_supplier_id` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`id`),
 );
 
+CREATE TABLE IF NOT EXISTS `inventory_transaction`
+(
+    `id`                bigint                              NOT NULL AUTO_INCREMENT,
+    `product_id`        bigint                              NOT NULL,
+    `quantity`          int                                 NOT NULL,
+    `type`              enum ('IMPORT','EXPORT')            NOT NULL,
+    `transaction_date`  datetime(6)                         DEFAULT CURRENT_TIMESTAMP(6),
+    `supplier_id`       bigint                              NOT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_inventory_transaction_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
+    CONSTRAINT `fk_inventory_transaction_supplier_id` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`id`)
+);
+
 CREATE TABLE IF NOT EXISTS `role`
 (
     `id`   bigint NOT NULL AUTO_INCREMENT,
@@ -223,17 +237,4 @@ CREATE TABLE IF NOT EXISTS `payment`
     `created_at`   datetime(6)                         DEFAULT CURRENT_TIMESTAMP(6),
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_payment_order_id` FOREIGN KEY (`order_id`) REFERENCES `order` (`id`)
-);
-
-CREATE TABLE IF NOT EXISTS `inventory_transaction`
-(
-    `id`                bigint                              NOT NULL AUTO_INCREMENT,
-    `product_id`        bigint                              NOT NULL,
-    `quantity`          int                                 NOT NULL,
-    `type`              enum ('IMPORT','EXPORT')            NOT NULL,
-    `transaction_date`  datetime(6)                         DEFAULT CURRENT_TIMESTAMP(6),
-    `supplier_id`       bigint                              NOT NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `fk_inventory_transaction_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
-    CONSTRAINT `fk_inventory_transaction_supplier_id` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`id`)
 );
