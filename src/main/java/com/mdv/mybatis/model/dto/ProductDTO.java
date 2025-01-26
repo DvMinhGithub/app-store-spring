@@ -15,6 +15,7 @@ public class ProductDTO {
     String name;
     Double price;
     String imageUrl;
+    Long totalQuantity;
     Integer sold;
     Integer view;
 
