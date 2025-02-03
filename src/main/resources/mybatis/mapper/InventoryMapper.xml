@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mdv.mybatis.mapper.InventoryMapper">
+    <insert id="importInventory">
+        INSERT INTO inventory (product_id, import_price, quantity, supplier_id, batch_code)
+        VALUES (#{i.productId}, #{i.importPrice}, #{i.quantity}, #{i.supplierId}, #{i.batchCode})
+    </insert>    
+
+    <resultMap id="selectInventory" type="com.mdv.mybatis.model.dto.InventoryDTO">
+        <id property="id" column="id" />
+        <result property="productId" column="product_id" />
+        <result property="importPrice" column="import_price" />
+        <result property="quantity" column="quantity" />
+        <result property="batchCode" column="batch_code" />
+        <association property="supplier" javaType="com.mdv.mybatis.model.dto.SupplierDTO" columnPrefix="s_">
+            <id property="id" column="id" />
+            <result property="name" column="name" />
+        </association>
+    </resultMap>
+
+    <sql id="selectFields">
+        i.id,
+        i.product_id,
+        i.import_price,
+        i.quantity,
+        i.batch_code,
+        s.id AS s_id,
+        s.name AS s_name
+    </sql>
+
+    <select id="getInventories" resultMap="selectInventory">
+        SELECT
+            <include refid="selectFields" />
+        FROM inventory i JOIN supplier s ON i.supplier_id = s.id
+    </select>
+
+    <select id="findByBatchCode">
+        SELECT
+            <include refid="selectFields" />
+        FROM inventory i JOIN supplier s ON i.supplier_id = s.id
+        WHERE i.batch_code = #{batchCode}
+    </select>
+
+    <update id="exportInventory">
+        UPDATE inventory
+        SET quantity = quantity - #{i.quantity}
+        WHERE batch_code = #{i.batchCode} AND quantity >= #{i.quantity}
+    </update>
+</mapper>

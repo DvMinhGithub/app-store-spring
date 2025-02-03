@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mdv.mybatis.mapper.InventoryTransactionMapper">
+    <insert id="importInventoryTransaction">
+        INSERT INTO inventory_transaction (product_id, quantity, type)
+        VALUES (#{it.productId}, #{it.quantity}, #{it.type})
+    </insert>
+
+    <resultMap id="selectInventoryTransactions" type="com.mdv.mybatis.model.dto.InventoryTransactionDTO">
+        <id property="id" column="id" />
+        <result property="productId" column="product_id" />
+        <result property="quantity" column="quantity" />
+        <result property="type" column="type" />
+        <result property="transactionDate" column="transaction_date" />
+        <association property="supplier" javaType="com.mdv.mybatis.model.dto.SupplierDTO" columnPrefix="s_">
+            <id property="id" column="id" />
+            <result property="name" column="name" />
+        </association>
+    </resultMap>    
+
+    <sql id="selectFields">
+        it.id,
+        it.product_id,
+        it.quantity,
+        it.type,
+        it.transaction_date,
+        s.id AS s_id,
+        s.name AS s_name
+    </sql>
+
+    <select id="getInventoryTransactions" resultMap="selectInventoryTransactions">
+        SELECT
+            <include refid="selectFields"/>
+        FROM inventory_transaction it
+        JOIN supplier s ON it.supplier_id = s.id
+    </select>
+
+    <insert id="exportInventoryTransaction">
+        INSERT INTO inventory_transaction (product_id, quantity, type, supplier_id)
+        VALUES (#{it.productId}, #{it.quantity}, #{it.type}, #{it.supplierId})
+    </insert>
+</mapper>

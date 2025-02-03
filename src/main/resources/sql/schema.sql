@@ -8,24 +8,24 @@ CREATE TABLE IF NOT EXISTS `brand`
     `created_at`  datetime(6)  DEFAULT CURRENT_TIMESTAMP(6),
     `updated_at`  datetime(6)  DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
     `is_deleted`  bit(1)       NOT NULL DEFAULT 0,
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `product`
 (
-    `id`            bigint       NOT NULL AUTO_INCREMENT,
-    `is_deleted`    bit(1)       NOT NULL DEFAULT 0,
-    `name`          varchar(255) NOT NULL,
-    `price`         DECIMAL(10, 2) DEFAULT 0,
-    `image_url`     varchar(255) DEFAULT NULL,
-    `total_quantity`int          NOT NULL DEFAULT 0,
-    `sold`          int          NOT NULL DEFAULT 0,
-    `view`          int          NOT NULL DEFAULT 0,
-    `brand_id`      bigint       DEFAULT NULL,
-    `created_at`    datetime(6)  DEFAULT CURRENT_TIMESTAMP(6),
-    `updated_at`    datetime(6)  DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `is_deleted` BIT(1) NOT NULL DEFAULT 0,
+    `name` VARCHAR(255) NOT NULL,
+    `price` DECIMAL(10, 2) NOT NULL DEFAULT 0 CHECK (price >= 0),
+    `image_url` VARCHAR(255) DEFAULT NULL,
+    `total_quantity` INT UNSIGNED NOT NULL DEFAULT 0,
+    `sold` INT UNSIGNED NOT NULL DEFAULT 0,
+    `view` INT UNSIGNED NOT NULL DEFAULT 0,
+    `brand_id` BIGINT UNSIGNED DEFAULT NULL,
+    `created_at` DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6),
+    `updated_at` DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
     PRIMARY KEY (`id`),
-    CONSTRAINT `fk_product_brand_id` FOREIGN KEY (`brand_id`) REFERENCES `brand` (`id`),
+    CONSTRAINT `fk_product_brand_id` FOREIGN KEY (`brand_id`) REFERENCES `brand` (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `product_attribute`
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `product_attribute`
     `attribute_value` varchar(255) DEFAULT NULL,
     `product_id`      bigint NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `fk_product_attribute_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
+    CONSTRAINT `fk_product_attribute_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `category`
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `category`
     `created_at`  datetime(6)  DEFAULT CURRENT_TIMESTAMP(6),
     `updated_at`  datetime(6)  DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
     `is_deleted`  bit(1)       NOT NULL DEFAULT 0,
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `product_category`
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `user`
     `phone`        varchar(255) NOT NULL UNIQUE,
     `created_at`   datetime(6)  DEFAULT CURRENT_TIMESTAMP(6),
     `updated_at`   datetime(6)  DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `cart_item`
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `voucher`
     `created_at`        datetime(6)  DEFAULT CURRENT_TIMESTAMP(6),
     `updated_at`        datetime(6)  DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
     `is_active`         bit(1)       NOT NULL DEFAULT 0,
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `order`
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `order`
     `user_id`      bigint                              NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_order_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-    CONSTRAINT `fk_order_voucher_code` FOREIGN KEY (`voucher_code`) REFERENCES `voucher` (`code`),
+    CONSTRAINT `fk_order_voucher_code` FOREIGN KEY (`voucher_code`) REFERENCES `voucher` (`code`)
 );
 
 CREATE TABLE IF NOT EXISTS `order_line`
@@ -139,20 +139,18 @@ CREATE TABLE IF NOT EXISTS `supplier`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `inventory`
-(
-    `id`           bigint NOT NULL AUTO_INCREMENT,
-    `import_price` DECIMAL(10, 2) NOT NULL DEFAULT 0,
-    `quantity`     int    NOT NULL DEFAULT 0,
-    `product_id`   bigint NOT NULL,
-    `created_at`   datetime(6) DEFAULT CURRENT_TIMESTAMP(6),
-    `supplier_id`  bigint NOT NULL,
-    `batch_code`   varchar(255) NOT NULL UNIQUE,
+CREATE TABLE IF NOT EXISTS `inventory` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `import_price` DECIMAL(10, 2) NOT NULL DEFAULT 0 CHECK (import_price >= 0),
+    `quantity` INT UNSIGNED NOT NULL DEFAULT 0 CHECK (quantity >= 0),
+    `product_id` BIGINT UNSIGNED NOT NULL,
+    `created_at` DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6),
+    `supplier_id` BIGINT UNSIGNED NOT NULL,
+    `batch_code` VARCHAR(255) NOT NULL UNIQUE,
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_inventory_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
-    CONSTRAINT `fk_inventory_supplier_id` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`id`),
+    CONSTRAINT `fk_inventory_supplier_id` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`id`)
 );
-
 CREATE TABLE IF NOT EXISTS `inventory_transaction`
 (
     `id`                bigint                              NOT NULL AUTO_INCREMENT,
@@ -160,7 +158,6 @@ CREATE TABLE IF NOT EXISTS `inventory_transaction`
     `quantity`          int                                 NOT NULL,
     `type`              enum ('IMPORT','EXPORT')            NOT NULL,
     `transaction_date`  datetime(6)                         DEFAULT CURRENT_TIMESTAMP(6),
-    `supplier_id`       bigint                              NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_inventory_transaction_product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
     CONSTRAINT `fk_inventory_transaction_supplier_id` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`id`)
@@ -212,7 +209,7 @@ CREATE TABLE IF NOT EXISTS `daily_revenue`
     `id`            bigint NOT NULL AUTO_INCREMENT,
     `date`          date   NOT NULL UNIQUE,
     `total_revenue` DECIMAL(10, 2) DEFAULT 0,
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `order_history`
