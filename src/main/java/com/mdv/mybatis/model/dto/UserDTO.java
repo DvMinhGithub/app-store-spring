@@ -1,6 +1,5 @@
 package com.mdv.mybatis.model.dto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +17,5 @@ public class UserDTO {
     String name;
     String password;
     String phone;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
     List<RoleDTO> roles;
 }

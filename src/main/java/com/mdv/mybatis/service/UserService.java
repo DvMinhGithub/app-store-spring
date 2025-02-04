@@ -3,8 +3,9 @@ package com.mdv.mybatis.service;
 import com.mdv.mybatis.exception.DataNotFoundException;
 import com.mdv.mybatis.mapper.UserMapper;
 import com.mdv.mybatis.model.dto.UserDTO;
-import com.mdv.mybatis.model.request.LoginRequest;
-import com.mdv.mybatis.model.request.UserRequest;
+import com.mdv.mybatis.model.request.UserCreateRequest;
+import com.mdv.mybatis.model.request.UserLoginRequest;
+import com.mdv.mybatis.model.request.UserUpdateRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,11 +15,11 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserMapper userMapper;
 
-    public void createUser(UserRequest user) {
+    public void createUser(UserCreateRequest user) {
         userMapper.createUser(user);
     }
 
-    public UserDTO login(LoginRequest user) {
+    public UserDTO login(UserLoginRequest user) {
         return userMapper.login(user);
     }
 
@@ -26,7 +27,7 @@ public class UserService {
         return userMapper.findAll();
     }
 
-    public void updateUser(Long id, UserRequest user) {
+    public void updateUser(Long id, UserUpdateRequest user) {
         userMapper.updateUser(id, user);
     }
 
@@ -40,5 +41,17 @@ public class UserService {
             throw new DataNotFoundException("User not exist");
         }
         return user;
+    }
+
+    public void assignRoles(Long userId, List<Long> roleIds) {
+        if (roleIds == null || roleIds.isEmpty()) {
+            throw new IllegalArgumentException("At least one role must be provided");
+        }
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID cannot be null");
+        }
+        // userMapper.assignRoles(userId, roleIds);
+        userMapper.deleteRolesByUserId(userId);
+        userMapper.insertRoles(userId, roleIds);
     }
 }
