@@ -2,43 +2,96 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mdv.mybatis.mapper.UserMapper">
-  <resultMap id="findAllResultMap" type="com.mdv.mybatis.model.dto.UserDTO">
-    <id property="id" column="id" />
-    <result property="address" column="address" />
-    <result property="avatar" column="avatar" />
-    <result property="dob" column="dob" />
-    <result property="email" column="email" />
-    <result property="name" column="name" />
-    <result property="password" column="password" />
-    <result property="phone" column="phone" />
-    <result property="createdAt" column="createdAt" />
-    <result property="updatedAt" column="updatedAt" />
-    <collection property="roles" ofType="com.mdv.mybatis.model.dto.RoleDTO"
-      columnPrefix="r_">
-      <id property="id" column="id" />
-      <result property="name" column="name" />
-    </collection>
-  </resultMap>
+    <resultMap id="findAllResultMap" type="com.mdv.mybatis.model.dto.UserDTO">
+        <id property="id" column="id" />
+        <result property="address" column="address" />
+        <result property="avatar" column="avatar" />
+        <result property="dob" column="dob" />
+        <result property="email" column="email" />
+        <result property="name" column="name" />
+        <result property="password" column="password" />
+        <result property="phone" column="phone" />
+        <collection property="roles" ofType="com.mdv.mybatis.model.dto.RoleDTO"
+            columnPrefix="r_">
+            <id property="id" column="id" />
+            <result property="name" column="name" />
+        </collection>
+    </resultMap>
 
-  <select id="findAll" resultMap="findAllResultMap"> SELECT * FROM user_role_view </select>
+    <select id="findAll" resultMap="findAllResultMap"> SELECT * FROM user_role_view </select>
 
-  <insert id="createUser">INSERT INTO user (address, avatar, dob, email, name, password, phone)
-    VALUES (#{user.address}, #{user.avatar}, #{user.dob}, #{user.email}, #{user.name},
-    #{user.password}, #{user.phone}) </insert>
+    <insert id="createUser">
+        INSERT INTO USER (
+            address,
+            avatar,
+            dob,
+            email,
+            name,
+            password,
+            phone
+        )
+        VALUES (
+            #{u.address}, 
+            #{u.avatar}, 
+            #{u.dob}, 
+            #{u.email}, 
+            #{u.name}, 
+            #{u.password}, 
+            #{u.phone}
+        )
+    </insert>
 
-  <update id="updateUser"> UPDATE user SET address=#{user.address}, avatar=#{user.avatar},
-    dob=#{user.dob}, name=#{user.name}, password=#{user.password}, phone=#{user.phone} WHERE id =
-    #{id} </update>
+    <update id="updateUser">
+        UPDATE user 
+        SET
+            <trim suffixOverrides=",">
+                <if test="u.address != null">address = #{u.address}, </if>
+                <if test="u.avatar != null">avatar = #{u.avatar}, </if>
+                <if test="u.dob != null">dob = #{u.dob}, </if>
+                <if test="u.name != null">name = #{u.name}, </if>
+                <if test="u.password != null">password = #{u.password}, </if>
+                <if test="u.phone != null">phone = #{u.phone} </if>
+            </trim>
+        WHERE id = #{id}
+    </update>
 
-  <delete id="deleteUser"> DELETE FROM user WHERE id = #{id} </delete>
+    <delete id="deleteUser">
+        DELETE
+        FROM USER
+        WHERE id = #{id}
+    </delete>
 
-  <select id="findById" resultType="com.mdv.mybatis.model.dto.UserDTO">SELECT id, address, avatar,
-    dob, email, name, password, phone, created_at as createdAt, updated_at as updatedAt FROM user
-    WHERE id = #{id} </select>
+    <select id="findById" resultMap="findAllResultMap">
+        SELECT *
+        FROM user_role_view
+        WHERE id = #{id}
+    </select>
 
-  <select id="login"> SELECT id, address, avatar, dob, email, name, password, phone, created_at as
-    createdAt, updated_at as updatedAt FROM user WHERE email = #{email} AND password = #{password} </select>
+    <select id="login" resultMap="findAllResultMap">
+        SELECT *
+        FROM user_role_view
+        WHERE email = #{u.email}
+        AND password = #{u.password}
+    </select>
 
-  <select id="findByEmailOrPhone" resultMap="findAllResultMap"> SELECT * FROM user_role_view WHERE
-    email = #{email} OR phone = #{phone} </select>
+    <select id="findByEmailOrPhone" resultMap="findAllResultMap">
+        SELECT *
+        FROM user_role_view
+        WHERE email = #{email}
+        OR phone = #{phone}
+    </select>
+
+    <delete id="deleteRolesByUserId">
+        DELETE 
+        FROM user_role 
+        WHERE user_id = #{userId};
+    </delete>
+
+    <insert id="insertRoles">
+        INSERT INTO user_role (user_id, role_id)
+        VALUES
+        <foreach collection="roleIds" item="roleId" separator=",">
+            (#{userId}, #{roleId})
+        </foreach>
+    </insert>
 </mapper>

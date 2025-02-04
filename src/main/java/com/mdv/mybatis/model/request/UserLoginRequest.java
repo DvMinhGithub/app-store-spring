@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequest {
+public class UserLoginRequest {
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email address")
     private String email;

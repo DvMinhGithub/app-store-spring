@@ -21,7 +21,6 @@ public class ApiResponse<T> {
     String message;
     T data;
 
-    // Factory method
     public static <T> ApiResponse<T> success(T data, String message) {
         return new ApiResponse<>(HttpStatus.OK.value(), message, data);
     }
