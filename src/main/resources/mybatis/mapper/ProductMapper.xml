@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.mdv.mybatis.mapper.ProductMapper">
+<mapper namespace="com.mdv.appstore.mapper.ProductMapper">
     <insert id="createProduct">
         INSERT INTO product (name, price, image_url, brand_id)
         VALUES (#{product.name}, #{product.price}, #{product.imageUrl}, #{product.brandId})
     </insert>
 
-    <resultMap id="selectProductResultMap" type="com.mdv.mybatis.model.dto.ProductDTO">
+    <resultMap id="selectProductResultMap" type="com.mdv.appstore.model.dto.ProductDTO">
         <id property="id" column="id" />
         <result property="name" column="name" />
         <result property="price" column="price" />
@@ -16,7 +16,7 @@
         <result property="sold" column="sold" />
         <result property="view" column="view" />
         <result property="isDeleted" column="is_deleted" />
-        <association property="brand" javaType="com.mdv.mybatis.model.dto.BrandDTO"
+        <association property="brand" javaType="com.mdv.appstore.model.dto.BrandDTO"
             columnPrefix="b_">
             <id property="id" column="id" />
             <result property="name" column="name" />

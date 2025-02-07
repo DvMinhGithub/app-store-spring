@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.mdv.mybatis.mapper.ProductCategoryMapper">
+<mapper namespace="com.mdv.appstore.mapper.ProductCategoryMapper">
 
     <insert id="create"> INSERT INTO product_category (product_id, category_id) VALUES
         (#{productId}, #{categoryId}) </insert>
 
-    <resultMap id="selectProductResultMap" type="com.mdv.mybatis.model.dto.ProductDTO">
+    <resultMap id="selectProductResultMap" type="com.mdv.appstore.model.dto.ProductDTO">
         <id property="id" column="id" />
         <result property="name" column="name" />
         <result property="price" column="price" />
@@ -14,14 +14,14 @@
         <result property="isDeleted" column="is_deleted" />
         <result property="sold" column="sold"/>
         <result property="view" column="view"/>
-        <association property="brand" javaType="com.mdv.mybatis.model.dto.BrandDTO"
+        <association property="brand" javaType="com.mdv.appstore.model.dto.BrandDTO"
             columnPrefix="b_">
             <id property="id" column="id" />
             <result property="name" column="name" />
         </association>
     </resultMap>
 
-    <select id="getCategoriesByProductId" resultType="com.mdv.mybatis.model.dto.CategoryDTO"> SELECT
+    <select id="getCategoriesByProductId" resultType="com.mdv.appstore.model.dto.CategoryDTO"> SELECT
         c.id, c.name FROM category c JOIN product_category pc ON c.id = pc.category_id WHERE
         pc.product_id = #{productId} </select>
 

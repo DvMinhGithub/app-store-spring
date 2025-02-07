@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.mdv.mybatis.mapper.VoucherMapper">
+<mapper namespace="com.mdv.appstore.mapper.VoucherMapper">
 
     <sql id="voucherFields">
         v.id,
@@ -20,7 +20,7 @@
         VALUES (#{v.code}, #{v.conditionValue}, #{v.discountPrice}, #{v.endTime}, #{v.startTime}, #{v.totalQuantity})
     </insert>
 
-    <resultMap id="selectVoucher" type="com.mdv.mybatis.model.dto.VoucherDTO">
+    <resultMap id="selectVoucher" type="com.mdv.appstore.model.dto.VoucherDTO">
         <id property="id" column="id"/>
         <result property="code" column="code"/>
         <result property="conditionValue" column="condition_value"/>

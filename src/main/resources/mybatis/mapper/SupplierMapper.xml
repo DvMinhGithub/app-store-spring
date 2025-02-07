@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.mdv.mybatis.mapper.SupplierMapper">
+<mapper namespace="com.mdv.appstore.mapper.SupplierMapper">
     <sql id="supplierFields">
         sr.id,
         sr.name,
@@ -10,7 +10,7 @@
         sr.is_deleted
     </sql>
 
-    <resultMap id="selecttResultMap" type="com.mdv.mybatis.model.dto.SupplierDTO">
+    <resultMap id="selecttResultMap" type="com.mdv.appstore.model.dto.SupplierDTO">
         <id property="id" column="id" />
         <result property="name" column="name" />
         <result property="phone" column="phone" />

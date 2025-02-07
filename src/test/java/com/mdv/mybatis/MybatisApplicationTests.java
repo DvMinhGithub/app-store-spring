@@ -1,4 +1,4 @@
-package com.mdv.mybatis;
+package com.mdv.appstore;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

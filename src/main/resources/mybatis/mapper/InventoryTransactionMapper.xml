@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.mdv.mybatis.mapper.InventoryTransactionMapper">
+<mapper namespace="com.mdv.appstore.mapper.InventoryTransactionMapper">
     <insert id="importInventoryTransaction">
         INSERT INTO inventory_transaction (product_id, quantity, type)
         VALUES (#{it.productId}, #{it.quantity}, #{it.type})
     </insert>
 
-    <resultMap id="selectInventoryTransactions" type="com.mdv.mybatis.model.dto.InventoryTransactionDTO">
+    <resultMap id="selectInventoryTransactions" type="com.mdv.appstore.model.dto.InventoryTransactionDTO">
         <id property="id" column="id" />
         <result property="productId" column="product_id" />
         <result property="quantity" column="quantity" />
         <result property="type" column="type" />
         <result property="transactionDate" column="transaction_date" />
-        <association property="supplier" javaType="com.mdv.mybatis.model.dto.SupplierDTO" columnPrefix="s_">
+        <association property="supplier" javaType="com.mdv.appstore.model.dto.SupplierDTO" columnPrefix="s_">
             <id property="id" column="id" />
             <result property="name" column="name" />
         </association>
