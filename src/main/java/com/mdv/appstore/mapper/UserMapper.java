@@ -1,8 +1,6 @@
 package com.mdv.appstore.mapper;
 
 import com.mdv.appstore.model.dto.UserDTO;
-import com.mdv.appstore.model.request.UserCreateRequest;
-import com.mdv.appstore.model.request.UserLoginRequest;
 import com.mdv.appstore.model.request.UserUpdateRequest;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
@@ -10,10 +8,6 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserMapper {
-    void createUser(@Param("u") UserCreateRequest user);
-
-    UserDTO login(@Param("u") UserLoginRequest user);
-
     List<UserDTO> findAll();
 
     UserDTO findById(@Param("id") Long id);

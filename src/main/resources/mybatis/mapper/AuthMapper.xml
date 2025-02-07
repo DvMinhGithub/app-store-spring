@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mdv.appstore.mapper.AuthMapper">
+    <resultMap id="findAllResultMap" type="com.mdv.appstore.model.dto.UserDTO">
+        <id property="id" column="id" />
+        <result property="address" column="address" />
+        <result property="avatar" column="avatar" />
+        <result property="dob" column="dob" />
+        <result property="email" column="email" />
+        <result property="name" column="name" />
+        <result property="password" column="password" />
+        <result property="phone" column="phone" />
+        <collection property="roles" ofType="com.mdv.appstore.model.dto.RoleDTO"
+            columnPrefix="r_">
+            <id property="id" column="id" />
+            <result property="name" column="name" />
+        </collection>
+    </resultMap>
+
+    <select id="login" resultMap="findAllResultMap">
+        SELECT *
+        FROM user_role_view
+        WHERE email = #{u.email}
+        AND password = #{u.password}
+    </select>
+
+    
+    <insert id="register">
+        INSERT INTO USER (
+            address,
+            avatar,
+            dob,
+            email,
+            name,
+            password,
+            phone
+        )
+        VALUES (
+            #{u.address}, 
+            #{u.avatar}, 
+            #{u.dob}, 
+            #{u.email}, 
+            #{u.name}, 
+            #{u.password}, 
+            #{u.phone}
+        )
+    </insert>
+</mapper>

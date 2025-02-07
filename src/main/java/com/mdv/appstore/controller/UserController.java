@@ -1,8 +1,6 @@
 package com.mdv.appstore.controller;
 
 import com.mdv.appstore.model.dto.UserDTO;
-import com.mdv.appstore.model.request.UserCreateRequest;
-import com.mdv.appstore.model.request.UserLoginRequest;
 import com.mdv.appstore.model.request.UserUpdateRequest;
 import com.mdv.appstore.model.response.ApiResponse;
 import com.mdv.appstore.service.UserService;
@@ -27,17 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-
-    @PostMapping
-    public ApiResponse<Void> createUser(@RequestBody @Valid UserCreateRequest user) {
-        userService.createUser(user);
-        return ApiResponse.success("User created successfully");
-    }
-
-    @PostMapping("/login")
-    public ApiResponse<UserDTO> login(@RequestBody @Valid UserLoginRequest user) {
-        return ApiResponse.success(userService.login(user), "User logged in successfully");
-    }
 
     @GetMapping
     public ApiResponse<List<UserDTO>> findAll() {

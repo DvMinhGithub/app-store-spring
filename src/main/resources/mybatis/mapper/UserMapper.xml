@@ -20,27 +20,6 @@
 
     <select id="findAll" resultMap="findAllResultMap"> SELECT * FROM user_role_view </select>
 
-    <insert id="createUser">
-        INSERT INTO USER (
-            address,
-            avatar,
-            dob,
-            email,
-            name,
-            password,
-            phone
-        )
-        VALUES (
-            #{u.address}, 
-            #{u.avatar}, 
-            #{u.dob}, 
-            #{u.email}, 
-            #{u.name}, 
-            #{u.password}, 
-            #{u.phone}
-        )
-    </insert>
-
     <update id="updateUser">
         UPDATE user 
         SET
@@ -65,13 +44,6 @@
         SELECT *
         FROM user_role_view
         WHERE id = #{id}
-    </select>
-
-    <select id="login" resultMap="findAllResultMap">
-        SELECT *
-        FROM user_role_view
-        WHERE email = #{u.email}
-        AND password = #{u.password}
     </select>
 
     <select id="findByEmailOrPhone" resultMap="findAllResultMap">
