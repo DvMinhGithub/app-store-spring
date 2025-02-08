@@ -26,7 +26,7 @@
     </select>
 
     
-    <insert id="register">
+    <insert id="register" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         INSERT INTO USER (
             address,
             avatar,

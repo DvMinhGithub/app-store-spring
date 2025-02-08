@@ -40,7 +40,6 @@ public class UserService {
         if (userId == null) {
             throw new IllegalArgumentException("User ID cannot be null");
         }
-        // userMapper.assignRoles(userId, roleIds);
         userMapper.deleteRolesByUserId(userId);
         userMapper.insertRoles(userId, roleIds);
     }

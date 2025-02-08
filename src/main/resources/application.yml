@@ -1,11 +1,13 @@
 spring:
   application:
     name: AppStore
+  
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/app_store?createDatabaseIfNotExist=true
     username: root
     password: 123456
+  
   sql:
     init:
       mode: never
@@ -14,7 +16,34 @@ spring:
       - classpath:sql/view.sql
       data-locations:
       - classpath:sql/data.sql
+      continue-on-error: false
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 15MB
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
+
 file:
-  upload-dir: 'uploads\'
+  upload-dir: uploads/
+  allowed-types: image/jpeg,image/png,image/gif
+  max-file-size: 5MB
+
+app:
+  jwt:
+    secret: 7F5p3vY9x2K8zDmQeJ4a1G6C9bUh5iR7gT3w0L2oA8sX6nZr1P4qM9yV7uI2eO5
+    expiration: 86400000
+    refresh-secret: 3cW7xZ1pB8vL2kN9tR5yH6mJ4gF7uD2iQ8eX0aO9sV1rP6qM3bY5zC2jI7
+    refresh-expiration: 259200000
+
+  api:
+    version: v1
+    base-url: /api/${app.api.version}

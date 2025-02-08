@@ -16,6 +16,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class UserRegisterRequest {
+    Long id;
+
     @NotBlank(message = "Name is required")
     String name;
 
