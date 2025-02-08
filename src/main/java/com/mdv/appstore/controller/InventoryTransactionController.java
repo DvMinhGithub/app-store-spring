@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/inventory-transactions")
+@RequestMapping("${app.api.base-url}/inventory-transactions")
 @RequiredArgsConstructor
 public class InventoryTransactionController {
     private final InventoryTransactionService inventoryTransactionService;

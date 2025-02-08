@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/brands")
+@RequestMapping("${app.api.base-url}/brands")
 @RequiredArgsConstructor
 public class BrandController {
     private final BrandService brandService;

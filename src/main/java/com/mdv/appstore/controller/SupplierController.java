@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/suppliers")
+@RequestMapping("${app.api.base-url}/suppliers")
 @RequiredArgsConstructor
 public class SupplierController {
     private final SupplierService supplierService;

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/product-attribute")
+@RequestMapping("${app.api.base-url}/product-attribute")
 @RequiredArgsConstructor
 public class ProductAtrributeController {
     private final ProductAtrributeService productAtrributeService;

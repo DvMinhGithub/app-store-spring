@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/inventories")
+@RequestMapping("${app.api.base-url}/inventories")
 @RequiredArgsConstructor
 public class InventoryController {
     private final InventoryService inventoryService;

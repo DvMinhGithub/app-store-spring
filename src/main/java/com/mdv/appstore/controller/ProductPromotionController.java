@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/product-promotion")
+@RequestMapping("${app.api.base-url}/product-promotion")
 @RequiredArgsConstructor
 public class ProductPromotionController {
     private final ProductPromotionService productPromotionService;
