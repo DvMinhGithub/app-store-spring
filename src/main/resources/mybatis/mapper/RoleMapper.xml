@@ -3,7 +3,7 @@
 
 <mapper namespace="com.mdv.appstore.mapper.RoleMapper">
 
-    <select id="findByName" resultType="com.mdv.appstore.model.dto.RoleDTO">
+    <select id="findByName" resultType="RoleDTO">
         SELECT * 
         FROM role 
         WHERE name = #{name}

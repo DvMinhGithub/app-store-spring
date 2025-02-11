@@ -10,7 +10,7 @@
         sr.is_deleted
     </sql>
 
-    <resultMap id="selecttResultMap" type="com.mdv.appstore.model.dto.SupplierDTO">
+    <resultMap id="selecttResultMap" type="SupplierDTO">
         <id property="id" column="id" />
         <result property="name" column="name" />
         <result property="phone" column="phone" />

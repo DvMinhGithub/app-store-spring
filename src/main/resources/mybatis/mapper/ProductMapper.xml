@@ -7,7 +7,7 @@
         VALUES (#{product.name}, #{product.price}, #{product.imageUrl}, #{product.brandId})
     </insert>
 
-    <resultMap id="selectProductResultMap" type="com.mdv.appstore.model.dto.ProductDTO">
+    <resultMap id="selectProductResultMap" type="ProductDTO">
         <id property="id" column="id" />
         <result property="name" column="name" />
         <result property="price" column="price" />
@@ -16,7 +16,7 @@
         <result property="sold" column="sold" />
         <result property="view" column="view" />
         <result property="isDeleted" column="is_deleted" />
-        <association property="brand" javaType="com.mdv.appstore.model.dto.BrandDTO"
+        <association property="brand" javaType="BrandDTO"
             columnPrefix="b_">
             <id property="id" column="id" />
             <result property="name" column="name" />

@@ -7,13 +7,13 @@
         VALUES (#{it.productId}, #{it.quantity}, #{it.type})
     </insert>
 
-    <resultMap id="selectInventoryTransactions" type="com.mdv.appstore.model.dto.InventoryTransactionDTO">
+    <resultMap id="selectInventoryTransactions" type="InventoryTransactionDTO">
         <id property="id" column="id" />
         <result property="productId" column="product_id" />
         <result property="quantity" column="quantity" />
         <result property="type" column="type" />
         <result property="transactionDate" column="transaction_date" />
-        <association property="supplier" javaType="com.mdv.appstore.model.dto.SupplierDTO" columnPrefix="s_">
+        <association property="supplier" javaType="SupplierDTO" columnPrefix="s_">
             <id property="id" column="id" />
             <result property="name" column="name" />
         </association>
