@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mdv.appstore.mapper.CartItemMapper">
+    <resultMap id="findAllResultMap" type="CartItemDTO">
+        <id property="id" column="id" />
+        <result property="productId" column="product_id" />
+        <result property="quantity" column="quantity" />
+        <result property="userId" column="user_id" />
+    </resultMap>
+
+    <select id="findByUserId" resultMap="findAllResultMap">
+        SELECT *
+        FROM cart_item
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="findByUserIdAndProductId" resultMap="findAllResultMap">
+        SELECT *
+        FROM cart_item
+        WHERE user_id = #{userId}
+        AND product_id = #{productId}
+    </select>
+
+    <select id="findById" resultMap="findAllResultMap">
+        SELECT *
+        FROM cart_item
+        WHERE id = #{id}
+    </select>
+
+    <update id="updateQuantity">
+        UPDATE cart_item
+        SET quantity = #{quantity}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM cart_item
+        WHERE id = #{id}    
+    </delete>
+
+    <insert id="insert" parameterType="CartItemRequest">
+        INSERT INTO cart_item (
+            product_id,
+            quantity,
+            user_id
+        )
+        VALUES (
+            #{productId}, 
+            #{quantity}, 
+            #{userId}
+        )
+    </insert>        
+</mapper>
