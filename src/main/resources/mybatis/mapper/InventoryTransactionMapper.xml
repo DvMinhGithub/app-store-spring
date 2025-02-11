@@ -3,8 +3,16 @@
 
 <mapper namespace="com.mdv.appstore.mapper.InventoryTransactionMapper">
     <insert id="importInventoryTransaction">
-        INSERT INTO inventory_transaction (product_id, quantity, type)
-        VALUES (#{it.productId}, #{it.quantity}, #{it.type})
+        INSERT INTO inventory_transaction (
+            product_id,
+            quantity,
+            type
+        )
+        VALUES (
+            # {it.productId},
+            # {it.quantity},
+            # {it.type}
+        )
     </insert>
 
     <resultMap id="selectInventoryTransactions" type="InventoryTransactionDTO">
@@ -37,7 +45,17 @@
     </select>
 
     <insert id="exportInventoryTransaction">
-        INSERT INTO inventory_transaction (product_id, quantity, type, supplier_id)
-        VALUES (#{it.productId}, #{it.quantity}, #{it.type}, #{it.supplierId})
-    </insert>
+        INSERT INTO inventory_transaction (
+            product_id,
+            quantity,
+            type,
+            supplier_id
+        )
+        VALUES ( 
+            # {it.productId},
+            # {it.quantity},
+            # {it.type},
+            # {it.supplierId}
+        ) 
+        </insert>
 </mapper>

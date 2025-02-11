@@ -7,21 +7,50 @@
         <result property="name" column="name" />
         <result property="isDeleted" column="is_deleted" />
     </resultMap>
-    <select id="findAll" resultMap="selectCategoryResultMap"> SELECT id, name, is_deleted FROM
-        category </select>
 
-    <select id="findAllActive"> SELECT id, name FROM category WHERE is_deleted = 0 </select>
+    <select id="findAll" resultMap="selectCategoryResultMap">
+        SELECT *
+        FROM category
+    </select>
 
-    <insert id="insert"> INSERT INTO category (name) VALUES (#{category.name}) </insert>
+    <select id="findAllActive">
+        SELECT *
+        FROM category
+        WHERE is_deleted = 0
+    </select>
+    
+    <select id="findById" resultMap="selectCategoryResultMap">
+        SELECT *
+        FROM category
+        WHERE id = #{id}
+    </select>
 
-    <update id="update"> UPDATE category SET name = #{category.name} WHERE id = #{id} </update>
+    <select id="existsByName">
+        SELECT COUNT(*)
+        FROM category
+        WHERE name = #{name}
+    </select>
 
-    <update id="softDelete"> UPDATE category SET is_deleted = 1 WHERE id = #{id} </update>
+    <insert id="insert">
+        INSERT INTO category (name)
+        VALUES (#{category.name})
+    </insert>
 
-    <select id="findById" resultMap="selectCategoryResultMap"> SELECT id, name, is_deleted FROM
-        category WHERE id = #{id} </select>
+    <update id="update"> 
+        UPDATE category 
+        SET name = #{category.name} 
+        WHERE id = #{id} 
+    </update>
 
-    <select id="existsByName"> SELECT COUNT(*) FROM category WHERE name = #{name} </select>
+    <update id="softDelete"> 
+        UPDATE category
+        SET is_deleted = 1
+        WHERE id = #{id}
+    </update>
 
-    <update id="restore"> UPDATE category SET is_deleted = 0 WHERE id = #{id} </update>
+    <update id="restore"> 
+        UPDATE category
+        SET is_deleted = 0
+        WHERE id = #{id} 
+    </update>
 </mapper>

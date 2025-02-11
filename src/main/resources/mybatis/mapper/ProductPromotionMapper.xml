@@ -11,30 +11,84 @@
         <result property="isActive" column="is_active" />
     </resultMap>
 
-    <select id="findAll" resultMap="selectPromotionResultMap"> SELECT id, product_id, end_time,
-        start_time, discount_price, is_active FROM product_promotion </select>
+    <sql id="selectFields">
+        id, 
+        product_id, 
+        end_time, 
+        start_time, 
+        discount_price, 
+        is_active
+    </sql>
 
-    <select id="findById" resultMap="selectPromotionResultMap"> SELECT id, product_id, end_time,
-        start_time, discount_price, is_active FROM product_promotion WHERE id = #{id} </select>
+    <select id="findAll" resultMap="selectPromotionResultMap">
+        SELECT 
+            <include refid="selectFields"/>
+        FROM 
+            product_promotion
+    </select>
 
-    <insert id="create"> INSERT INTO product_promotion (product_id, end_time, start_time,
-        discount_price) VALUES (#{pr.productId}, #{pr.endTime}, #{pr.startTime},
-        #{pr.discountPrice}) </insert>
+    <select id="findById" resultMap="selectPromotionResultMap">
+        SELECT 
+            <include refid="selectFields"/>
+        FROM 
+            product_promotion 
+        WHERE 
+            id = #{id}
+    </select>
 
-    <update id="update"> UPDATE product_promotion SET product_id = #{pr.productId}, end_time =
-        #{pr.endTime}, start_time = #{pr.startTime}, discount_price = #{pr.discountPrice}, is_active = #{pr.isActive} WHERE id =
-        #{id} </update>
+    
+    <select id="findActivePromotions" resultMap="selectPromotionResultMap">
+        SELECT 
+            <include refid="selectFields"/>
+        FROM 
+            product_promotion 
+        WHERE 
+            is_active = 1
+    </select>
 
-    <delete id="delete"> DELETE FROM product_promotion WHERE id = #{id} </delete>
+    <select id="findByProductId" resultMap="selectPromotionResultMap">
+        SELECT 
+            <include refid="selectFields"/>
+        FROM 
+            product_promotion 
+        WHERE 
+            product_id = #{productId}
+    </select>
 
-    <select id="findActivePromotions" resultMap="selectPromotionResultMap"> SELECT id, product_id,
-        end_time, start_time, discount_price, is_active FROM product_promotion WHERE is_active = 1 </select>
+    <select id="findActivePromotionsByProductId" resultMap="selectPromotionResultMap">
+        SELECT 
+            <include refid="selectFields"/>
+        FROM 
+            product_promotion 
+        WHERE 
+            product_id = #{productId} 
+            AND is_active = 1
+    </select>
 
-    <select id="findByProductId" resultMap="selectPromotionResultMap"> SELECT id, product_id,
-        end_time, start_time, discount_price, is_active FROM product_promotion WHERE product_id =
-        #{productId} </select>
+    <insert id="create">
+        INSERT INTO product_promotion 
+            (product_id, end_time, start_time, discount_price)
+        VALUES 
+            (#{pr.productId}, #{pr.endTime}, #{pr.startTime}, #{pr.discountPrice})
+    </insert>
 
-    <select id="findActivePromotionsByProductId" resultMap="selectPromotionResultMap"> SELECT id,
-        product_id, end_time, start_time, discount_price, is_active FROM product_promotion WHERE
-        product_id = #{productId} AND is_active = 1 </select>
+    <update id="update">
+        UPDATE 
+            product_promotion
+        SET 
+            product_id = #{pr.productId}, 
+            end_time = #{pr.endTime}, 
+            start_time = #{pr.startTime}, 
+            discount_price = #{pr.discountPrice}, 
+            is_active = #{pr.isActive} 
+        WHERE 
+            id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM 
+            product_promotion 
+        WHERE 
+            id = #{id}
+    </delete>
 </mapper>

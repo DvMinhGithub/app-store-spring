@@ -2,15 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mdv.appstore.mapper.BrandMapper">
-  <select id="findAll" resultType="BrandDTO"> SELECT id, name FROM brand </select>
+    <select id="findAll" resultType="BrandDTO">
+        SELECT * 
+        FROM brand
+    </select>
 
-  <insert id="createBrand"> INSERT INTO brand (name) VALUES (#{brand.name}) </insert>
+    <select id="findById">
+        SELECT * 
+        FROM brand
+        WHERE id = #{id}
+    </select>
+    
+    <select id="existsByName">
+        SELECT COUNT(*) 
+        FROM brand
+        WHERE name = #{name}
+    </select>
 
-  <update id="updateBrand"> UPDATE brand SET name = #{brand.name} WHERE id = #{id} </update>
+    <insert id="createBrand">
+        INSERT INTO brand (name)
+        VALUES (#{brand.name})
+    </insert>
 
-  <delete id="deleteBrand"> DELETE FROM brand WHERE id = #{id} </delete>
+    <update id="updateBrand"> 
+        UPDATE brand
+        <set>
+            <if test="brand.name != null and brand.name != ''">
+                name = #{brand.name},
+            </if>
+        </set>
+        WHERE id = #{brand.id}
+    </update>
 
-  <select id="findById"> SELECT id, name FROM brand WHERE id = #{id} </select>
-
-  <select id="existsByName"> SELECT COUNT(*) FROM brand WHERE name = #{name} </select>
+    <delete id="deleteBrand">
+        DELETE FROM brand
+        WHERE id = #{id}
+    </delete>
 </mapper>
