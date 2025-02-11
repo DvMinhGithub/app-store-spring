@@ -31,6 +31,7 @@ server:
 
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.mdv.appstore.model
 
 file:
   upload-dir: uploads/
