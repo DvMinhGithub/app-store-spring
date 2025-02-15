@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,42 +17,53 @@ public class ProductService {
     private final ProductMapper productMapper;
     private final FileService fileService;
 
-    public void createProduct(ProductRequest product) throws IOException {
-        String imageUrl = fileService.storeFile(product.getImage());
-        ProductCreateDTO productDto =
+    @Transactional
+    public void createProduct(ProductRequest productRequest) throws IOException {
+        String imageUrl = fileService.storeFile(productRequest.getImage());
+        ProductCreateDTO productCreateDTO =
                 ProductCreateDTO.builder()
-                        .name(product.getName())
-                        .price(product.getPrice())
+                        .name(productRequest.getName())
+                        .price(productRequest.getPrice())
                         .imageUrl(imageUrl)
-                        .brandId(product.getBrandId())
+                        .brandId(productRequest.getBrandId())
                         .build();
-        productMapper.createProduct(productDto);
+        productMapper.createProduct(productCreateDTO);
     }
 
     public List<ProductDTO> findAll() {
         return productMapper.findAll();
     }
 
+    @Transactional
     public ProductDTO findById(Long id) {
-        ProductDTO product = productMapper.findById(id);
-        if (product == null || product.isDeleted()) {
-            throw new DataNotFoundException("Product not found");
+        ProductDTO productDTO = getProductByIdOrThrow(id);
+        productMapper.incrementViewCount(id);
+        return productDTO;
+    }
+
+    private ProductDTO getProductByIdOrThrow(Long id) {
+        ProductDTO productDTO = productMapper.findById(id);
+        if (productDTO == null) {
+            throw new DataNotFoundException("Product with id " + id + " not found");
         }
-        return product;
+        return productDTO;
     }
 
-    public void updateProduct(Long id, ProductRequest product) {
-        findById(id);
-        productMapper.updateProduct(id, product);
+    @Transactional
+    public void updateProduct(Long id, ProductRequest productRequest) {
+        getProductByIdOrThrow(id);
+        productMapper.updateProduct(id, productRequest);
     }
 
+    @Transactional
     public void deleteProduct(Long id) {
-        findById(id);
+        getProductByIdOrThrow(id);
         productMapper.softDelete(id);
     }
 
+    @Transactional
     public void restoreProduct(Long id) {
-        findById(id);
+        getProductByIdOrThrow(id);
         productMapper.restore(id);
     }
 }
