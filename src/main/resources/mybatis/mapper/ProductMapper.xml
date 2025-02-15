@@ -75,4 +75,22 @@
         SET total_quantity = #{totalQuantity}
         WHERE id = #{id}
     </update>
+
+    <update id="incrementViewCount">
+        UPDATE product
+        SET view = view + 1
+        WHERE id = #{id}
+    </update>
+
+    <update id="increaseSoldQuantity">
+        UPDATE product
+        SET sold = sold + #{quantity}
+        WHERE id = #{id}
+    </update>
+
+    <update id="decreaseTotalQuantity">
+        UPDATE product
+        SET total_quantity = total_quantity - #{quantity}
+        WHERE id = #{id}
+    </update>
 </mapper>

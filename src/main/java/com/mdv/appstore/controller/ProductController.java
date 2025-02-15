@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,58 +26,38 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<Object> createProduct(@ModelAttribute @Valid ProductRequest product)
+    public ApiResponse<Void> createProduct(@ModelAttribute @Valid ProductRequest product)
             throws IOException {
         productService.createProduct(product);
-        return ApiResponse.builder()
-                .code(HttpStatus.CREATED.value())
-                .message("Product created successfully")
-                .build();
+        return ApiResponse.success("Product created successfully");
     }
 
     @GetMapping
     public ApiResponse<List<ProductDTO>> findAll() {
-        return ApiResponse.<List<ProductDTO>>builder()
-                .code(HttpStatus.OK.value())
-                .message("Product fetched successfully")
-                .data(productService.findAll())
-                .build();
+        return ApiResponse.success(productService.findAll(), "Products fetched successfully");
     }
 
     @GetMapping("/{id}")
     public ApiResponse<ProductDTO> findById(@PathVariable("id") Long id) {
-        return ApiResponse.<ProductDTO>builder()
-                .code(HttpStatus.OK.value())
-                .message("Product fetched successfully")
-                .data(productService.findById(id))
-                .build();
+        return ApiResponse.success(productService.findById(id), "Product fetched successfully");
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Object> updateProduct(
+    public ApiResponse<Void> updateProduct(
             @PathVariable("id") Long id, @RequestBody ProductRequest product) {
         productService.updateProduct(id, product);
-        return ApiResponse.builder()
-                .code(HttpStatus.OK.value())
-                .message("Product updated successfully")
-                .build();
+        return ApiResponse.success("Product updated successfully");
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<Object> deleteProduct(@PathVariable("id") Long id) {
+    public ApiResponse<Void> deleteProduct(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
-        return ApiResponse.builder()
-                .code(HttpStatus.OK.value())
-                .message("Product deleted successfully")
-                .build();
+        return ApiResponse.success("Product deleted successfully");
     }
 
     @PutMapping("/restore/{id}")
-    public ApiResponse<Object> restoreProduct(@PathVariable("id") Long id) {
+    public ApiResponse<Void> restoreProduct(@PathVariable("id") Long id) {
         productService.restoreProduct(id);
-        return ApiResponse.builder()
-                .code(HttpStatus.OK.value())
-                .message("Product restored successfully")
-                .build();
+        return ApiResponse.success("Product restored successfully");
     }
 }

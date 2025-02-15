@@ -21,6 +21,12 @@ public interface ProductMapper {
 
     void updateTotalQuantity(@Param("id") Long id, @Param("totalQuantity") Long totalQuantity);
 
+    void increaseSoldQuantity(@Param("id") Long id, @Param("quantity") Long quantity);
+
+    void decreaseSoldQuantity(@Param("id") Long id, @Param("quantity") Long quantity);
+
+    void incrementViewCount(@Param("id") Long id);
+
     void softDelete(@Param("id") Long id);
 
     void restore(@Param("id") Long id);
