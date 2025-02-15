@@ -2,6 +2,7 @@ package com.mdv.appstore.controller;
 
 import com.mdv.appstore.model.dto.CartItemDTO;
 import com.mdv.appstore.model.request.CartItemRequest;
+import com.mdv.appstore.model.request.CartItemUpdate;
 import com.mdv.appstore.model.response.ApiResponse;
 import com.mdv.appstore.service.CartService;
 import jakarta.validation.Valid;
@@ -35,8 +36,9 @@ public class CartController {
 
     @PutMapping("/{cartItemId}")
     public ApiResponse<Void> updateQuantity(
-            @PathVariable("cartItemId") Long cartItemId, @RequestBody CartItemRequest request) {
-        cartService.updateQuantity(cartItemId, request);
+            @PathVariable("cartItemId") Long cartItemId,
+            @RequestBody @Valid CartItemUpdate cartItemUpdate) {
+        cartService.updateQuantity(cartItemId, cartItemUpdate);
         return ApiResponse.success("Quantity updated successfully");
     }
 

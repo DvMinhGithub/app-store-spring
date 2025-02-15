@@ -8,7 +8,16 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface CartItemMapper {
-    List<CartItemDTO> findByUserId(Long userId);
+
+    List<CartItemDTO> findByUserId(@Param("userId") Long userId);
+
+    List<CartItemDTO> findAllByIdsAndUserId(
+            @Param("listId") List<Long> listId, @Param("userId") Long userId);
+
+    CartItemDTO findByUserIdAndProductId(
+            @Param("userId") Long userId, @Param("productId") Long productId);
+
+    CartItemDTO findByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
 
     CartItemDTO findById(Long id);
 
@@ -16,8 +25,5 @@ public interface CartItemMapper {
 
     int updateQuantity(@Param("id") Long id, @Param("quantity") Integer quantity);
 
-    int delete(Long id);
-
-    CartItemDTO findByUserIdAndProductId(
-            @Param("userId") Long userId, @Param("productId") Long productId);
+    int delete(@Param("id") Long id, @Param("userId") Long userId);
 }
