@@ -1,13 +1,19 @@
 package com.mdv.appstore.service;
 
+import com.mdv.appstore.config.CustomUserDetailsService;
 import com.mdv.appstore.exception.DataNotFoundException;
+import com.mdv.appstore.exception.InsufficientStockException;
 import com.mdv.appstore.mapper.CartItemMapper;
 import com.mdv.appstore.model.dto.CartItemDTO;
 import com.mdv.appstore.model.dto.ProductDTO;
+import com.mdv.appstore.model.dto.UserDTO;
 import com.mdv.appstore.model.request.CartItemRequest;
+import com.mdv.appstore.model.request.CartItemUpdate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,8 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 public class CartService {
+
     private final CartItemMapper cartItemMapper;
     private final ProductService productService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     public List<CartItemDTO> getUserCart(Long userId) {
         return cartItemMapper.findByUserId(userId);
@@ -24,63 +32,80 @@ public class CartService {
 
     @Transactional
     public void addToCart(CartItemRequest request) {
-        validateProduct(request);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = ((UserDTO) authentication.getPrincipal()).getId();
+        request.setUserId(userId);
+
+        validateProduct(request.getProductId(), request.getQuantity());
+
         CartItemDTO existingItem =
-                cartItemMapper.findByUserIdAndProductId(
-                        request.getUserId(), request.getProductId());
+                cartItemMapper.findByUserIdAndProductId(userId, request.getProductId());
 
         if (existingItem != null) {
-            existingItem.setQuantity(existingItem.getQuantity() + request.getQuantity());
-            cartItemMapper.updateQuantity(existingItem.getId(), existingItem.getQuantity());
+            int newQuantity = existingItem.getQuantity() + request.getQuantity();
+            cartItemMapper.updateQuantity(existingItem.getId(), newQuantity);
         } else {
             cartItemMapper.insert(request);
         }
     }
 
-    private void validateProduct(CartItemRequest request) {
-        ProductDTO product = productService.findById(request.getProductId());
+    private ProductDTO validateProduct(Long productId, int quantity) {
+        ProductDTO product = productService.findById(productId);
         if (product == null) {
-            log.warn("Product with ID {} not found, cannot add to cart.", request.getProductId());
+            log.error("Product not found: {}", productId);
             throw new DataNotFoundException("Product not found");
         }
-        if (product.getTotalQuantity() < request.getQuantity()) {
-            throw new RuntimeException(
+        Long totalQuantityInStock = product.getTotalQuantity();
+
+        if (totalQuantityInStock < quantity) {
+            log.error(
+                    "Insufficient stock. Available: {}, Requested: {}",
+                    totalQuantityInStock,
+                    quantity);
+            throw new InsufficientStockException(
                     "Insufficient stock. Available: "
-                            + product.getTotalQuantity()
+                            + totalQuantityInStock
                             + ", Requested: "
-                            + request.getQuantity());
+                            + quantity);
         }
-        if (product.getTotalQuantity() != null
-                && request.getQuantity() > product.getTotalQuantity()) {
-            log.warn(
-                    "Quantity exceeds product maximum order limit: {}", product.getTotalQuantity());
-            throw new RuntimeException(
-                    "Quantity exceeds product maximum order limit: " + product.getTotalQuantity());
-        }
+        return product;
     }
 
     @Transactional
-    public void updateQuantity(Long cartItemId, CartItemRequest request) {
-        validateProduct(request);
-        CartItemDTO item = cartItemMapper.findById(cartItemId);
+    public void updateQuantity(Long cartItemId, CartItemUpdate cartItemUpdate) {
+        int newQuantity = cartItemUpdate.getQuantity();
+        Long userId = customUserDetailsService.getCurrentUserId();
+
+        CartItemDTO item = findCartItemByIdAndUserId(cartItemId, userId);
+
+        ProductDTO product = validateProduct(item.getProduct().getId(), newQuantity);
+
+        if (product.getTotalQuantity() < newQuantity) {
+            throw new InsufficientStockException(
+                    "Insufficient stock. Available: "
+                            + product.getTotalQuantity()
+                            + ", Requested: "
+                            + newQuantity);
+        }
+        cartItemMapper.updateQuantity(cartItemId, newQuantity);
+    }
+
+    private CartItemDTO findCartItemByIdAndUserId(Long cartItemId, Long userId) {
+        CartItemDTO item = cartItemMapper.findByIdAndUserId(cartItemId, userId);
         if (item == null) {
-            log.warn("Cart item with ID {} not found, cannot update quantity.", cartItemId);
+            log.error("Cart item not found with id: {} and user id: {}", cartItemId, userId);
+
             throw new DataNotFoundException("Cart item not found");
         }
-        validateProduct(request);
-        if (item != null) {
-            item.setQuantity(request.getQuantity());
-            cartItemMapper.updateQuantity(cartItemId, request.getQuantity());
-        }
+        return item;
     }
 
     @Transactional
     public void removeFromCart(Long cartItemId) {
-        CartItemDTO existingItem = cartItemMapper.findById(cartItemId);
-        if (existingItem == null) {
-            log.warn("Cart item with ID {} not found, cannot remove.", cartItemId);
-            throw new DataNotFoundException("Cart item not found");
-        }
-        cartItemMapper.delete(cartItemId);
+        Long userId = customUserDetailsService.getCurrentUserId();
+
+        findCartItemByIdAndUserId(cartItemId, userId);
+        cartItemMapper.delete(cartItemId, userId);
     }
 }

@@ -4,14 +4,35 @@
 <mapper namespace="com.mdv.appstore.mapper.CartItemMapper">
     <resultMap id="findAllResultMap" type="CartItemDTO">
         <id property="id" column="id" />
-        <result property="productId" column="product_id" />
         <result property="quantity" column="quantity" />
         <result property="userId" column="user_id" />
+        <association property="product" javaType="ProductDTO" columnPrefix="p_"> 
+            <id property="id" column="id" />
+            <result property="name" column="name" />
+            <result property="price" column="price" />
+            <result property="imageUrl" column="image_url"/>
+            <result property="totalQuantity" column="total_quantity"/>
+        </association>
     </resultMap>
 
+    <sql id="cartItemFields">
+        ci.id,
+        ci.product_id,
+        ci.quantity,
+        ci.user_id,
+        p.id as p_id,
+        p.name as p_name,
+        p.price as p_price,
+        p.image_url as p_image_url,
+        p.total_quantity as p_total_quantity
+    </sql>  
+
     <select id="findByUserId" resultMap="findAllResultMap">
-        SELECT *
-        FROM cart_item
+        SELECT 
+            <include refid="cartItemFields"/>
+        FROM cart_item ci
+        JOIN product p 
+        ON ci.product_id = p.id
         WHERE user_id = #{userId}
     </select>
 
@@ -27,6 +48,29 @@
         FROM cart_item
         WHERE id = #{id}
     </select>
+    
+    <select id="findAllByIdsAndUserId" resultMap="findAllResultMap">
+        SELECT 
+            <include refid="cartItemFields"/>
+        FROM cart_item ci
+        JOIN product p 
+        ON ci.product_id = p.id
+        WHERE ci.id IN
+        <foreach collection="listId" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND user_id = #{userId}
+    </select>
+
+
+    <select id="findByIdAndUserId" resultMap="findAllResultMap">
+        SELECT *
+        FROM cart_item ci
+        JOIN product p
+        ON ci.product_id = p.id
+        WHERE ci.id = #{id}
+        AND user_id = #{userId}
+    </select>
 
     <update id="updateQuantity">
         UPDATE cart_item
@@ -37,6 +81,7 @@
     <delete id="delete">
         DELETE FROM cart_item
         WHERE id = #{id}    
+        AND user_id = #{userId}
     </delete>
 
     <insert id="insert" parameterType="CartItemRequest">
@@ -50,5 +95,5 @@
             #{quantity}, 
             #{userId}
         )
-    </insert>        
+    </insert>    
 </mapper>
