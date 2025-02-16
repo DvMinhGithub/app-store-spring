@@ -78,7 +78,7 @@
         WHERE id = #{id}
     </update>
 
-    <delete id="delete">
+    <delete id="deleteByCartItemIdAndUserId">
         DELETE FROM cart_item
         WHERE id = #{id}    
         AND user_id = #{userId}

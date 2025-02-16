@@ -88,9 +88,9 @@
         WHERE id = #{id}
     </update>
 
-    <update id="decreaseTotalQuantity">
+    <update id="decreaseSoldQuantity">
         UPDATE product
-        SET total_quantity = total_quantity - #{quantity}
+        SET sold = sold - #{quantity}
         WHERE id = #{id}
     </update>
 </mapper>

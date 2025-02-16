@@ -6,14 +6,11 @@ import com.mdv.appstore.exception.InsufficientStockException;
 import com.mdv.appstore.mapper.CartItemMapper;
 import com.mdv.appstore.model.dto.CartItemDTO;
 import com.mdv.appstore.model.dto.ProductDTO;
-import com.mdv.appstore.model.dto.UserDTO;
 import com.mdv.appstore.model.request.CartItemRequest;
 import com.mdv.appstore.model.request.CartItemUpdate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +30,7 @@ public class CartService {
     @Transactional
     public void addToCart(CartItemRequest request) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = ((UserDTO) authentication.getPrincipal()).getId();
+        Long userId = customUserDetailsService.getCurrentUserId();
         request.setUserId(userId);
 
         validateProduct(request.getProductId(), request.getQuantity());
@@ -106,6 +102,6 @@ public class CartService {
         Long userId = customUserDetailsService.getCurrentUserId();
 
         findCartItemByIdAndUserId(cartItemId, userId);
-        cartItemMapper.delete(cartItemId, userId);
+        cartItemMapper.deleteByCartItemIdAndUserId(cartItemId, userId);
     }
 }

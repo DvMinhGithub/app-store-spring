@@ -25,5 +25,5 @@ public interface CartItemMapper {
 
     int updateQuantity(@Param("id") Long id, @Param("quantity") Integer quantity);
 
-    int delete(@Param("id") Long id, @Param("userId") Long userId);
+    int deleteByCartItemIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
 }

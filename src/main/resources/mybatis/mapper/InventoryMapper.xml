@@ -16,6 +16,9 @@
         <association property="supplier" javaType="SupplierDTO" columnPrefix="s_">
             <id property="id" column="id" />
             <result property="name" column="name" />
+            <result property="phone" column="phone" />
+            <result property="address" column="address" />
+            <result property="isDeleted" column="is_deleted" />
         </association>
     </resultMap>
 
@@ -26,7 +29,10 @@
         i.quantity,
         i.batch_code,
         s.id AS s_id,
-        s.name AS s_name
+        s.name AS s_name,
+        s.phone AS s_phone,
+        s.address AS s_address,
+        s.is_deleted AS s_is_deleted
     </sql>
 
     <select id="getInventories" resultMap="selectInventory">
