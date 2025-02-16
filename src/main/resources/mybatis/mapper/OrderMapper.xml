@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mdv.appstore.mapper.OrderMapper">
+    <resultMap id="findAllResultMap" type="OrderDTO">
+        <id property="id" column="id" />
+        <result property="userId" column="user_id" />
+        <result property="voucherCode" column="voucher_code" />
+        <result property="orderCode" column="order_code" />
+        <result property="status" column="status" />
+        <result property="totalPrice" column="total_price" />
+        <result property="address" column="address" />
+        <result property="phone" column="phone" />
+        <result property="checkoutUrl" column="checkout_url" />
+        <collection property="orderItems" ofType="OrderItemDTO"
+            columnPrefix="oi_">
+            <id property="id" column="id" />
+            <result property="orderId" column="order_id" /> 
+            <result property="productId" column="product_id" />
+            <result property="quantity" column="quantity" />
+            <result property="priceAtOrderTime" column="price_at_order_time" />
+        </collection>
+    </resultMap>
+
+    <resultMap id="findOrderItemsResultMap" type="OrderItemDTO">
+        <id property="id" column="id" />
+        <result property="orderId" column="order_id" />
+        <result property="productId" column="product_id" />
+        <result property="quantity" column="quantity" />
+        <result property="priceAtOrderTime" column="price_at_order_time" />
+    </resultMap>
+
+    <resultMap id="findOrderHistoriesResultMap" type="OrderHistoryDTO">
+        <id property="id" column="id" />
+        <result property="orderId" column="order_id" />
+        <result property="status" column="status" />
+        <result property="changedAt" column="changed_at" />
+        <association property="changedBy" resultMap="com.mdv.appstore.mapper.UserMapper.findAllResultMap">
+        </association>
+    </resultMap>
+
+    <sql id="orderColumns">
+        id,
+        user_id,
+        voucher_code,
+        order_code,
+        status,
+        total_price,
+        address,
+        phone,
+        checkout_url,
+        oi_id,
+        oi_order_id,
+        oi_product_id,
+        oi_quantity,
+        oi_price_at_order_time
+    </sql>
+
+    <select id="findAll">
+        SELECT 
+            <include refid="orderColumns" />
+        FROM order_view
+    </select>
+
+    <select id="findAllByUserId" resultMap="findAllResultMap">
+        SELECT
+            <include refid="orderColumns" />
+        FROM order_view
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="findById" resultMap="findAllResultMap">
+        SELECT
+            <include refid="orderColumns" />
+        FROM order_view
+        WHERE id = #{id}
+    </select>
+
+    <select id="findOrderItems" resultMap="findOrderItemsResultMap">
+        SELECT *
+        FROM order_item
+        WHERE order_id = #{orderId}
+    </select>
+
+    <select id="findOrderItem" resultMap="findOrderItemsResultMap">
+        SELECT *
+        FROM order_item
+        WHERE id = #{id}
+    </select>
+
+    <select id="findOrderHistories" resultMap="findOrderHistoriesResultMap">
+        SELECT *
+        FROM order_history
+        LEFT JOIN user_role_view user 
+        ON order_history.changed_by = user.id
+        WHERE order_id = #{orderId}
+    </select>
+
+    <insert id="insertOrder" useGeneratedKeys="true" keyProperty="id"> INSERT INTO `order` (
+            user_id,
+            voucher_code,
+            order_code,
+            status,
+            total_price,
+            address,
+            phone,
+            checkout_url
+        )
+        VALUES (
+            #{orderCreateRequest.userId},
+            #{orderCreateRequest.voucherCode},
+            #{orderCreateRequest.orderCode},
+            #{orderCreateRequest.status},
+            #{orderCreateRequest.totalPrice},
+            #{orderCreateRequest.address},
+            #{orderCreateRequest.phone},
+            #{orderCreateRequest.checkoutUrl}
+        )
+    </insert>
+
+    <insert id="insertOrderDetail"> INSERT INTO order_item (
+            order_id,
+            product_id,
+            quantity,
+            price_at_order_time
+        )
+        VALUES (
+            #{orderItemRequest.orderId},
+            #{orderItemRequest.productId},
+            #{orderItemRequest.quantity},
+            #{orderItemRequest.priceAtOrderTime}
+        )
+    </insert>
+
+    <insert id="insertOrderHistory"> INSERT INTO order_history (
+            order_id,
+            changed_by,
+            status
+        )
+        VALUES (
+            #{orderHistoryRequest.orderId},
+            #{orderHistoryRequest.changedBy},
+            #{orderHistoryRequest.status}
+        )
+    </insert>
+
+    <update id="updateOrderStatus">
+        UPDATE `order`
+        SET status = #{status}  WHERE id = #{id}
+    </update>
+</mapper>
