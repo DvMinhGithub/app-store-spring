@@ -31,19 +31,19 @@ public class VoucherController {
     @GetMapping
     public ApiResponse<List<VoucherDTO>> selectAllVouchers() {
         return ApiResponse.success(
-                voucherService.selectAllVouchers(), "Vouchers fetched successfully");
+                voucherService.getAllVouchers(), "Vouchers fetched successfully");
     }
 
     @GetMapping("/{id}")
     public ApiResponse<VoucherDTO> selectVoucherById(@PathVariable("id") Long id) {
         return ApiResponse.success(
-                voucherService.selectVoucherById(id), "Voucher fetched successfully");
+                voucherService.getVoucherById(id), "Voucher fetched successfully");
     }
 
     @GetMapping("/code/{code}")
     public ApiResponse<VoucherDTO> selectVoucherByCode(@PathVariable("code") String code) {
         return ApiResponse.success(
-                voucherService.selectVoucherByCode(code), "Voucher fetched successfully");
+                voucherService.getVoucherByCode(code), "Voucher fetched successfully");
     }
 
     @PutMapping("/{id}")
