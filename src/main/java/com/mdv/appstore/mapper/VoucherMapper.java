@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface VoucherMapper {
-    void createVoucher(@Param("v") VoucherRequest voucher);
+    void insertVoucher(@Param("voucherRequest") VoucherRequest voucherRequest);
 
     List<VoucherDTO> selectAllVouchers();
 
@@ -16,7 +16,14 @@ public interface VoucherMapper {
 
     VoucherDTO selectVoucherByCode(String code);
 
-    void updateVoucher(@Param("id") Long id, @Param("v") VoucherRequest voucher);
+    List<VoucherDTO> selectVouchersToActivate();
 
-    void deleteVoucher(@Param("id") Long id);
+    List<VoucherDTO> selectVouchersToDeactivate();
+
+    void updateVoucherById(
+            @Param("id") Long id, @Param("voucherRequest") VoucherRequest voucherRequest);
+
+    void batchUpdateVoucherStatus(@Param("vouchers") List<VoucherDTO> vouchers);
+
+    void deleteVoucherById(@Param("id") Long id);
 }

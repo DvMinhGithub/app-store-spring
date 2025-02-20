@@ -15,9 +15,23 @@
         v.is_active
     </sql>
 
-    <insert id="createVoucher">
-        INSERT INTO voucher (code, condition_value, discount_price, end_time, start_time, total_quantity)
-        VALUES (#{v.code}, #{v.conditionValue}, #{v.discountPrice}, #{v.endTime}, #{v.startTime}, #{v.totalQuantity})
+    <insert id="insertVoucher">
+        INSERT INTO voucher (
+            code,
+            condition_value,
+            discount_price,
+            end_time,
+            start_time,
+            total_quantity
+        )
+        VALUES (
+            #{voucherRequest.code},
+            #{voucherRequest.conditionValue},
+            #{voucherRequest.discountPrice},
+            #{voucherRequest.endTime},
+            #{voucherRequest.startTime},
+            #{voucherRequest.totalQuantity}
+        )
     </insert>
 
     <resultMap id="selectVoucher" type="VoucherDTO">
@@ -52,23 +66,46 @@
         WHERE code = #{code}
     </select>
 
-    <update id="updateVoucher">
+    <select id="selectVouchersToActivate">
+        SELECT id, code, is_active
+        FROM voucher
+        WHERE is_active = 0
+          AND start_time &lt;= CURDATE()
+          AND end_time &gt;= CURDATE()
+    </select>
+
+    <select id="selectVouchersToDeactivate">
+        SELECT *
+        FROM voucher
+        WHERE is_active = 1
+          AND end_time &lt; CURDATE()
+    </select>
+
+    <update id="updateVoucherById">
         UPDATE voucher
         <set>
-            <if test="v.code != null">code = #{v.code},</if>
-            <if test="v.conditionValue != null">condition_value = #{v.conditionValue},</if>
-            <if test="v.discountPrice != null">discount_price = #{v.discountPrice},</if>
-            <if test="v.endTime != null">end_time = #{v.endTime},</if>
-            <if test="v.startTime != null">start_time = #{v.startTime},</if>
-            <if test="v.totalQuantity != null">total_quantity = #{v.totalQuantity},</if>
-            <if test="v.usedQuantity != null">used_quantity = #{v.usedQuantity},</if>
-            <if test="v.isActive != null">is_active = #{v.isActive},</if>
+            <if test="voucherRequest.code != null">code = #{voucherRequest.code},</if>
+            <if test="voucherRequest.conditionValue != null">condition_value = #{voucherRequest.conditionValue},</if>
+            <if test="voucherRequest.discountPrice != null">discount_price = #{voucherRequest.discountPrice},</if>
+            <if test="voucherRequest.endTime != null">end_time = #{voucherRequest.endTime},</if>
+            <if test="voucherRequest.startTime != null">start_time = #{voucherRequest.startTime},</if>
+            <if test="voucherRequest.totalQuantity != null">total_quantity = #{voucherRequest.totalQuantity},</if>
+            <if test="voucherRequest.usedQuantity != null">used_quantity = #{voucherRequest.usedQuantity},</if>
+            <if test="voucherRequest.isActive != null">is_active = #{voucherRequest.isActive},</if>
             updated_at = now()
         </set>
         WHERE id = #{id}
     </update>
 
-    <delete id="deleteVoucher">
+    <delete id="deleteVoucherById">
         DELETE FROM voucher WHERE id = #{id}
     </delete>
+
+    <update id="batchUpdateVoucherStatus">
+        <foreach collection="vouchers" item="voucher" separator=";">
+            UPDATE voucher
+            SET is_active = #{voucher.isActive}
+            WHERE id = #{voucher.id}
+        </foreach>
+    </update>
 </mapper>
