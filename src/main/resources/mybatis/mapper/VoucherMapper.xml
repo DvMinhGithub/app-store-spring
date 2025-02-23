@@ -108,4 +108,10 @@
             WHERE id = #{voucher.id}
         </foreach>
     </update>
+
+    <update id="updateUsedQuantity">
+        UPDATE voucher
+        SET used_quantity = used_quantity + 1
+        WHERE id = #{id}
+    </update>
 </mapper>

@@ -7,11 +7,13 @@ import com.mdv.appstore.model.dto.VoucherDTO;
 import com.mdv.appstore.model.request.VoucherRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class VoucherService {
     private final VoucherMapper voucherMapper;
 
@@ -49,24 +51,26 @@ public class VoucherService {
     }
 
     @Transactional
-    public void updateVoucherActiveStatus() {
+    public int updateVoucherActiveStatus() {
+        int updatedCount = 0;
 
         List<VoucherDTO> vouchersToActivate = voucherMapper.selectVouchersToActivate();
-        List<VoucherDTO> vouchersToDeactivate = voucherMapper.selectVouchersToDeactivate();
-
         if (!vouchersToActivate.isEmpty()) {
             vouchersToActivate.forEach(voucher -> voucher.setIsActive(true));
-            voucherMapper.batchUpdateVoucherStatus(vouchersToActivate);
+            updatedCount += voucherMapper.batchUpdateVoucherStatus(vouchersToActivate);
             vouchersToActivate.forEach(
-                    voucher -> System.out.println("Voucher active: " + voucher.getCode()));
+                    voucher -> log.info("Voucher activated: {}", voucher.getCode()));
         }
 
+        List<VoucherDTO> vouchersToDeactivate = voucherMapper.selectVouchersToDeactivate();
         if (!vouchersToDeactivate.isEmpty()) {
             vouchersToDeactivate.forEach(voucher -> voucher.setIsActive(false));
-            voucherMapper.batchUpdateVoucherStatus(vouchersToDeactivate);
+            updatedCount += voucherMapper.batchUpdateVoucherStatus(vouchersToDeactivate);
             vouchersToDeactivate.forEach(
-                    voucher -> System.out.println("Voucher disable: " + voucher.getCode()));
+                    voucher -> log.info("Voucher deactivated: {}", voucher.getCode()));
         }
+
+        return updatedCount;
     }
 
     public VoucherRequest toVoucherRequest(VoucherDTO voucherDTO) {

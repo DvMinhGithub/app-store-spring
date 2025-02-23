@@ -1,6 +1,5 @@
 package com.mdv.appstore.model.request;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -16,8 +15,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class VoucherRequest {
     String code;
-    BigDecimal conditionValue;
-    BigDecimal discountPrice;
+    Double conditionValue;
+    Double discountPrice;
     LocalDate endTime;
     LocalDate startTime;
     Integer totalQuantity;
