@@ -23,7 +23,9 @@ public interface VoucherMapper {
     void updateVoucherById(
             @Param("id") Long id, @Param("voucherRequest") VoucherRequest voucherRequest);
 
-    void batchUpdateVoucherStatus(@Param("vouchers") List<VoucherDTO> vouchers);
+    void updateUsedQuantity(@Param("id") Long id);
+
+    Integer batchUpdateVoucherStatus(@Param("vouchers") List<VoucherDTO> vouchers);
 
     void deleteVoucherById(@Param("id") Long id);
 }

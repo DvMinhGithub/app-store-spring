@@ -1,7 +1,6 @@
 package com.mdv.appstore.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,8 +16,8 @@ import lombok.experimental.FieldDefaults;
 public class VoucherDTO {
     Long id;
     String code;
-    BigDecimal conditionValue;
-    BigDecimal discountPrice;
+    Double conditionValue;
+    Double discountPrice;
     LocalDate endTime;
     LocalDate startTime;
     Integer totalQuantity;

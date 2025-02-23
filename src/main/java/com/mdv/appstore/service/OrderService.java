@@ -8,10 +8,12 @@ import com.mdv.appstore.mapper.CartItemMapper;
 import com.mdv.appstore.mapper.OrderMapper;
 import com.mdv.appstore.mapper.ProductMapper;
 import com.mdv.appstore.mapper.UserMapper;
+import com.mdv.appstore.mapper.VoucherMapper;
 import com.mdv.appstore.model.dto.CartItemDTO;
 import com.mdv.appstore.model.dto.OrderDTO;
 import com.mdv.appstore.model.dto.OrderHistoryDTO;
 import com.mdv.appstore.model.dto.OrderItemDTO;
+import com.mdv.appstore.model.dto.VoucherDTO;
 import com.mdv.appstore.model.request.OrderCreateRequest;
 import com.mdv.appstore.model.request.OrderHistoryRequest;
 import com.mdv.appstore.model.request.OrderItemRequest;
@@ -31,6 +33,7 @@ public class OrderService {
     private final UserMapper userMapper;
     private final CartItemMapper cartItemMapper;
     private final ProductMapper productMapper;
+    private final VoucherMapper voucherMapper;
     private final CustomUserDetailsService customUserDetailsService;
 
     public OrderDTO getOrderById(Long id) {
@@ -56,6 +59,29 @@ public class OrderService {
         double totalPriceOrder = 0;
         for (CartItemDTO cartItem : cartItems) {
             totalPriceOrder += cartItem.getProduct().getPrice() * cartItem.getQuantity();
+        }
+
+        VoucherDTO voucher = voucherMapper.selectVoucherByCode(orderCreateRequest.getVoucherCode());
+
+        if (voucher != null) {
+            if (!voucher.getIsActive()) {
+                throw new RuntimeException("Voucher is not active");
+            }
+
+            if (voucher.getConditionValue() > totalPriceOrder) {
+                throw new RuntimeException("Total price is less than minimum total price");
+            }
+
+            if (voucher.getDiscountPrice() > totalPriceOrder) {
+                throw new RuntimeException("Discount is greater than total price");
+            }
+
+            voucherMapper.updateUsedQuantity(voucher.getId());
+            totalPriceOrder -= voucher.getDiscountPrice();
+        } else {
+            throw new DataNotFoundException(
+                    String.format(
+                            "Voucher with code %s not found", orderCreateRequest.getVoucherCode()));
         }
 
         orderCreateRequest.setTotalPrice(totalPriceOrder);
