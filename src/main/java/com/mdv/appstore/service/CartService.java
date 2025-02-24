@@ -29,7 +29,6 @@ public class CartService {
 
     @Transactional
     public void addToCart(CartItemRequest request) {
-
         Long userId = customUserDetailsService.getCurrentUserId();
         request.setUserId(userId);
 
@@ -41,8 +40,18 @@ public class CartService {
         if (existingItem != null) {
             int newQuantity = existingItem.getQuantity() + request.getQuantity();
             cartItemMapper.updateQuantity(existingItem.getId(), newQuantity);
+            log.info(
+                    "Updated quantity for cart item: productId={}, userId={}, newQuantity={}",
+                    request.getProductId(),
+                    userId,
+                    newQuantity);
         } else {
             cartItemMapper.insert(request);
+            log.info(
+                    "Added new item to cart: productId={}, userId={}, quantity={}",
+                    request.getProductId(),
+                    userId,
+                    request.getQuantity());
         }
     }
 
@@ -78,6 +87,10 @@ public class CartService {
         ProductDTO product = validateProduct(item.getProduct().getId(), newQuantity);
 
         if (product.getTotalQuantity() < newQuantity) {
+            log.error(
+                    "Insufficient stock for update. Available: {}, Requested: {}",
+                    product.getTotalQuantity(),
+                    newQuantity);
             throw new InsufficientStockException(
                     "Insufficient stock. Available: "
                             + product.getTotalQuantity()
@@ -85,13 +98,17 @@ public class CartService {
                             + newQuantity);
         }
         cartItemMapper.updateQuantity(cartItemId, newQuantity);
+        log.info(
+                "Updated cart item quantity: cartItemId={}, userId={}, newQuantity={}",
+                cartItemId,
+                userId,
+                newQuantity);
     }
 
     private CartItemDTO findCartItemByIdAndUserId(Long cartItemId, Long userId) {
         CartItemDTO item = cartItemMapper.findByIdAndUserId(cartItemId, userId);
         if (item == null) {
             log.error("Cart item not found with id: {} and user id: {}", cartItemId, userId);
-
             throw new DataNotFoundException("Cart item not found");
         }
         return item;
@@ -103,5 +120,6 @@ public class CartService {
 
         findCartItemByIdAndUserId(cartItemId, userId);
         cartItemMapper.deleteByCartItemIdAndUserId(cartItemId, userId);
+        log.info("Removed cart item: cartItemId={}, userId={}", cartItemId, userId);
     }
 }

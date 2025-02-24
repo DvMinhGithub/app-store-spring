@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
+@Slf4j
 public class JwtUtils {
 
     @Value("${app.jwt.secret}")
@@ -74,12 +74,18 @@ public class JwtUtils {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             return true;
         } catch (Exception e) {
+            log.error("Failed to validate JWT token: {}", e.getMessage());
             return false;
         }
     }
 
     public boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationFromToken(token);
-        return expiration.before(new Date());
+        try {
+            final Date expiration = getExpirationFromToken(token);
+            return expiration.before(new Date());
+        } catch (Exception e) {
+            log.error("Error checking token expiration: {}", e.getMessage());
+            return true;
+        }
     }
 }
