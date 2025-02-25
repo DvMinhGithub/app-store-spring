@@ -94,6 +94,8 @@ public class SecurityConfig {
                                                 apiBaseUrl + "/vouchers/public",
                                                 apiBaseUrl + "/vouchers/validate/{code}")
                                         .permitAll()
+                                        .requestMatchers(apiBaseUrl + "/revenue/total")
+                                        .hasAnyAuthority("ADMIN", "EMPLOYEE")
 
                                         // .requestMatchers("/v3/api-docs/**",
                                         // "/swagger-ui/**",

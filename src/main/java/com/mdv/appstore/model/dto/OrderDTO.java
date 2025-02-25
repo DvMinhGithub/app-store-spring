@@ -1,5 +1,6 @@
 package com.mdv.appstore.model.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class OrderDTO {
     private Double totalPrice;
     private String voucherCode;
     private Long userId;
+    LocalDateTime createdAt;
 
     private List<OrderItemDTO> orderItems;
     private List<OrderHistoryDTO> orderHistories;

@@ -1,4 +1,4 @@
-package com.mdv.appstore.schedule;
+package com.mdv.appstore.scheduler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

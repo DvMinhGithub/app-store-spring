@@ -12,6 +12,7 @@
         <result property="address" column="address" />
         <result property="phone" column="phone" />
         <result property="checkoutUrl" column="checkout_url" />
+        <result property="createdAt" column="created_at" />
         <collection property="orderItems" ofType="OrderItemDTO"
             columnPrefix="oi_">
             <id property="id" column="id" />
@@ -49,6 +50,7 @@
         address,
         phone,
         checkout_url,
+        created_at,
         oi_id,
         oi_order_id,
         oi_product_id,
@@ -94,6 +96,13 @@
         LEFT JOIN user_role_view user 
         ON order_history.changed_by = user.id
         WHERE order_id = #{orderId}
+    </select>
+
+    <select id="getTotalRevenue">
+        SELECT SUM(total_price) 
+        FROM `order`
+        WHERE created_at BETWEEN #{startDate} AND #{endDate}
+        AND status = 'SUCCESS'
     </select>
 
     <insert id="insertOrder" useGeneratedKeys="true" keyProperty="id"> INSERT INTO `order` (
