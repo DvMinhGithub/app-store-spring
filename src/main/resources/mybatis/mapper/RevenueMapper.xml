@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mdv.appstore.mapper.RevenueMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="RevenueDTO">
+        INSERT INTO daily_revenue (
+            date,
+            total_revenue
+        )
+        VALUES (
+            #{date},
+            #{totalRevenue}
+        )
+        ON DUPLICATE KEY UPDATE
+            total_revenue = total_revenue + #{totalRevenue}
+    </insert>
+
+    <resultMap id="revenueResultMap" type="RevenueDTO">
+        <id property="id" column="id"/>
+        <result property="date" column="date"/>
+        <result property="totalRevenue" column="total_revenue"/>
+    </resultMap>
+
+    <sql id="revenueColumns">
+        id,
+        date,
+        total_revenue
+    </sql>
+
+    <select id="findByDateRange" resultMap="revenueResultMap">
+        SELECT 
+            <include refid="revenueColumns"/>
+        FROM daily_revenue
+        WHERE date BETWEEN #{startDate} AND #{endDate}
+    </select>
+
+    <select id="getTotalRevenue">
+        SELECT SUM(total_revenue) 
+        FROM daily_revenue
+        WHERE date BETWEEN #{startDate} AND #{endDate}
+    </select>    
+</mapper>

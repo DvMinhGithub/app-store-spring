@@ -33,5 +33,7 @@ public interface OrderMapper {
 
     List<OrderHistoryDTO> findOrderHistories(@Param("orderId") Long orderId);
 
+    Double getTotalRevenue(@Param("startDate") String startDate, @Param("endDate") String endDate);
+
     void updateOrderStatus(@Param("id") Long id, @Param("status") String status);
 }

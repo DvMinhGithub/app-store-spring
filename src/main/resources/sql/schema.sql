@@ -217,5 +217,6 @@ CREATE TABLE IF NOT EXISTS `daily_revenue` (
     `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `date`         DATE NOT NULL UNIQUE,
     `total_revenue` DECIMAL(10, 2) DEFAULT 0,
+    `created_at`   DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6),
     PRIMARY KEY (`id`)
 );

@@ -1,5 +1,6 @@
 package com.mdv.appstore.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +30,7 @@ public class OrderService {
     private final CartItemMapper cartItemMapper;
     private final ProductMapper productMapper;
     private final VoucherMapper voucherMapper;
+    private final RevenueMapper revenueMapper;
     private final CustomUserDetailsService customUserDetailsService;
 
     public OrderDTO getOrderById(Long id) {
@@ -138,6 +140,12 @@ public class OrderService {
                             + order.getStatus()
                             + " to "
                             + newOrderStatus);
+        } else if (newOrderStatus == OrderStatus.SUCCESS) {
+            RevenueDTO revenueDTO = new RevenueDTO();
+            LocalDateTime createAt = order.getCreatedAt();
+            revenueDTO.setDate(createAt.toLocalDate());
+            revenueDTO.setTotalRevenue(order.getTotalPrice());
+            revenueMapper.insert(revenueDTO);
         }
 
         orderMapper.updateOrderStatus(id, status);
