@@ -100,7 +100,8 @@ public class SecurityConfig {
                                         // "/swagger-ui.html")
                                         // .permitAll()
 
-                                        .requestMatchers(apiBaseUrl + "/**")
+                                        .requestMatchers(
+                                                apiBaseUrl + "/**", apiBaseUrl + "/auth/logout")
                                         .authenticated())
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(

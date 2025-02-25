@@ -5,9 +5,11 @@ import com.mdv.appstore.model.request.UserLoginRequest;
 import com.mdv.appstore.model.request.UserRegisterRequest;
 import com.mdv.appstore.model.response.ApiResponse;
 import com.mdv.appstore.service.AuthService;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,8 +31,11 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ApiResponse<Void> logout() {
-        authService.logout();
+    public ApiResponse<Void> logout(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody(required = false) Map<String, String> body) {
+        String token = authHeader.substring(7);
+        authService.logout(token, body);
         return ApiResponse.success("Logout successful");
     }
 }
