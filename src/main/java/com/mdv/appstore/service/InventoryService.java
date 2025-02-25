@@ -1,5 +1,12 @@
 package com.mdv.appstore.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
+
 import com.mdv.appstore.exception.DuplicateEntryException;
 import com.mdv.appstore.mapper.InventoryMapper;
 import com.mdv.appstore.mapper.InventoryTransactionMapper;
@@ -8,10 +15,6 @@ import com.mdv.appstore.model.dto.InventoryDTO;
 import com.mdv.appstore.model.dto.ProductDTO;
 import com.mdv.appstore.model.request.InventoryRequest;
 import com.mdv.appstore.model.request.InventoryTransactionRequest;
-import java.util.List;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

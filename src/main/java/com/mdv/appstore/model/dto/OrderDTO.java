@@ -1,9 +1,11 @@
 package com.mdv.appstore.model.dto;
 
-import com.mdv.appstore.enums.OrderStatus;
 import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
+
+import com.mdv.appstore.enums.OrderStatus;
 
 @Getter
 @Setter

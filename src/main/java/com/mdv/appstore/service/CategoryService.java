@@ -1,20 +1,22 @@
 package com.mdv.appstore.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
+
 import com.mdv.appstore.exception.DataNotFoundException;
 import com.mdv.appstore.mapper.CategoryMapper;
 import com.mdv.appstore.model.dto.CategoryDTO;
 import com.mdv.appstore.model.request.CategoryRequest;
-import java.util.List;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
-    private final CategoryMapper categoryMapper;
-
     private static final String CATEGORY_NOT_EXISTS = "Category not exists";
     private static final String CATEGORY_ALREADY_EXISTS = "Category already exists";
+    private final CategoryMapper categoryMapper;
 
     public void createCategory(CategoryRequest category) {
         categoryMapper.insert(category);

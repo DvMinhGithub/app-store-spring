@@ -1,10 +1,12 @@
 package com.mdv.appstore.config;
 
-import com.mdv.appstore.model.dto.UserDTO;
 import java.util.Collection;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.mdv.appstore.model.dto.UserDTO;
 
 public class CustomUserDetails implements UserDetails {
     private final UserDTO user;

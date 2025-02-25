@@ -1,5 +1,23 @@
 package com.mdv.appstore.service;
 
+import java.time.Instant;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import com.mdv.appstore.config.JwtUtils;
 import com.mdv.appstore.enums.UserRole;
 import com.mdv.appstore.exception.DuplicateEntryException;
@@ -11,26 +29,12 @@ import com.mdv.appstore.model.dto.RoleDTO;
 import com.mdv.appstore.model.dto.UserDTO;
 import com.mdv.appstore.model.request.UserLoginRequest;
 import com.mdv.appstore.model.request.UserRegisterRequest;
-import java.time.Instant;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class AuthService {
+    private static final String USER_CACHE_KEY_PREFIX = "register:user:emailOrPhone:";
     private final AuthMapper authMapper;
     private final UserMapper userMapper;
     private final RoleMapper roleMapper;
@@ -39,8 +43,6 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final RedisService redisService;
-
-    private static final String USER_CACHE_KEY_PREFIX = "register:user:emailOrPhone:";
 
     public LoginDTO login(UserLoginRequest request) {
         Authentication authentication =

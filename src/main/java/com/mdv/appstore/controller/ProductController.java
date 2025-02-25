@@ -1,23 +1,18 @@
 package com.mdv.appstore.controller;
 
+import java.io.IOException;
+import java.util.List;
+
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
 import com.mdv.appstore.model.dto.ProductDTO;
 import com.mdv.appstore.model.request.ProductRequest;
 import com.mdv.appstore.model.response.ApiResponse;
 import com.mdv.appstore.service.ProductService;
-import jakarta.validation.Valid;
-import java.io.IOException;
-import java.util.List;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("${app.api.base-url}/products")

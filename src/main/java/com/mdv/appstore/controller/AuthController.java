@@ -1,17 +1,16 @@
 package com.mdv.appstore.controller;
 
+import java.util.Map;
+
+import org.springframework.web.bind.annotation.*;
+
+import lombok.RequiredArgsConstructor;
+
 import com.mdv.appstore.model.dto.LoginDTO;
 import com.mdv.appstore.model.request.UserLoginRequest;
 import com.mdv.appstore.model.request.UserRegisterRequest;
 import com.mdv.appstore.model.response.ApiResponse;
 import com.mdv.appstore.service.AuthService;
-import java.util.Map;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("${app.api.base-url}/auth")

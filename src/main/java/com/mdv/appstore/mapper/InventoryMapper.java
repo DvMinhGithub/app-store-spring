@@ -1,10 +1,12 @@
 package com.mdv.appstore.mapper;
 
-import com.mdv.appstore.model.dto.InventoryDTO;
-import com.mdv.appstore.model.request.InventoryRequest;
 import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import com.mdv.appstore.model.dto.InventoryDTO;
+import com.mdv.appstore.model.request.InventoryRequest;
 
 @Mapper
 public interface InventoryMapper {

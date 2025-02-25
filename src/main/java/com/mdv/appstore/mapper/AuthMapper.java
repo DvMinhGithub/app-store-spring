@@ -1,10 +1,11 @@
 package com.mdv.appstore.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import com.mdv.appstore.model.dto.UserDTO;
 import com.mdv.appstore.model.request.UserLoginRequest;
 import com.mdv.appstore.model.request.UserRegisterRequest;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface AuthMapper {

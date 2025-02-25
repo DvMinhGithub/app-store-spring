@@ -1,19 +1,15 @@
 package com.mdv.appstore.controller;
 
-import com.mdv.appstore.model.request.ProductCategoryRequest;
-import com.mdv.appstore.model.response.ApiResponse;
-import com.mdv.appstore.service.ProductCategoryService;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import com.mdv.appstore.model.request.ProductCategoryRequest;
+import com.mdv.appstore.model.response.ApiResponse;
+import com.mdv.appstore.service.ProductCategoryService;
 
 @RestController
 @RequestMapping("${app.api.base-url}")

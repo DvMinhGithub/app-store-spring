@@ -1,9 +1,11 @@
 package com.mdv.appstore.mapper;
 
-import com.mdv.appstore.model.dto.ProductAttributeDTO;
 import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import com.mdv.appstore.model.dto.ProductAttributeDTO;
 
 @Mapper
 public interface ProductAtrributeMapper {

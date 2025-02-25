@@ -5,12 +5,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +30,7 @@ public class FileService {
         if (Files.notExists(Paths.get(uploadDir))) {
             Files.createDirectories(Paths.get(uploadDir));
         }
-        String uniqueFileName =
-                UUID.randomUUID().toString() + getExtension(file.getOriginalFilename());
+        String uniqueFileName = UUID.randomUUID() + getExtension(file.getOriginalFilename());
         Path path = Paths.get(uploadDir + uniqueFileName);
         Files.write(path, file.getBytes());
         return path.toString();

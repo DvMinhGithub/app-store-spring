@@ -53,6 +53,6 @@ spotless {
 		removeUnusedImports()
 		leadingTabsToSpaces(4)
         trimTrailingWhitespace()
-        importOrder()
+		importOrder('java', 'javax', 'org.springframework', '', 'com.mdv')
 	}
 }

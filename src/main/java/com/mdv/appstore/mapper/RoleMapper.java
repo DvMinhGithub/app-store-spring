@@ -1,7 +1,8 @@
 package com.mdv.appstore.mapper;
 
-import com.mdv.appstore.model.dto.RoleDTO;
 import org.apache.ibatis.annotations.Mapper;
+
+import com.mdv.appstore.model.dto.RoleDTO;
 
 @Mapper
 public interface RoleMapper {
