@@ -181,30 +181,77 @@ Cơ sở dữ liệu của ứng dụng bao gồm các bảng sau:
 ## Cài đặt và chạy ứng dụng
 
 ### Yêu cầu hệ thống
-- Java 21
-- MySQL
-- Maven
+
+-   Java 21
+-   MySQL
+-   Gradle
 
 ### Các bước cài đặt
-1. **Clone dự án**:
 
-   ```bash
-   git clone https://github.com/your-repo/app-store.git
-   cd app-store```
-2. **Cấu hình cơ sở dữ liệu**:
-
-- Tạo một database mới trong MySQL với tên app_store.
-
-- Cập nhật thông tin kết nối cơ sở dữ liệu trong file application.properties:
+1.  **Clone dự án**:
 
     ```bash
-    spring.datasource.url=jdbc:mysql://localhost:3306/app_store
-    spring.datasource.username=your-username
-    spring.datasource.password=your-password'
+    git clone [https://github.com/DvMinhGithub/app-store-spring.git](https://github.com/DvMinhGithub/app-store-spring.git)
+    cd app-store
+    ```
 
-3. Chạy ứng dụng:
+2.  **Cấu hình cơ sở dữ liệu**:
+
+    -   Tạo một database mới trong MySQL với tên `app_store`.
+    -   Cập nhật thông tin kết nối cơ sở dữ liệu trong file `src/main/resources/application.yml`:
+
+        ```yaml
+        spring:
+          datasource:
+            url: jdbc:mysql://localhost:3306/app_store
+            username: your-username
+            password: your-password
+        ```
+
+3.  **Xây dựng ứng dụng bằng Gradle**:
 
     ```bash
-    ./mvnw spring-boot:run
-4. Truy cập ứng dụng:
-- Mở trình duyệt và truy cập http://localhost:8080.
+    ./gradlew build
+    ```
+
+4.  **Chạy ứng dụng**:
+
+    ```bash
+    ./gradlew bootRun
+    ```
+
+5.  **Truy cập ứng dụng**:
+
+    -   Mở trình duyệt và truy cập `http://localhost:8080`.
+
+### Cấu hình bổ sung
+
+-   **Profile**:
+
+    -   Nếu bạn muốn chạy ứng dụng với một profile cụ thể (ví dụ: `dev`, `prod`), bạn có thể thêm tham số `-Dspring.profiles.active` khi chạy ứng dụng:
+
+        ```bash
+        ./gradlew bootRun -Dspring.profiles.active=dev
+        ```
+
+-   **Cổng**:
+
+    -   Để thay đổi cổng mặc định (8080), hãy cập nhật thuộc tính `server.port` trong `application.yml`:
+
+        ```yaml
+        server:
+          port: 8081
+        ```
+
+### Các lệnh Gradle thông dụng
+
+-   `./gradlew build`: Xây dựng ứng dụng.
+-   `./gradlew bootRun`: Chạy ứng dụng.
+-   `./gradlew test`: Chạy các unit test.
+-   `./gradlew clean`: Xóa thư mục build.
+
+### Lưu ý
+
+-   Đảm bảo rằng MySQL server đang chạy trước khi khởi động ứng dụng.
+-   Nếu bạn gặp lỗi kết nối cơ sở dữ liệu, hãy kiểm tra lại thông tin kết nối trong `application.yml`.
+-   Nếu bạn có bất kỳ vấn đề nào, vui lòng kiểm tra phần Issues trên GitHub hoặc liên hệ với người quản lý dự án.
