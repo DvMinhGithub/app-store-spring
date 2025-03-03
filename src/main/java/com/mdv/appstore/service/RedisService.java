@@ -11,7 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class RedisService {
-    @Autowired private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
+
+    public RedisService(@Autowired RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     public void setValue(String key, Object value) {
         log.debug("Set value to redis with key: {}", key);

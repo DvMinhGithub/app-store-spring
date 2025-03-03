@@ -37,6 +37,9 @@ public class FileService {
     }
 
     private String getExtension(String filename) {
+        if (filename == null || filename.isEmpty()) {
+            return "";
+        }
         String extension = "";
         int i = filename.lastIndexOf('.');
         if (i > 0) {

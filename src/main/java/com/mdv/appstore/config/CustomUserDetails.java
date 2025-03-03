@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.mdv.appstore.model.dto.UserDTO;
 
 public class CustomUserDetails implements UserDetails {
-    private final UserDTO user;
+    private final transient UserDTO user;
 
     public CustomUserDetails(UserDTO user) {
         this.user = user;

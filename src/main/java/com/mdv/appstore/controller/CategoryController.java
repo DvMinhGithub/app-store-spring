@@ -16,13 +16,14 @@ import com.mdv.appstore.service.CategoryService;
 @RequestMapping("${app.api.base-url}/categories")
 @RequiredArgsConstructor
 public class CategoryController {
+
     private final CategoryService categoryService;
 
     @GetMapping("/all")
     public ApiResponse<List<CategoryDTO>> getAllCategories() {
         return ApiResponse.<List<CategoryDTO>>builder()
                 .code(HttpStatus.OK.value())
-                .message("Category fetched successfully")
+                .message("All categories fetched successfully")
                 .data(categoryService.findAll())
                 .build();
     }
@@ -31,7 +32,7 @@ public class CategoryController {
     public ApiResponse<List<CategoryDTO>> getAllActiveCategories() {
         return ApiResponse.<List<CategoryDTO>>builder()
                 .code(HttpStatus.OK.value())
-                .message("Category fetched successfully")
+                .message("Active categories fetched successfully")
                 .data(categoryService.findAllActive())
                 .build();
     }

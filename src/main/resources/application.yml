@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/app_store?createDatabaseIfNotExist=true&allowMultiQueries=true
     username: root
-    password: 123456
+    password: ${DATABASE_PASSWORD}
   
   sql:
     init:

@@ -16,6 +16,8 @@ public class ProductAtrributeService {
     private final ProductAtrributeMapper productAtrributeMapper;
     private final ProductService productService;
 
+    private static final String PRODUCT_ATRIBUTE_NOT_FOUND = "ProductAtrribute not found";
+
     public void createProductAtrribute(ProductAttributeDTO productAtrribute) {
         productService.findById(productAtrribute.getProductId());
         productAtrributeMapper.create(productAtrribute);
@@ -28,7 +30,7 @@ public class ProductAtrributeService {
     public ProductAttributeDTO findById(Long id) {
         ProductAttributeDTO productAtrribute = productAtrributeMapper.findById(id);
         if (productAtrribute == null) {
-            throw new DataNotFoundException("ProductAtrribute not found");
+            throw new DataNotFoundException(PRODUCT_ATRIBUTE_NOT_FOUND);
         }
         return productAtrribute;
     }
@@ -41,14 +43,14 @@ public class ProductAtrributeService {
     public void updateProductAtrribute(Long id, ProductAttributeDTO productAtrribute) {
         productService.findById(productAtrribute.getProductId());
         if (productAtrributeMapper.findById(id) == null) {
-            throw new DataNotFoundException("ProductAtrribute not found");
+            throw new DataNotFoundException(PRODUCT_ATRIBUTE_NOT_FOUND);
         }
         productAtrributeMapper.update(id, productAtrribute);
     }
 
     public void deleteProductAtrribute(Long id) {
         if (productAtrributeMapper.findById(id) == null) {
-            throw new DataNotFoundException("ProductAtrribute not found");
+            throw new DataNotFoundException(PRODUCT_ATRIBUTE_NOT_FOUND);
         }
         productAtrributeMapper.delete(id);
     }

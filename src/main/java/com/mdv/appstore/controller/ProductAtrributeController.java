@@ -18,11 +18,14 @@ import com.mdv.appstore.service.ProductAtrributeService;
 public class ProductAtrributeController {
     private final ProductAtrributeService productAtrributeService;
 
+    private static final String PRODUCT_ATTRIBUTE_FETCHED_SUCCESSFULLY_MESSAGE =
+            "Product attribute fetched successfully";
+
     @GetMapping
     public ApiResponse<List<ProductAttributeDTO>> findAll() {
         return ApiResponse.<List<ProductAttributeDTO>>builder()
                 .code(HttpStatus.OK.value())
-                .message("Product attribute fetched successfully")
+                .message(PRODUCT_ATTRIBUTE_FETCHED_SUCCESSFULLY_MESSAGE)
                 .data(productAtrributeService.findAll())
                 .build();
     }
@@ -31,7 +34,7 @@ public class ProductAtrributeController {
     public ApiResponse<ProductAttributeDTO> findById(@PathVariable("id") Long id) {
         return ApiResponse.<ProductAttributeDTO>builder()
                 .code(HttpStatus.OK.value())
-                .message("Product attribute fetched successfully")
+                .message(PRODUCT_ATTRIBUTE_FETCHED_SUCCESSFULLY_MESSAGE)
                 .data(productAtrributeService.findById(id))
                 .build();
     }
@@ -41,7 +44,7 @@ public class ProductAtrributeController {
             @PathVariable("productId") Long productId) {
         return ApiResponse.<List<ProductAttributeDTO>>builder()
                 .code(HttpStatus.OK.value())
-                .message("Product attribute fetched successfully")
+                .message(PRODUCT_ATTRIBUTE_FETCHED_SUCCESSFULLY_MESSAGE)
                 .data(productAtrributeService.findAttributesByProductId(productId))
                 .build();
     }

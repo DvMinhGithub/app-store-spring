@@ -1,6 +1,5 @@
 package com.mdv.appstore.scheduler;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +12,11 @@ import com.mdv.appstore.service.VoucherService;
 @Slf4j
 public class VoucherScheduler {
 
-    @Autowired private VoucherService voucherService;
+    private VoucherService voucherService;
+
+    public VoucherScheduler(VoucherService voucherService) {
+        this.voucherService = voucherService;
+    }
 
     @PostConstruct
     public void runOnStartup() {

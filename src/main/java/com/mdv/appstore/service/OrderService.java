@@ -12,10 +12,24 @@ import lombok.RequiredArgsConstructor;
 
 import com.mdv.appstore.config.CustomUserDetailsService;
 import com.mdv.appstore.enums.OrderStatus;
+import com.mdv.appstore.exception.CartEmptyException;
 import com.mdv.appstore.exception.DataNotFoundException;
+import com.mdv.appstore.exception.DiscountGreaterThanTotalPriceException;
 import com.mdv.appstore.exception.InvalidOrderStatusException;
-import com.mdv.appstore.mapper.*;
-import com.mdv.appstore.model.dto.*;
+import com.mdv.appstore.exception.TotalPriceLessThanConditionException;
+import com.mdv.appstore.exception.VoucherNotActiveException;
+import com.mdv.appstore.mapper.CartItemMapper;
+import com.mdv.appstore.mapper.OrderMapper;
+import com.mdv.appstore.mapper.ProductMapper;
+import com.mdv.appstore.mapper.RevenueMapper;
+import com.mdv.appstore.mapper.UserMapper;
+import com.mdv.appstore.mapper.VoucherMapper;
+import com.mdv.appstore.model.dto.CartItemDTO;
+import com.mdv.appstore.model.dto.OrderDTO;
+import com.mdv.appstore.model.dto.OrderHistoryDTO;
+import com.mdv.appstore.model.dto.OrderItemDTO;
+import com.mdv.appstore.model.dto.RevenueDTO;
+import com.mdv.appstore.model.dto.VoucherDTO;
 import com.mdv.appstore.model.request.OrderCreateRequest;
 import com.mdv.appstore.model.request.OrderHistoryRequest;
 import com.mdv.appstore.model.request.OrderItemRequest;
@@ -42,7 +56,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void createOrder(OrderCreateRequest orderCreateRequest) {
+    public void createOrder(OrderCreateRequest orderCreateRequest) throws RuntimeException {
         Long userId = customUserDetailsService.getCurrentUserId();
         orderCreateRequest.setUserId(userId);
         orderCreateRequest.setOrderCode(generateOrderCode());
@@ -50,7 +64,7 @@ public class OrderService {
         List<CartItemDTO> cartItems =
                 cartItemMapper.findAllByIdsAndUserId(orderCreateRequest.getCartItemIds(), userId);
         if (cartItems.isEmpty()) {
-            throw new RuntimeException("Cart is empty");
+            throw new CartEmptyException("Cart is empty");
         }
 
         double totalPriceOrder = 0;
@@ -61,16 +75,19 @@ public class OrderService {
         VoucherDTO voucher = voucherMapper.selectVoucherByCode(orderCreateRequest.getVoucherCode());
 
         if (voucher != null) {
-            if (!voucher.getIsActive()) {
-                throw new RuntimeException("Voucher is not active");
+            Boolean isVoucherActive = voucher.getIsActive();
+            if (Boolean.FALSE.equals(isVoucherActive)) {
+                throw new VoucherNotActiveException("Voucher is not active");
             }
 
             if (voucher.getConditionValue() > totalPriceOrder) {
-                throw new RuntimeException("Total price is less than minimum total price");
+                throw new TotalPriceLessThanConditionException(
+                        "Total price is less than minimum total price");
             }
 
             if (voucher.getDiscountPrice() > totalPriceOrder) {
-                throw new RuntimeException("Discount is greater than total price");
+                throw new DiscountGreaterThanTotalPriceException(
+                        "Discount is greater than total price");
             }
 
             voucherMapper.updateUsedQuantity(voucher.getId());
