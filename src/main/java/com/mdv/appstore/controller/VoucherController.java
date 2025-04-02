@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.request.VoucherRequest;
 import com.mdv.appstore.dto.response.ApiResponse;
 import com.mdv.appstore.dto.response.VoucherResponse;
 import com.mdv.appstore.service.VoucherService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api.base-url}/vouchers")
@@ -26,25 +26,21 @@ public class VoucherController {
 
     @GetMapping
     public ApiResponse<List<VoucherResponse>> selectAllVouchers() {
-        return ApiResponse.success(
-                voucherService.getAllVouchers(), "Vouchers fetched successfully");
+        return ApiResponse.success(voucherService.getAllVouchers(), "Vouchers fetched successfully");
     }
 
     @GetMapping("/{id}")
     public ApiResponse<VoucherResponse> selectVoucherById(@PathVariable("id") Long id) {
-        return ApiResponse.success(
-                voucherService.getVoucherById(id), "Voucher fetched successfully");
+        return ApiResponse.success(voucherService.getVoucherById(id), "Voucher fetched successfully");
     }
 
     @GetMapping("/code/{code}")
     public ApiResponse<VoucherResponse> selectVoucherByCode(@PathVariable("code") String code) {
-        return ApiResponse.success(
-                voucherService.getVoucherByCode(code), "Voucher fetched successfully");
+        return ApiResponse.success(voucherService.getVoucherByCode(code), "Voucher fetched successfully");
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Void> updateVoucher(
-            @PathVariable("id") Long id, @RequestBody @Valid VoucherRequest voucher) {
+    public ApiResponse<Void> updateVoucher(@PathVariable("id") Long id, @RequestBody @Valid VoucherRequest voucher) {
         voucherService.updateVoucher(id, voucher);
         return ApiResponse.success("Voucher updated successfully");
     }

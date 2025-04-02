@@ -8,8 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.request.OrderCreateRequest;
 import com.mdv.appstore.dto.request.OrderHistoryRequest;
 import com.mdv.appstore.dto.request.OrderItemRequest;
@@ -36,6 +34,8 @@ import com.mdv.appstore.mapper.VoucherMapper;
 import com.mdv.appstore.security.user.CustomUserDetailsService;
 import com.mdv.appstore.service.OrderService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -57,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Transactional
-    public void createOrder(OrderCreateRequest orderCreateRequest) throws RuntimeException {
+    public void createOrder(OrderCreateRequest orderCreateRequest) {
         Long userId = customUserDetailsService.getCurrentUserId();
         orderCreateRequest.setUserId(userId);
         orderCreateRequest.setOrderCode(generateOrderCode());
@@ -73,8 +73,7 @@ public class OrderServiceImpl implements OrderService {
             totalPriceOrder += cartItem.getProduct().getPrice() * cartItem.getQuantity();
         }
 
-        VoucherResponse voucher =
-                voucherMapper.selectVoucherByCode(orderCreateRequest.getVoucherCode());
+        VoucherResponse voucher = voucherMapper.selectVoucherByCode(orderCreateRequest.getVoucherCode());
 
         if (voucher != null) {
             Boolean isVoucherActive = voucher.getIsActive();
@@ -83,21 +82,18 @@ public class OrderServiceImpl implements OrderService {
             }
 
             if (voucher.getConditionValue() > totalPriceOrder) {
-                throw new TotalPriceLessThanConditionException(
-                        "Total price is less than minimum total price");
+                throw new TotalPriceLessThanConditionException("Total price is less than minimum total price");
             }
 
             if (voucher.getDiscountPrice() > totalPriceOrder) {
-                throw new DiscountGreaterThanTotalPriceException(
-                        "Discount is greater than total price");
+                throw new DiscountGreaterThanTotalPriceException("Discount is greater than total price");
             }
 
             voucherMapper.updateUsedQuantity(voucher.getId());
             totalPriceOrder -= voucher.getDiscountPrice();
         } else {
             throw new DataNotFoundException(
-                    String.format(
-                            "Voucher with code %s not found", orderCreateRequest.getVoucherCode()));
+                    String.format("Voucher with code %s not found", orderCreateRequest.getVoucherCode()));
         }
 
         orderCreateRequest.setTotalPrice(totalPriceOrder);
@@ -110,23 +106,19 @@ public class OrderServiceImpl implements OrderService {
     private void saveOrderDetailsAndProcessCartItems(
             OrderCreateRequest orderCreateRequest, List<CartItemResponse> cartItems) {
         for (CartItemResponse cartItem : cartItems) {
-            OrderItemRequest orderItemRequest =
-                    OrderItemRequest.builder()
-                            .orderId(orderCreateRequest.getId())
-                            .productId(cartItem.getProduct().getId())
-                            .quantity(cartItem.getQuantity())
-                            .priceAtOrderTime(cartItem.getProduct().getPrice())
-                            .build();
+            OrderItemRequest orderItemRequest = OrderItemRequest.builder()
+                    .orderId(orderCreateRequest.getId())
+                    .productId(cartItem.getProduct().getId())
+                    .quantity(cartItem.getQuantity())
+                    .priceAtOrderTime(cartItem.getProduct().getPrice())
+                    .build();
             orderMapper.insertOrderDetail(orderItemRequest);
 
-            cartItemMapper.deleteByCartItemIdAndUserId(
-                    cartItem.getId(), customUserDetailsService.getCurrentUserId());
+            cartItemMapper.deleteByCartItemIdAndUserId(cartItem.getId(), customUserDetailsService.getCurrentUserId());
 
-            Long newTotalQuantity =
-                    cartItem.getProduct().getTotalQuantity() - cartItem.getQuantity();
+            Long newTotalQuantity = cartItem.getProduct().getTotalQuantity() - cartItem.getQuantity();
             productMapper.updateTotalQuantity(cartItem.getProduct().getId(), newTotalQuantity);
-            productMapper.increaseSoldQuantity(
-                    cartItem.getProduct().getId(), cartItem.getQuantity());
+            productMapper.increaseSoldQuantity(cartItem.getProduct().getId(), cartItem.getQuantity());
         }
     }
 
@@ -155,10 +147,7 @@ public class OrderServiceImpl implements OrderService {
 
         if (order.getStatus() != OrderStatus.PENDING) {
             throw new InvalidOrderStatusException(
-                    "Order status cannot be updated from "
-                            + order.getStatus()
-                            + " to "
-                            + newOrderStatus);
+                    "Order status cannot be updated from " + order.getStatus() + " to " + newOrderStatus);
         } else if (newOrderStatus == OrderStatus.SUCCESS) {
             RevenueResponse revenueResponse = new RevenueResponse();
             LocalDateTime createAt = order.getCreatedAt();
@@ -172,12 +161,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void insertOrderHistory(Long orderId, String status) {
-        OrderHistoryRequest orderHistoryRequest =
-                OrderHistoryRequest.builder()
-                        .orderId(orderId)
-                        .status(status)
-                        .changedBy(customUserDetailsService.getCurrentUserId())
-                        .build();
+        OrderHistoryRequest orderHistoryRequest = OrderHistoryRequest.builder()
+                .orderId(orderId)
+                .status(status)
+                .changedBy(customUserDetailsService.getCurrentUserId())
+                .build();
         orderMapper.insertOrderHistory(orderHistoryRequest);
     }
 
@@ -198,8 +186,7 @@ public class OrderServiceImpl implements OrderService {
             productMapper.decreaseSoldQuantity(orderItem.getProductId(), orderItem.getQuantity());
             productMapper.updateTotalQuantity(
                     orderItem.getProductId(),
-                    productMapper.findById(orderItem.getProductId()).getTotalQuantity()
-                            + orderItem.getQuantity());
+                    productMapper.findById(orderItem.getProductId()).getTotalQuantity() + orderItem.getQuantity());
         }
     }
 

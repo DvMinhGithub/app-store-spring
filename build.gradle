@@ -48,11 +48,11 @@ tasks.named('test') {
 
 spotless {
 	java {
-		googleJavaFormat('1.17.0').aosp().reflowLongStrings().skipJavadocFormatting()
+		palantirJavaFormat()
 		endWithNewline()
 		removeUnusedImports()
 		leadingTabsToSpaces(4)
         trimTrailingWhitespace()
-		importOrder('java', 'javax', 'org.springframework', '', 'com.mdv')
+		importOrder('java', 'javax', 'org', 'com', 'com.diffplug', 'all-other')
 	}
 }

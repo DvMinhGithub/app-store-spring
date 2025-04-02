@@ -13,11 +13,9 @@ public interface CartItemMapper {
 
     List<CartItemResponse> findByUserId(@Param("userId") Long userId);
 
-    List<CartItemResponse> findAllByIdsAndUserId(
-            @Param("listId") List<Long> listId, @Param("userId") Long userId);
+    List<CartItemResponse> findAllByIdsAndUserId(@Param("listId") List<Long> listId, @Param("userId") Long userId);
 
-    CartItemResponse findByUserIdAndProductId(
-            @Param("userId") Long userId, @Param("productId") Long productId);
+    CartItemResponse findByUserIdAndProductId(@Param("userId") Long userId, @Param("productId") Long productId);
 
     CartItemResponse findByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
 

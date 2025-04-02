@@ -5,12 +5,12 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.response.ApiResponse;
 import com.mdv.appstore.dto.response.ProductAttributeResponse;
 import com.mdv.appstore.service.ProductAttributeService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api.base-url}/product-attribute")
@@ -50,8 +50,7 @@ public class ProductAttributeController {
     }
 
     @PostMapping
-    public ApiResponse<Object> createProductAttribute(
-            @RequestBody @Valid ProductAttributeResponse productAttribute) {
+    public ApiResponse<Object> createProductAttribute(@RequestBody @Valid ProductAttributeResponse productAttribute) {
         productAttributeService.createProductAttribute(productAttribute);
         return ApiResponse.builder()
                 .code(HttpStatus.CREATED.value())

@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.request.SupplierRequest;
 import com.mdv.appstore.dto.response.ApiResponse;
 import com.mdv.appstore.dto.response.SupplierResponse;
 import com.mdv.appstore.service.SupplierService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api.base-url}/suppliers")
@@ -35,8 +35,7 @@ public class SupplierController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Void> update(
-            @PathVariable Long id, @RequestBody @Valid SupplierRequest supplier) {
+    public ApiResponse<Void> update(@PathVariable Long id, @RequestBody @Valid SupplierRequest supplier) {
         supplierService.update(id, supplier);
         return ApiResponse.success("Supplier updated successfully");
     }

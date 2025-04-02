@@ -6,13 +6,13 @@ import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.request.ProductRequest;
 import com.mdv.appstore.dto.response.ApiResponse;
 import com.mdv.appstore.dto.response.ProductResponse;
 import com.mdv.appstore.service.ProductService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api.base-url}/products")
@@ -21,8 +21,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<Void> createProduct(@ModelAttribute @Valid ProductRequest product)
-            throws IOException {
+    public ApiResponse<Void> createProduct(@ModelAttribute @Valid ProductRequest product) throws IOException {
         productService.createProduct(product);
         return ApiResponse.success("Product created successfully");
     }
@@ -38,8 +37,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Void> updateProduct(
-            @PathVariable("id") Long id, @RequestBody ProductRequest product) {
+    public ApiResponse<Void> updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequest product) {
         productService.updateProduct(id, product);
         return ApiResponse.success("Product updated successfully");
     }

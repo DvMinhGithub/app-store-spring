@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.request.InventoryRequest;
 import com.mdv.appstore.dto.request.InventoryTransactionRequest;
 import com.mdv.appstore.dto.response.InventoryResponse;
@@ -17,6 +15,8 @@ import com.mdv.appstore.mapper.InventoryTransactionMapper;
 import com.mdv.appstore.mapper.ProductMapper;
 import com.mdv.appstore.service.InventoryService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
 @RequiredArgsConstructor
 public class InventoryServiceImpl implements InventoryService {
@@ -26,8 +26,7 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Transactional
     public void importInventory(InventoryRequest inventory) {
-        InventoryResponse inventoryResponse =
-                inventoryMapper.findByBatchCode(inventory.getBatchCode());
+        InventoryResponse inventoryResponse = inventoryMapper.findByBatchCode(inventory.getBatchCode());
         if (inventoryResponse != null) {
             throw new DuplicateEntryException("Batch code already exists");
         }
@@ -37,13 +36,12 @@ public class InventoryServiceImpl implements InventoryService {
         }
         Long totalQuantity = product.getTotalQuantity() + inventory.getQuantity();
         productMapper.updateTotalQuantity(inventory.getProductId(), totalQuantity);
-        InventoryTransactionRequest inventoryTransaction =
-                InventoryTransactionRequest.builder()
-                        .productId(inventory.getProductId())
-                        .quantity(inventory.getQuantity())
-                        .type("IMPORT")
-                        .supplierId(inventory.getSupplierId())
-                        .build();
+        InventoryTransactionRequest inventoryTransaction = InventoryTransactionRequest.builder()
+                .productId(inventory.getProductId())
+                .quantity(inventory.getQuantity())
+                .type("IMPORT")
+                .supplierId(inventory.getSupplierId())
+                .build();
         inventoryTransactionMapper.importInventoryTransaction(inventoryTransaction);
         inventoryMapper.importInventory(inventory);
     }
@@ -62,13 +60,12 @@ public class InventoryServiceImpl implements InventoryService {
         }
         productMapper.updateTotalQuantity(
                 inventory.getProductId(), product.getTotalQuantity() - inventory.getQuantity());
-        InventoryTransactionRequest inventoryTransaction =
-                InventoryTransactionRequest.builder()
-                        .productId(inventory.getProductId())
-                        .quantity(inventory.getQuantity())
-                        .type("EXPORT")
-                        .supplierId(inventory.getSupplierId())
-                        .build();
+        InventoryTransactionRequest inventoryTransaction = InventoryTransactionRequest.builder()
+                .productId(inventory.getProductId())
+                .quantity(inventory.getQuantity())
+                .type("EXPORT")
+                .supplierId(inventory.getSupplierId())
+                .build();
         inventoryTransactionMapper.exportInventoryTransaction(inventoryTransaction);
         inventoryMapper.exportInventory(inventory);
     }

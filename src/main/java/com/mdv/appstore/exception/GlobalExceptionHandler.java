@@ -21,8 +21,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiResponse<Map<String, String>> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
+    public ApiResponse<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult()
                 .getFieldErrors()
@@ -34,18 +33,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiResponse<String> handleNoHandlerFoundException(NoHandlerFoundException ex) {
-        return new ApiResponse<>(
-                HttpStatus.NOT_FOUND.value(), "Endpoint not found: " + ex.getRequestURL(), null);
+        return new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "Endpoint not found: " + ex.getRequestURL(), null);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public ApiResponse<String> handleHttpRequestMethodNotSupported(
-            HttpRequestMethodNotSupportedException ex) {
+    public ApiResponse<String> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
         return new ApiResponse<>(
-                HttpStatus.METHOD_NOT_ALLOWED.value(),
-                "HTTP method not supported: " + ex.getMethod(),
-                null);
+                HttpStatus.METHOD_NOT_ALLOWED.value(), "HTTP method not supported: " + ex.getMethod(), null);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -56,27 +51,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiResponse<String> handleMethodArgumentTypeMismatch(
-            MethodArgumentTypeMismatchException ex) {
-        return new ApiResponse<>(
-                HttpStatus.BAD_REQUEST.value(), "Invalid parameter: " + ex.getName(), null);
+    public ApiResponse<String> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        return new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), "Invalid parameter: " + ex.getName(), null);
     }
 
     @ExceptionHandler(DataAccessException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiResponse<String> handleDataAccessException(DataAccessException ex) {
-        return new ApiResponse<>(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Database error: " + ex.getMessage(),
-                null);
+        return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Database error: " + ex.getMessage(), null);
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiResponse<String> handleAllExceptions(Exception ex) {
         return new ApiResponse<>(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "An error occurred: " + ex.getMessage(),
-                null);
+                HttpStatus.INTERNAL_SERVER_ERROR.value(), "An error occurred: " + ex.getMessage(), null);
     }
 }

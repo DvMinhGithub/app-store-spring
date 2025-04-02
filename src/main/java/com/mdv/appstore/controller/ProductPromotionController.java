@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.request.ProductPromotionRequest;
 import com.mdv.appstore.dto.response.ApiResponse;
 import com.mdv.appstore.dto.response.ProductPromotionResponse;
 import com.mdv.appstore.service.ProductPromotionService;
+
+import jakarta.validation.Valid;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api.base-url}/product-promotion")
@@ -40,8 +40,7 @@ public class ProductPromotionController {
 
     @PutMapping("/{id}")
     public ApiResponse<Void> update(
-            @PathVariable("id") Long id,
-            @RequestBody @Valid ProductPromotionRequest productPromotion) {
+            @PathVariable("id") Long id, @RequestBody @Valid ProductPromotionRequest productPromotion) {
         productPromotionService.update(id, productPromotion);
         return ApiResponse.success(SUCCESS_MESSAGE);
     }
@@ -68,8 +67,7 @@ public class ProductPromotionController {
     @GetMapping("/product/{productId}/active")
     public ApiResponse<List<ProductPromotionResponse>> findActivePromotionsByProductId(
             @PathVariable @NonNull Long productId) {
-        List<ProductPromotionResponse> data =
-                productPromotionService.findActivePromotionsByProductId(productId);
+        List<ProductPromotionResponse> data = productPromotionService.findActivePromotionsByProductId(productId);
         return ApiResponse.success(data, SUCCESS_MESSAGE);
     }
 }

@@ -4,13 +4,13 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.*;
 
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.request.UserLoginRequest;
 import com.mdv.appstore.dto.request.UserRegisterRequest;
 import com.mdv.appstore.dto.response.ApiResponse;
 import com.mdv.appstore.dto.response.LoginResponse;
 import com.mdv.appstore.service.AuthService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api.base-url}/auth")

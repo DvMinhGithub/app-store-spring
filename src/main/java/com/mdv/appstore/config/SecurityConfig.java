@@ -24,92 +24,82 @@ import com.mdv.appstore.security.jwt.JwtAuthFilter;
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
-        private final JwtAuthFilter jwtAuthFilter;
+    private final JwtAuthFilter jwtAuthFilter;
 
-        @Value("${app.api.base-url}")
-        private String apiBaseUrl;
+    @Value("${app.api.base-url}")
+    private String apiBaseUrl;
 
-        public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
-                this.jwtAuthFilter = jwtAuthFilter;
-        }
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
+        this.jwtAuthFilter = jwtAuthFilter;
+    }
 
-        @Bean
-        public PasswordEncoder passwordEncoder() {
-                return new BCryptPasswordEncoder();
-        }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-        @Bean
-        public AuthenticationManager authenticationManager(
-                        AuthenticationConfiguration authenticationConfiguration) throws Exception {
-                return authenticationConfiguration.getAuthenticationManager();
-        }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-                http.csrf(AbstractHttpConfigurer::disable)
-                                .cors(Customizer.withDefaults())
-                                .sessionManagement(
-                                                sessionManagement -> sessionManagement.sessionCreationPolicy(
-                                                                SessionCreationPolicy.STATELESS))
-                                .authorizeHttpRequests(
-                                                authorizeRequests -> authorizeRequests
-                                                                .requestMatchers(
-                                                                                apiBaseUrl + "/auth/login",
-                                                                                apiBaseUrl + "/auth/register",
-                                                                                apiBaseUrl + "/auth/refresh-token")
-                                                                .permitAll()
-                                                                .requestMatchers(
-                                                                                HttpMethod.GET,
-                                                                                apiBaseUrl + "/products",
-                                                                                apiBaseUrl + "/products/{id}",
-                                                                                apiBaseUrl + "/products/search",
-                                                                                apiBaseUrl + "/products/category/{categoryId}",
-                                                                                apiBaseUrl + "/products/brand/{brandId}",
-                                                                                apiBaseUrl + "/products/{id}/reviews")
-                                                                .permitAll()
-                                                                .requestMatchers(
-                                                                                HttpMethod.GET,
-                                                                                apiBaseUrl + "/categories",
-                                                                                apiBaseUrl + "/categories/{id}",
-                                                                                apiBaseUrl + "/categories/{id}/products")
-                                                                .permitAll()
-                                                                .requestMatchers(
-                                                                                HttpMethod.GET,
-                                                                                apiBaseUrl + "/brands",
-                                                                                apiBaseUrl + "/brands/{id}",
-                                                                                apiBaseUrl + "/brands/{id}/products")
-                                                                .permitAll()
-                                                                .requestMatchers(
-                                                                                HttpMethod.GET,
-                                                                                apiBaseUrl + "/promotions",
-                                                                                apiBaseUrl + "/promotions/active")
-                                                                .permitAll()
-                                                                .requestMatchers(
-                                                                                HttpMethod.GET,
-                                                                                apiBaseUrl + "/reviews/product/{productId}")
-                                                                .permitAll()
-                                                                .requestMatchers(
-                                                                                HttpMethod.GET,
-                                                                                apiBaseUrl + "/vouchers/public",
-                                                                                apiBaseUrl + "/vouchers/validate/{code}")
-                                                                .permitAll()
-                                                                .requestMatchers(apiBaseUrl + "/revenue/total")
-                                                                .hasAnyAuthority("ADMIN", "EMPLOYEE")
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
+                .sessionManagement(
+                        sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers(
+                                apiBaseUrl + "/auth/login",
+                                apiBaseUrl + "/auth/register",
+                                apiBaseUrl + "/auth/refresh-token")
+                        .permitAll()
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                apiBaseUrl + "/products",
+                                apiBaseUrl + "/products/{id}",
+                                apiBaseUrl + "/products/search",
+                                apiBaseUrl + "/products/category/{categoryId}",
+                                apiBaseUrl + "/products/brand/{brandId}",
+                                apiBaseUrl + "/products/{id}/reviews")
+                        .permitAll()
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                apiBaseUrl + "/categories",
+                                apiBaseUrl + "/categories/{id}",
+                                apiBaseUrl + "/categories/{id}/products")
+                        .permitAll()
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                apiBaseUrl + "/brands",
+                                apiBaseUrl + "/brands/{id}",
+                                apiBaseUrl + "/brands/{id}/products")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, apiBaseUrl + "/promotions", apiBaseUrl + "/promotions/active")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, apiBaseUrl + "/reviews/product/{productId}")
+                        .permitAll()
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                apiBaseUrl + "/vouchers/public",
+                                apiBaseUrl + "/vouchers/validate/{code}")
+                        .permitAll()
+                        .requestMatchers(apiBaseUrl + "/revenue/total")
+                        .hasAnyAuthority("ADMIN", "EMPLOYEE")
 
-                                                                // .requestMatchers("/v3/api-docs/**",
-                                                                // "/swagger-ui/**",
-                                                                // "/swagger-ui.html")
-                                                                // .permitAll()
+                        // .requestMatchers("/v3/api-docs/**",
+                        // "/swagger-ui/**",
+                        // "/swagger-ui.html")
+                        // .permitAll()
 
-                                                                .requestMatchers(
-                                                                                apiBaseUrl + "/**",
-                                                                                apiBaseUrl + "/auth/logout")
-                                                                .authenticated())
-                                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                                .exceptionHandling(
-                                                exceptionHandling -> exceptionHandling.authenticationEntryPoint(
-                                                                new JwtAuthEntryPoint()));
+                        .requestMatchers(apiBaseUrl + "/**", apiBaseUrl + "/auth/logout")
+                        .authenticated())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(
+                        exceptionHandling -> exceptionHandling.authenticationEntryPoint(new JwtAuthEntryPoint()));
 
-                return http.build();
-        }
+        return http.build();
+    }
 }

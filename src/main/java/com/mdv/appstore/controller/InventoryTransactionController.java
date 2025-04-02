@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.response.ApiResponse;
 import com.mdv.appstore.dto.response.InventoryTransactionResponse;
 import com.mdv.appstore.service.InventoryTransactionService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api.base-url}/inventory-transactions")
@@ -21,7 +21,6 @@ public class InventoryTransactionController {
     @GetMapping
     public ApiResponse<List<InventoryTransactionResponse>> getInventoryTransactions() {
         return ApiResponse.success(
-                inventoryTransactionService.getInventoryTransactions(),
-                "Inventory transactions fetched successfully");
+                inventoryTransactionService.getInventoryTransactions(), "Inventory transactions fetched successfully");
     }
 }

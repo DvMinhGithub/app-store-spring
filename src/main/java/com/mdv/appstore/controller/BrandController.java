@@ -5,12 +5,12 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.request.BrandRequest;
 import com.mdv.appstore.dto.response.ApiResponse;
 import com.mdv.appstore.dto.response.BrandResponse;
 import com.mdv.appstore.service.BrandService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api.base-url}/brands")
@@ -46,8 +46,7 @@ public class BrandController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Object> updateBrand(
-            @PathVariable("id") Long id, @RequestBody BrandRequest brand) {
+    public ApiResponse<Object> updateBrand(@PathVariable("id") Long id, @RequestBody BrandRequest brand) {
         brandService.updateBrand(id, brand);
         return ApiResponse.builder()
                 .code(HttpStatus.OK.value())

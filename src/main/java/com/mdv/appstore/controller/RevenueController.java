@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.response.ApiResponse;
 import com.mdv.appstore.dto.response.RevenueResponse;
 import com.mdv.appstore.service.RevenueService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api.base-url}/revenue")
@@ -22,14 +22,12 @@ public class RevenueController {
     @GetMapping("/total")
     public ApiResponse<Double> getTotalRevenue(
             @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
-        return ApiResponse.success(
-                revenueService.getTotalRevenue(startDate, endDate), "Get total revenue successful");
+        return ApiResponse.success(revenueService.getTotalRevenue(startDate, endDate), "Get total revenue successful");
     }
 
     @GetMapping("/list")
     public ApiResponse<List<RevenueResponse>> getRevenueByDate(
             @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
-        return ApiResponse.success(
-                revenueService.getRevenueByDate(startDate, endDate), "Get revenue list successful");
+        return ApiResponse.success(revenueService.getRevenueByDate(startDate, endDate), "Get revenue list successful");
     }
 }

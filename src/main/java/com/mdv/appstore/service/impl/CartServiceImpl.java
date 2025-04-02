@@ -5,9 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import com.mdv.appstore.dto.request.CartItemRequest;
 import com.mdv.appstore.dto.request.CartItemUpdate;
 import com.mdv.appstore.dto.response.CartItemResponse;
@@ -18,6 +15,9 @@ import com.mdv.appstore.mapper.CartItemMapper;
 import com.mdv.appstore.security.user.CustomUserDetailsService;
 import com.mdv.appstore.service.CartService;
 import com.mdv.appstore.service.ProductService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -39,8 +39,7 @@ public class CartServiceImpl implements CartService {
 
         validateProduct(request.getProductId(), request.getQuantity());
 
-        CartItemResponse existingItem =
-                cartItemMapper.findByUserIdAndProductId(userId, request.getProductId());
+        CartItemResponse existingItem = cartItemMapper.findByUserIdAndProductId(userId, request.getProductId());
 
         if (existingItem != null) {
             int newQuantity = existingItem.getQuantity() + request.getQuantity();
@@ -69,15 +68,9 @@ public class CartServiceImpl implements CartService {
         Long totalQuantityInStock = product.getTotalQuantity();
 
         if (totalQuantityInStock < quantity) {
-            log.error(
-                    "Insufficient stock. Available: {}, Requested: {}",
-                    totalQuantityInStock,
-                    quantity);
+            log.error("Insufficient stock. Available: {}, Requested: {}", totalQuantityInStock, quantity);
             throw new InsufficientStockException(
-                    "Insufficient stock. Available: "
-                            + totalQuantityInStock
-                            + ", Requested: "
-                            + quantity);
+                    "Insufficient stock. Available: " + totalQuantityInStock + ", Requested: " + quantity);
         }
         return product;
     }
@@ -97,10 +90,7 @@ public class CartServiceImpl implements CartService {
                     product.getTotalQuantity(),
                     newQuantity);
             throw new InsufficientStockException(
-                    "Insufficient stock. Available: "
-                            + product.getTotalQuantity()
-                            + ", Requested: "
-                            + newQuantity);
+                    "Insufficient stock. Available: " + product.getTotalQuantity() + ", Requested: " + newQuantity);
         }
         cartItemMapper.updateQuantity(cartItemId, newQuantity);
         log.info(

@@ -5,15 +5,15 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import com.mdv.appstore.dto.request.VoucherRequest;
 import com.mdv.appstore.dto.response.VoucherResponse;
 import com.mdv.appstore.exception.DataNotFoundException;
 import com.mdv.appstore.exception.DuplicateEntryException;
 import com.mdv.appstore.mapper.VoucherMapper;
 import com.mdv.appstore.service.VoucherService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -62,16 +62,14 @@ public class VoucherServiceImpl implements VoucherService {
         if (!vouchersToActivate.isEmpty()) {
             vouchersToActivate.forEach(voucher -> voucher.setIsActive(true));
             updatedCount += voucherMapper.batchUpdateVoucherStatus(vouchersToActivate);
-            vouchersToActivate.forEach(
-                    voucher -> log.info("Voucher activated: {}", voucher.getCode()));
+            vouchersToActivate.forEach(voucher -> log.info("Voucher activated: {}", voucher.getCode()));
         }
 
         List<VoucherResponse> vouchersToDeactivate = voucherMapper.selectVouchersToDeactivate();
         if (!vouchersToDeactivate.isEmpty()) {
             vouchersToDeactivate.forEach(voucher -> voucher.setIsActive(false));
             updatedCount += voucherMapper.batchUpdateVoucherStatus(vouchersToDeactivate);
-            vouchersToDeactivate.forEach(
-                    voucher -> log.info("Voucher deactivated: {}", voucher.getCode()));
+            vouchersToDeactivate.forEach(voucher -> log.info("Voucher deactivated: {}", voucher.getCode()));
         }
 
         return updatedCount;

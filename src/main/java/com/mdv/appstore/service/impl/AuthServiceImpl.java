@@ -15,9 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import com.mdv.appstore.dto.request.UserLoginRequest;
 import com.mdv.appstore.dto.request.UserRegisterRequest;
 import com.mdv.appstore.dto.response.LoginResponse;
@@ -32,6 +29,9 @@ import com.mdv.appstore.security.jwt.JwtUtils;
 import com.mdv.appstore.service.AuthService;
 import com.mdv.appstore.service.RedisService;
 import com.mdv.appstore.service.UserService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -49,10 +49,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponse login(UserLoginRequest request) {
-        Authentication authentication =
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                request.getEmail(), request.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -70,20 +68,14 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void register(UserRegisterRequest user) {
         if (isEmailOrPhoneExistsInCache(user.getEmail(), user.getPhone())) {
-            log.warn(
-                    "Registration failed: email {} and phone {} already exists",
-                    user.getEmail(),
-                    user.getPhone());
+            log.warn("Registration failed: email {} and phone {} already exists", user.getEmail(), user.getPhone());
             throw new DuplicateEntryException("Email or phone already exists");
         }
 
         UserResponse userResponse = userMapper.findByEmailOrPhone(user.getEmail(), user.getPhone());
         if (userResponse != null) {
             cacheEmailAndPhone(user.getEmail(), user.getPhone());
-            log.warn(
-                    "Registration failed: email {} and phone {} already exists",
-                    user.getEmail(),
-                    user.getPhone());
+            log.warn("Registration failed: email {} and phone {} already exists", user.getEmail(), user.getPhone());
             throw new DuplicateEntryException("Email or phone already exists");
         }
 
@@ -102,8 +94,7 @@ public class AuthServiceImpl implements AuthService {
 
         if (accessTokenTtl > 0) {
             String blacklistAccessToken = "blacklist:" + accessToken;
-            redisService.setValue(
-                    blacklistAccessToken, "logged_out", accessTokenTtl, TimeUnit.MILLISECONDS);
+            redisService.setValue(blacklistAccessToken, "logged_out", accessTokenTtl, TimeUnit.MILLISECONDS);
             log.info(
                     "AccessToken has been successfully blacklisted. Redis Key: {}, TTL: {} ms",
                     blacklistAccessToken,
@@ -112,13 +103,10 @@ public class AuthServiceImpl implements AuthService {
 
         if (body != null && body.containsKey("refreshToken")) {
             String refreshToken = body.get("refreshToken");
-            long refreshTokenTtl =
-                    jwtUtils.getExpirationFromToken(refreshToken).getTime()
-                            - System.currentTimeMillis();
+            long refreshTokenTtl = jwtUtils.getExpirationFromToken(refreshToken).getTime() - System.currentTimeMillis();
             String blacklistRefresh = "blacklist:" + refreshToken;
             if (refreshTokenTtl > 0) {
-                redisService.setValue(
-                        blacklistRefresh, "logged_out", refreshTokenTtl, TimeUnit.MILLISECONDS);
+                redisService.setValue(blacklistRefresh, "logged_out", refreshTokenTtl, TimeUnit.MILLISECONDS);
                 log.info(
                         "RefreshToken has been successfully blacklisted. Redis Key: {}, TTL: {} ms",
                         blacklistRefresh,

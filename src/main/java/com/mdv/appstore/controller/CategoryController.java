@@ -5,12 +5,12 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.request.CategoryRequest;
 import com.mdv.appstore.dto.response.ApiResponse;
 import com.mdv.appstore.dto.response.CategoryResponse;
 import com.mdv.appstore.service.CategoryService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api.base-url}/categories")
@@ -56,8 +56,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Object> updateCategory(
-            @PathVariable("id") Long id, @RequestBody CategoryRequest category) {
+    public ApiResponse<Object> updateCategory(@PathVariable("id") Long id, @RequestBody CategoryRequest category) {
         categoryService.updateCategory(id, category);
         return ApiResponse.builder()
                 .code(HttpStatus.OK.value())

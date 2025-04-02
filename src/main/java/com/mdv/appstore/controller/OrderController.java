@@ -4,15 +4,15 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-
 import com.mdv.appstore.dto.request.OrderCreateRequest;
 import com.mdv.appstore.dto.request.OrderStatusRequest;
 import com.mdv.appstore.dto.response.ApiResponse;
-import com.mdv.appstore.dto.response.OrderResponse;
 import com.mdv.appstore.dto.response.OrderHistoryResponse;
 import com.mdv.appstore.dto.response.OrderItemResponse;
+import com.mdv.appstore.dto.response.OrderResponse;
 import com.mdv.appstore.service.OrderService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("${app.api.base-url}/orders")
@@ -49,16 +49,14 @@ public class OrderController {
     }
 
     @PostMapping
-    public ApiResponse<Void> createOrder(
-            @RequestBody @Valid OrderCreateRequest orderCreateRequest) {
+    public ApiResponse<Void> createOrder(@RequestBody @Valid OrderCreateRequest orderCreateRequest) {
         orderService.createOrder(orderCreateRequest);
         return ApiResponse.success("Order created");
     }
 
     @PutMapping("/{id}/status")
     public ApiResponse<Void> updateOrderStatus(
-            @PathVariable("id") Long id,
-            @RequestBody @Valid OrderStatusRequest orderStatusRequest) {
+            @PathVariable("id") Long id, @RequestBody @Valid OrderStatusRequest orderStatusRequest) {
         orderService.updateOrderStatus(id, orderStatusRequest);
         return ApiResponse.success("Order status updated");
     }

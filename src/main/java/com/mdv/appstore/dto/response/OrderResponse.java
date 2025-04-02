@@ -3,10 +3,10 @@ package com.mdv.appstore.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.mdv.appstore.enums.OrderStatus;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import com.mdv.appstore.enums.OrderStatus;
 
 @Getter
 @Setter

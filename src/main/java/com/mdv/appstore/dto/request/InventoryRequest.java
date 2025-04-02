@@ -1,10 +1,11 @@
 package com.mdv.appstore.dto.request;
 
+import org.hibernate.validator.constraints.Length;
+
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.validator.constraints.Length;
 
 @Getter
 @Setter
@@ -15,10 +16,7 @@ public class InventoryRequest {
     private Long productId;
 
     @NotNull(message = "Import price cannot be null")
-    @DecimalMin(
-            value = "0.0",
-            inclusive = true,
-            message = "Import price must be greater than or equal to 0")
+    @DecimalMin(value = "0.0", inclusive = true, message = "Import price must be greater than or equal to 0")
     private Double importPrice;
 
     @NotNull(message = "Quantity cannot be null")

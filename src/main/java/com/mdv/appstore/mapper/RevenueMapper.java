@@ -11,8 +11,7 @@ import com.mdv.appstore.dto.response.RevenueResponse;
 public interface RevenueMapper {
     void insert(RevenueResponse revenue);
 
-    List<RevenueResponse> findByDateRange(
-            @Param("startDate") String startDate, @Param("endDate") String endDate);
+    List<RevenueResponse> findByDateRange(@Param("startDate") String startDate, @Param("endDate") String endDate);
 
     Double getTotalRevenue(@Param("startDate") String startDate, @Param("endDate") String endDate);
 }

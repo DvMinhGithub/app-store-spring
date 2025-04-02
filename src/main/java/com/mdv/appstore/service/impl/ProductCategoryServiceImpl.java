@@ -4,10 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-
 import com.mdv.appstore.dto.response.CategoryResponse;
 import com.mdv.appstore.dto.response.ProductResponse;
 import com.mdv.appstore.exception.DataNotFoundException;
@@ -16,6 +12,10 @@ import com.mdv.appstore.mapper.ProductCategoryMapper;
 import com.mdv.appstore.service.CategoryService;
 import com.mdv.appstore.service.ProductCategoryService;
 import com.mdv.appstore.service.ProductService;
+
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Service
 @RequiredArgsConstructor
@@ -30,10 +30,8 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         validateProductAndCategory(productId, categoryId);
 
         if (isExist(productId, categoryId)) {
-            throw new DuplicateEntryException(
-                    String.format(
-                            "Product with ID %d is already associated with category ID %d.",
-                            productId, categoryId));
+            throw new DuplicateEntryException(String.format(
+                    "Product with ID %d is already associated with category ID %d.", productId, categoryId));
         }
 
         productCategoryMapper.create(productId, categoryId);
@@ -53,10 +51,8 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         validateProductAndCategory(productId, categoryId);
 
         if (!isExist(productId, categoryId)) {
-            throw new DataNotFoundException(
-                    String.format(
-                            "Product with ID %d and category ID %d association not found.",
-                            productId, categoryId));
+            throw new DataNotFoundException(String.format(
+                    "Product with ID %d and category ID %d association not found.", productId, categoryId));
         }
 
         productCategoryMapper.delete(productId, categoryId);

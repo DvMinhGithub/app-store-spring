@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.request.CartItemRequest;
 import com.mdv.appstore.dto.request.CartItemUpdate;
 import com.mdv.appstore.dto.response.ApiResponse;
 import com.mdv.appstore.dto.response.CartItemResponse;
 import com.mdv.appstore.service.CartService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api.base-url}/cart")
@@ -32,8 +32,7 @@ public class CartController {
 
     @PutMapping("/{cartItemId}")
     public ApiResponse<Void> updateQuantity(
-            @PathVariable("cartItemId") Long cartItemId,
-            @RequestBody @Valid CartItemUpdate cartItemUpdate) {
+            @PathVariable("cartItemId") Long cartItemId, @RequestBody @Valid CartItemUpdate cartItemUpdate) {
         cartService.updateQuantity(cartItemId, cartItemUpdate);
         return ApiResponse.success("Quantity updated successfully");
     }

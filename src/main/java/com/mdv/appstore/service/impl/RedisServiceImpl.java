@@ -6,14 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.Slf4j;
-
 import com.mdv.appstore.service.RedisService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 public class RedisServiceImpl implements RedisService {
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     public RedisServiceImpl(@Autowired RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;

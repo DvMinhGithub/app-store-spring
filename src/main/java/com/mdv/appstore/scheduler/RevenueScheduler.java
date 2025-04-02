@@ -3,10 +3,10 @@ package com.mdv.appstore.scheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.mdv.appstore.service.RevenueService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import com.mdv.appstore.service.RevenueService;
 
 @Component
 @RequiredArgsConstructor

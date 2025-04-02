@@ -3,13 +3,13 @@ package com.mdv.appstore.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.request.ProductCategoryRequest;
 import com.mdv.appstore.dto.response.ApiResponse;
 import com.mdv.appstore.service.ProductCategoryService;
+
+import jakarta.validation.Valid;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api.base-url}")
@@ -20,8 +20,7 @@ public class ProductCategoryController {
 
     @PostMapping("/products/{id}/categories")
     public ApiResponse<Object> create(
-            @NonNull @PathVariable("id") Long productId,
-            @Valid @RequestBody ProductCategoryRequest request) {
+            @NonNull @PathVariable("id") Long productId, @Valid @RequestBody ProductCategoryRequest request) {
         productCategoryService.create(productId, request.getCategoryId());
         return ApiResponse.builder()
                 .code(HttpStatus.CREATED.value())
@@ -49,8 +48,7 @@ public class ProductCategoryController {
 
     @DeleteMapping("/products/{productId}/categories/{categoryId}")
     public ApiResponse<Object> delete(
-            @PathVariable("productId") Long productId,
-            @PathVariable("categoryId") Long categoryId) {
+            @PathVariable("productId") Long productId, @PathVariable("categoryId") Long categoryId) {
         productCategoryService.delete(productId, categoryId);
         return ApiResponse.builder()
                 .code(HttpStatus.OK.value())

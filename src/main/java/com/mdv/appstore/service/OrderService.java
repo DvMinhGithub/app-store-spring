@@ -12,7 +12,7 @@ public interface OrderService {
 
     OrderResponse getOrderById(Long id);
 
-    void createOrder(OrderCreateRequest orderCreateRequest) throws RuntimeException;
+    void createOrder(OrderCreateRequest orderCreateRequest);
 
     List<OrderResponse> getOrdersByUserId(Long userId);
 

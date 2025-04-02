@@ -22,8 +22,7 @@ public interface VoucherMapper {
 
     List<VoucherResponse> selectVouchersToDeactivate();
 
-    void updateVoucherById(
-            @Param("id") Long id, @Param("voucherRequest") VoucherRequest voucherRequest);
+    void updateVoucherById(@Param("id") Long id, @Param("voucherRequest") VoucherRequest voucherRequest);
 
     void updateUsedQuantity(@Param("id") Long id);
 
