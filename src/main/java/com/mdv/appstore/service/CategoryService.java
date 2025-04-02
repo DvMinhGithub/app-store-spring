@@ -2,67 +2,22 @@ package com.mdv.appstore.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.request.CategoryRequest;
 import com.mdv.appstore.dto.response.CategoryResponse;
-import com.mdv.appstore.exception.DataNotFoundException;
-import com.mdv.appstore.mapper.CategoryMapper;
 
-@Service
-@RequiredArgsConstructor
-public class CategoryService {
-    private static final String CATEGORY_NOT_EXISTS = "Category not exists";
-    private static final String CATEGORY_ALREADY_EXISTS = "Category already exists";
-    private final CategoryMapper categoryMapper;
+public interface CategoryService {
 
-    public void createCategory(CategoryRequest category) {
-        categoryMapper.insert(category);
-    }
+    void createCategory(CategoryRequest category);
 
-    public List<CategoryResponse> findAll() {
-        return categoryMapper.findAll();
-    }
+    List<CategoryResponse> findAll();
 
-    public List<CategoryResponse> findAllActive() {
-        return categoryMapper.findAllActive();
-    }
+    List<CategoryResponse> findAllActive();
 
-    public CategoryResponse findById(Long id) {
-        CategoryResponse category = categoryMapper.findById(id);
-        if (category == null || category.isDeleted()) {
-            throw new DataNotFoundException(CATEGORY_NOT_EXISTS);
-        }
-        return category;
-    }
+    CategoryResponse findById(Long id);
 
-    public void updateCategory(Long id, CategoryRequest category) {
-        CategoryResponse categoryResponse = findById(id);
-        if (categoryResponse == null || categoryResponse.isDeleted()) {
-            throw new DataNotFoundException(CATEGORY_NOT_EXISTS);
-        }
+    void updateCategory(Long id, CategoryRequest category);
 
-        if (categoryMapper.existsByName(category.getName())) {
-            throw new IllegalArgumentException(CATEGORY_ALREADY_EXISTS);
-        }
-        categoryMapper.update(id, category);
-    }
+    void deleteCategory(Long id);
 
-    public void deleteCategory(Long id) {
-        CategoryResponse category = findById(id);
-        if (category == null) {
-            throw new DataNotFoundException(CATEGORY_NOT_EXISTS);
-        }
-        categoryMapper.softDelete(id);
-    }
-
-    public void restoreCategory(Long id) {
-        CategoryResponse category = categoryMapper.findById(id);
-        if (category == null) {
-            throw new DataNotFoundException(CATEGORY_NOT_EXISTS);
-        }
-        categoryMapper.restore(id);
-    }
+    void restoreCategory(Long id);
 }

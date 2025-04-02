@@ -8,8 +8,8 @@ import org.apache.ibatis.annotations.Param;
 import com.mdv.appstore.dto.response.ProductAttributeResponse;
 
 @Mapper
-public interface ProductAtrributeMapper {
-    void create(@Param("pad") ProductAttributeResponse productAtrributeResponse);
+public interface ProductAttributeMapper {
+    void create(@Param("pad") ProductAttributeResponse productAttributeResponse);
 
     ProductAttributeResponse findById(Long id);
 
@@ -17,7 +17,7 @@ public interface ProductAtrributeMapper {
 
     List<ProductAttributeResponse> findAttributesByProductId(Long productId);
 
-    void update(Long id, @Param("pad") ProductAttributeResponse productAtrributeResponse);
+    void update(Long id, @Param("pad") ProductAttributeResponse productAttributeResponse);
 
     void delete(Long id);
 }

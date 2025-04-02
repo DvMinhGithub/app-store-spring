@@ -2,57 +2,24 @@ package com.mdv.appstore.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.request.ProductPromotionRequest;
 import com.mdv.appstore.dto.response.ProductPromotionResponse;
-import com.mdv.appstore.exception.DataNotFoundException;
-import com.mdv.appstore.mapper.ProductPromotionMapper;
 
-@Service
-@RequiredArgsConstructor
-public class ProductPromotionService {
-    private final ProductPromotionMapper productPromotionMapper;
-    private final ProductService productService;
+public interface ProductPromotionService {
 
-    public List<ProductPromotionResponse> findAll() {
-        return productPromotionMapper.findAll();
-    }
+    List<ProductPromotionResponse> findAll();
 
-    public ProductPromotionResponse findById(Long id) {
-        ProductPromotionResponse product = productPromotionMapper.findById(id);
-        if (product == null) {
-            throw new DataNotFoundException("Product promotion not found");
-        }
-        return product;
-    }
+    ProductPromotionResponse findById(Long id);
 
-    public void create(ProductPromotionRequest productPromotion) {
-        productService.findById(productPromotion.getProductId());
-        productPromotionMapper.create(productPromotion);
-    }
+    void create(ProductPromotionRequest productPromotion);
 
-    public void update(Long id, ProductPromotionRequest productPromotion) {
-        findById(id);
-        productPromotionMapper.update(id, productPromotion);
-    }
+    void update(Long id, ProductPromotionRequest productPromotion);
 
-    public void delete(Long id) {
-        findById(id);
-        productPromotionMapper.delete(id);
-    }
+    void delete(Long id);
 
-    public List<ProductPromotionResponse> findActivePromotions() {
-        return productPromotionMapper.findActivePromotions();
-    }
+    List<ProductPromotionResponse> findActivePromotions();
 
-    public List<ProductPromotionResponse> findByProductId(Long productId) {
-        return productPromotionMapper.findByProductId(productId);
-    }
+    List<ProductPromotionResponse> findByProductId(Long productId);
 
-    public List<ProductPromotionResponse> findActivePromotionsByProductId(Long productId) {
-        return productPromotionMapper.findActivePromotionsByProductId(productId);
-    }
+    List<ProductPromotionResponse> findActivePromotionsByProductId(Long productId);
 }

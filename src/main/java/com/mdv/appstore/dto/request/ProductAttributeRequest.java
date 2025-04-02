@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductAtrributeRequest {
+public class ProductAttributeRequest {
     @NotBlank(message = "Attribute name is required")
     @Size(max = 255, message = "Attribute name must be less than 255 characters")
     private String attributeName;

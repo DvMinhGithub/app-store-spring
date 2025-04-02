@@ -10,13 +10,13 @@ import lombok.RequiredArgsConstructor;
 
 import com.mdv.appstore.dto.response.ApiResponse;
 import com.mdv.appstore.dto.response.ProductAttributeResponse;
-import com.mdv.appstore.service.ProductAtrributeService;
+import com.mdv.appstore.service.ProductAttributeService;
 
 @RestController
 @RequestMapping("${app.api.base-url}/product-attribute")
 @RequiredArgsConstructor
-public class ProductAtrributeController {
-    private final ProductAtrributeService productAtrributeService;
+public class ProductAttributeController {
+    private final ProductAttributeService productAttributeService;
 
     private static final String PRODUCT_ATTRIBUTE_FETCHED_SUCCESSFULLY_MESSAGE =
             "Product attribute fetched successfully";
@@ -26,7 +26,7 @@ public class ProductAtrributeController {
         return ApiResponse.<List<ProductAttributeResponse>>builder()
                 .code(HttpStatus.OK.value())
                 .message(PRODUCT_ATTRIBUTE_FETCHED_SUCCESSFULLY_MESSAGE)
-                .data(productAtrributeService.findAll())
+                .data(productAttributeService.findAll())
                 .build();
     }
 
@@ -35,7 +35,7 @@ public class ProductAtrributeController {
         return ApiResponse.<ProductAttributeResponse>builder()
                 .code(HttpStatus.OK.value())
                 .message(PRODUCT_ATTRIBUTE_FETCHED_SUCCESSFULLY_MESSAGE)
-                .data(productAtrributeService.findById(id))
+                .data(productAttributeService.findById(id))
                 .build();
     }
 
@@ -45,14 +45,14 @@ public class ProductAtrributeController {
         return ApiResponse.<List<ProductAttributeResponse>>builder()
                 .code(HttpStatus.OK.value())
                 .message(PRODUCT_ATTRIBUTE_FETCHED_SUCCESSFULLY_MESSAGE)
-                .data(productAtrributeService.findAttributesByProductId(productId))
+                .data(productAttributeService.findAttributesByProductId(productId))
                 .build();
     }
 
     @PostMapping
     public ApiResponse<Object> createProductAttribute(
             @RequestBody @Valid ProductAttributeResponse productAttribute) {
-        productAtrributeService.createProductAtrribute(productAttribute);
+        productAttributeService.createProductAttribute(productAttribute);
         return ApiResponse.builder()
                 .code(HttpStatus.CREATED.value())
                 .message("Product attribute created successfully")
@@ -62,7 +62,7 @@ public class ProductAtrributeController {
     @PutMapping("/{id}")
     public ApiResponse<Object> updateProductAttribute(
             @PathVariable("id") Long id, @RequestBody @Valid ProductAttributeResponse productAttribute) {
-        productAtrributeService.updateProductAtrribute(id, productAttribute);
+        productAttributeService.updateProductAttribute(id, productAttribute);
         return ApiResponse.builder()
                 .code(HttpStatus.OK.value())
                 .message("Product attribute updated successfully")
@@ -71,7 +71,7 @@ public class ProductAtrributeController {
 
     @DeleteMapping("/{id}")
     public ApiResponse<Object> deleteProductAttribute(@PathVariable("id") Long id) {
-        productAtrributeService.deleteProductAtrribute(id);
+        productAttributeService.deleteProductAttribute(id);
         return ApiResponse.builder()
                 .code(HttpStatus.OK.value())
                 .message("Product attribute deleted successfully")

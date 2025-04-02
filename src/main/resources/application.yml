@@ -44,7 +44,7 @@ server:
 
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
-  type-aliases-package: com.mdv.appstore.model
+  type-aliases-package: com.mdv.appstore.dto
 
 file:
   upload-dir: uploads/

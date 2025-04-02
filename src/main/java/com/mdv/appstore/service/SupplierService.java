@@ -2,43 +2,18 @@ package com.mdv.appstore.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
-import lombok.RequiredArgsConstructor;
-
 import com.mdv.appstore.dto.request.SupplierRequest;
 import com.mdv.appstore.dto.response.SupplierResponse;
-import com.mdv.appstore.exception.DataNotFoundException;
-import com.mdv.appstore.mapper.SupplierMapper;
 
-@Service
-@RequiredArgsConstructor
-public class SupplierService {
-    private final SupplierMapper supplierMapper;
+public interface SupplierService {
 
-    public List<SupplierResponse> findAll() {
-        return supplierMapper.findAll();
-    }
+    List<SupplierResponse> findAll();
 
-    public SupplierResponse findById(Long id) {
-        SupplierResponse supplier = supplierMapper.findById(id);
-        if (supplier == null) {
-            throw new DataNotFoundException("Supplier not found");
-        }
-        return supplier;
-    }
+    SupplierResponse findById(Long id);
 
-    public void create(SupplierRequest supplier) {
-        supplierMapper.create(supplier);
-    }
+    void create(SupplierRequest supplier);
 
-    public void update(Long id, SupplierRequest supplier) {
-        findById(id);
-        supplierMapper.update(supplier);
-    }
+    void update(Long id, SupplierRequest supplier);
 
-    public void deleteById(Long id) {
-        findById(id);
-        supplierMapper.deleteById(id);
-    }
+    void deleteById(Long id);
 }
