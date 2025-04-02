@@ -3,7 +3,7 @@
 
 <mapper namespace="com.mdv.appstore.mapper.RevenueMapper">
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="RevenueDTO">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="RevenueResponse">
         INSERT INTO daily_revenue (
             date,
             total_revenue
@@ -16,7 +16,7 @@
             total_revenue = total_revenue + #{totalRevenue}
     </insert>
 
-    <resultMap id="revenueResultMap" type="RevenueDTO">
+    <resultMap id="revenueResultMap" type="RevenueResponse">
         <id property="id" column="id"/>
         <result property="date" column="date"/>
         <result property="totalRevenue" column="total_revenue"/>

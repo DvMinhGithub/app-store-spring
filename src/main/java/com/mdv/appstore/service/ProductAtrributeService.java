@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import com.mdv.appstore.dto.response.ProductAttributeResponse;
 import com.mdv.appstore.exception.DataNotFoundException;
 import com.mdv.appstore.mapper.ProductAtrributeMapper;
-import com.mdv.appstore.model.dto.ProductAttributeDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -18,29 +18,29 @@ public class ProductAtrributeService {
 
     private static final String PRODUCT_ATRIBUTE_NOT_FOUND = "ProductAtrribute not found";
 
-    public void createProductAtrribute(ProductAttributeDTO productAtrribute) {
+    public void createProductAtrribute(ProductAttributeResponse productAtrribute) {
         productService.findById(productAtrribute.getProductId());
         productAtrributeMapper.create(productAtrribute);
     }
 
-    public List<ProductAttributeDTO> findAll() {
+    public List<ProductAttributeResponse> findAll() {
         return productAtrributeMapper.findAll();
     }
 
-    public ProductAttributeDTO findById(Long id) {
-        ProductAttributeDTO productAtrribute = productAtrributeMapper.findById(id);
+    public ProductAttributeResponse findById(Long id) {
+        ProductAttributeResponse productAtrribute = productAtrributeMapper.findById(id);
         if (productAtrribute == null) {
             throw new DataNotFoundException(PRODUCT_ATRIBUTE_NOT_FOUND);
         }
         return productAtrribute;
     }
 
-    public List<ProductAttributeDTO> findAttributesByProductId(Long productId) {
+    public List<ProductAttributeResponse> findAttributesByProductId(Long productId) {
         productService.findById(productId);
         return productAtrributeMapper.findAttributesByProductId(productId);
     }
 
-    public void updateProductAtrribute(Long id, ProductAttributeDTO productAtrribute) {
+    public void updateProductAtrribute(Long id, ProductAttributeResponse productAtrribute) {
         productService.findById(productAtrribute.getProductId());
         if (productAtrributeMapper.findById(id) == null) {
             throw new DataNotFoundException(PRODUCT_ATRIBUTE_NOT_FOUND);

@@ -5,16 +5,16 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.mdv.appstore.model.dto.CategoryDTO;
-import com.mdv.appstore.model.dto.ProductDTO;
+import com.mdv.appstore.dto.response.CategoryResponse;
+import com.mdv.appstore.dto.response.ProductResponse;
 
 @Mapper
 public interface ProductCategoryMapper {
     void create(@Param("productId") Long productId, @Param("categoryId") Long categoryId);
 
-    List<CategoryDTO> getCategoriesByProductId(Long productId);
+    List<CategoryResponse> getCategoriesByProductId(Long productId);
 
-    List<ProductDTO> getProductsByCategoryId(Long categoryId);
+    List<ProductResponse> getProductsByCategoryId(Long categoryId);
 
     boolean isExist(@Param("productId") Long productId, @Param("categoryId") Long categoryId);
 

@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import com.mdv.appstore.model.dto.SupplierDTO;
-import com.mdv.appstore.model.request.SupplierRequest;
-import com.mdv.appstore.model.response.ApiResponse;
+import com.mdv.appstore.dto.request.SupplierRequest;
+import com.mdv.appstore.dto.response.ApiResponse;
+import com.mdv.appstore.dto.response.SupplierResponse;
 import com.mdv.appstore.service.SupplierService;
 
 @RestController
@@ -25,12 +25,12 @@ public class SupplierController {
     }
 
     @GetMapping
-    public ApiResponse<List<SupplierDTO>> findAll() {
+    public ApiResponse<List<SupplierResponse>> findAll() {
         return ApiResponse.success(supplierService.findAll(), "Suppliers retrieved successfully");
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<SupplierDTO> findById(@PathVariable Long id) {
+    public ApiResponse<SupplierResponse> findById(@PathVariable Long id) {
         return ApiResponse.success(supplierService.findById(id), "Supplier retrieved successfully");
     }
 

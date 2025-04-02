@@ -8,11 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import com.mdv.appstore.dto.request.ProductRequest;
+import com.mdv.appstore.dto.response.ProductCreateResponse;
+import com.mdv.appstore.dto.response.ProductResponse;
 import com.mdv.appstore.exception.DataNotFoundException;
 import com.mdv.appstore.mapper.ProductMapper;
-import com.mdv.appstore.model.dto.ProductCreateDTO;
-import com.mdv.appstore.model.dto.ProductDTO;
-import com.mdv.appstore.model.request.ProductRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -23,33 +23,33 @@ public class ProductService {
     @Transactional
     public void createProduct(ProductRequest productRequest) throws IOException {
         String imageUrl = fileService.storeFile(productRequest.getImage());
-        ProductCreateDTO productCreateDTO =
-                ProductCreateDTO.builder()
+        ProductCreateResponse productCreateResponse =
+                ProductCreateResponse.builder()
                         .name(productRequest.getName())
                         .price(productRequest.getPrice())
                         .imageUrl(imageUrl)
                         .brandId(productRequest.getBrandId())
                         .build();
-        productMapper.createProduct(productCreateDTO);
+        productMapper.createProduct(productCreateResponse);
     }
 
-    public List<ProductDTO> findAll() {
+    public List<ProductResponse> findAll() {
         return productMapper.findAll();
     }
 
     @Transactional
-    public ProductDTO findById(Long id) {
-        ProductDTO productDTO = getProductByIdOrThrow(id);
+    public ProductResponse findById(Long id) {
+        ProductResponse productResponse = getProductByIdOrThrow(id);
         productMapper.incrementViewCount(id);
-        return productDTO;
+        return productResponse;
     }
 
-    private ProductDTO getProductByIdOrThrow(Long id) {
-        ProductDTO productDTO = productMapper.findById(id);
-        if (productDTO == null) {
+    private ProductResponse getProductByIdOrThrow(Long id) {
+        ProductResponse productResponse = productMapper.findById(id);
+        if (productResponse == null) {
             throw new DataNotFoundException("Product with id " + id + " not found");
         }
-        return productDTO;
+        return productResponse;
     }
 
     @Transactional

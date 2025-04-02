@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import com.mdv.appstore.dto.request.BrandRequest;
+import com.mdv.appstore.dto.response.BrandResponse;
 import com.mdv.appstore.exception.DataNotFoundException;
 import com.mdv.appstore.mapper.BrandMapper;
-import com.mdv.appstore.model.dto.BrandDTO;
-import com.mdv.appstore.model.request.BrandRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -25,12 +25,12 @@ public class BrandService {
         brandMapper.createBrand(brand);
     }
 
-    public List<BrandDTO> findAll() {
+    public List<BrandResponse> findAll() {
         return brandMapper.findAll();
     }
 
-    public BrandDTO findById(Long id) {
-        BrandDTO brand = brandMapper.findById(id);
+    public BrandResponse findById(Long id) {
+        BrandResponse brand = brandMapper.findById(id);
         if (brand == null) {
             throw new DataNotFoundException(BRAND_NOT_EXISTS);
         }
@@ -49,7 +49,7 @@ public class BrandService {
     }
 
     public void deleteBrand(Long id) {
-        BrandDTO brand = findById(id);
+        BrandResponse brand = findById(id);
         if (brand == null) {
             throw new DataNotFoundException(BRAND_NOT_EXISTS);
         }

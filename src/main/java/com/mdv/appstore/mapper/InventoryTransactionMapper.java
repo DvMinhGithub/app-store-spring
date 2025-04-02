@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.mdv.appstore.model.dto.InventoryTransactionDTO;
-import com.mdv.appstore.model.request.InventoryTransactionRequest;
+import com.mdv.appstore.dto.request.InventoryTransactionRequest;
+import com.mdv.appstore.dto.response.InventoryTransactionResponse;
 
 @Mapper
 public interface InventoryTransactionMapper {
@@ -14,9 +14,9 @@ public interface InventoryTransactionMapper {
 
     void exportInventoryTransaction(@Param("it") InventoryTransactionRequest inventoryTransaction);
 
-    List<InventoryTransactionDTO> getInventoryTransactions();
+    List<InventoryTransactionResponse> getInventoryTransactions();
 
-    List<InventoryTransactionDTO> findByProductId(@Param("productId") Long productId);
+    List<InventoryTransactionResponse> findByProductId(@Param("productId") Long productId);
 
-    List<InventoryTransactionDTO> findBySupplierId(@Param("supplierId") Long supplierId);
+    List<InventoryTransactionResponse> findBySupplierId(@Param("supplierId") Long supplierId);
 }

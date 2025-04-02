@@ -8,11 +8,11 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import com.mdv.appstore.dto.response.CategoryResponse;
+import com.mdv.appstore.dto.response.ProductResponse;
 import com.mdv.appstore.exception.DataNotFoundException;
 import com.mdv.appstore.exception.DuplicateEntryException;
 import com.mdv.appstore.mapper.ProductCategoryMapper;
-import com.mdv.appstore.model.dto.CategoryDTO;
-import com.mdv.appstore.model.dto.ProductDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -36,12 +36,12 @@ public class ProductCategoryService {
         productCategoryMapper.create(productId, categoryId);
     }
 
-    public List<CategoryDTO> getCategoriesByProductId(Long productId) {
+    public List<CategoryResponse> getCategoriesByProductId(Long productId) {
         validateProduct(productId);
         return productCategoryMapper.getCategoriesByProductId(productId);
     }
 
-    public List<ProductDTO> getProductsByCategoryId(Long categoryId) {
+    public List<ProductResponse> getProductsByCategoryId(Long categoryId) {
         validateCategory(categoryId);
         return productCategoryMapper.getProductsByCategoryId(categoryId);
     }

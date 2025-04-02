@@ -5,14 +5,14 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.mdv.appstore.model.dto.ProductPromotionDTO;
-import com.mdv.appstore.model.request.ProductPromotionRequest;
+import com.mdv.appstore.dto.request.ProductPromotionRequest;
+import com.mdv.appstore.dto.response.ProductPromotionResponse;
 
 @Mapper
 public interface ProductPromotionMapper {
-    List<ProductPromotionDTO> findAll();
+    List<ProductPromotionResponse> findAll();
 
-    ProductPromotionDTO findById(@Param("id") Long id);
+    ProductPromotionResponse findById(@Param("id") Long id);
 
     void create(@Param("pr") ProductPromotionRequest productPromotion);
 
@@ -20,9 +20,9 @@ public interface ProductPromotionMapper {
 
     void delete(@Param("id") Long id);
 
-    List<ProductPromotionDTO> findActivePromotions();
+    List<ProductPromotionResponse> findActivePromotions();
 
-    List<ProductPromotionDTO> findByProductId(@Param("productId") Long productId);
+    List<ProductPromotionResponse> findByProductId(@Param("productId") Long productId);
 
-    List<ProductPromotionDTO> findActivePromotionsByProductId(@Param("productId") Long productId);
+    List<ProductPromotionResponse> findActivePromotionsByProductId(@Param("productId") Long productId);
 }

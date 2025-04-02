@@ -18,17 +18,17 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import com.mdv.appstore.config.JwtUtils;
+import com.mdv.appstore.dto.request.UserLoginRequest;
+import com.mdv.appstore.dto.request.UserRegisterRequest;
+import com.mdv.appstore.dto.response.LoginResponse;
+import com.mdv.appstore.dto.response.RoleResponse;
+import com.mdv.appstore.dto.response.UserResponse;
 import com.mdv.appstore.enums.UserRole;
 import com.mdv.appstore.exception.DuplicateEntryException;
 import com.mdv.appstore.mapper.AuthMapper;
 import com.mdv.appstore.mapper.RoleMapper;
 import com.mdv.appstore.mapper.UserMapper;
-import com.mdv.appstore.model.dto.LoginDTO;
-import com.mdv.appstore.model.dto.RoleDTO;
-import com.mdv.appstore.model.dto.UserDTO;
-import com.mdv.appstore.model.request.UserLoginRequest;
-import com.mdv.appstore.model.request.UserRegisterRequest;
+import com.mdv.appstore.security.jwt.JwtUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +44,7 @@ public class AuthService {
     private final UserService userService;
     private final RedisService redisService;
 
-    public LoginDTO login(UserLoginRequest request) {
+    public LoginResponse login(UserLoginRequest request) {
         Authentication authentication =
                 authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
@@ -56,7 +56,7 @@ public class AuthService {
         String generateAccessToken = jwtUtils.generateAccessToken(userDetails);
         String generateRefreshToken = jwtUtils.generateRefreshToken(userDetails);
 
-        return LoginDTO.builder()
+        return LoginResponse.builder()
                 .accessToken(generateAccessToken)
                 .refreshToken(generateRefreshToken)
                 .build();
@@ -72,8 +72,8 @@ public class AuthService {
             throw new DuplicateEntryException("Email or phone already exists");
         }
 
-        UserDTO userDTO = userMapper.findByEmailOrPhone(user.getEmail(), user.getPhone());
-        if (userDTO != null) {
+        UserResponse userResponse = userMapper.findByEmailOrPhone(user.getEmail(), user.getPhone());
+        if (userResponse != null) {
             cacheEmailAndPhone(user.getEmail(), user.getPhone());
             log.warn(
                     "Registration failed: email {} and phone {} already exists",
@@ -86,7 +86,7 @@ public class AuthService {
         user.setPassword(encodedPassword);
         authMapper.register(user);
 
-        RoleDTO role = roleMapper.findByName(UserRole.CUSTOMER.name());
+        RoleResponse role = roleMapper.findByName(UserRole.CUSTOMER.name());
         userService.assignRoles(user.getId(), List.of(role.getId()));
     }
 

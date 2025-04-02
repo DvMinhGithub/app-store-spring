@@ -34,7 +34,7 @@
         )
     </insert>
 
-    <resultMap id="selectVoucher" type="VoucherDTO">
+    <resultMap id="selectVoucher" type="VoucherResponse">
         <id property="id" column="id"/>
         <result property="code" column="code"/>
         <result property="conditionValue" column="condition_value"/>

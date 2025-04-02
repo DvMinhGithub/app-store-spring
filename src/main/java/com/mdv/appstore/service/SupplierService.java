@@ -6,22 +6,22 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import com.mdv.appstore.dto.request.SupplierRequest;
+import com.mdv.appstore.dto.response.SupplierResponse;
 import com.mdv.appstore.exception.DataNotFoundException;
 import com.mdv.appstore.mapper.SupplierMapper;
-import com.mdv.appstore.model.dto.SupplierDTO;
-import com.mdv.appstore.model.request.SupplierRequest;
 
 @Service
 @RequiredArgsConstructor
 public class SupplierService {
     private final SupplierMapper supplierMapper;
 
-    public List<SupplierDTO> findAll() {
+    public List<SupplierResponse> findAll() {
         return supplierMapper.findAll();
     }
 
-    public SupplierDTO findById(Long id) {
-        SupplierDTO supplier = supplierMapper.findById(id);
+    public SupplierResponse findById(Long id) {
+        SupplierResponse supplier = supplierMapper.findById(id);
         if (supplier == null) {
             throw new DataNotFoundException("Supplier not found");
         }

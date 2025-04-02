@@ -16,7 +16,7 @@
         )
     </insert>
 
-    <resultMap id="selectResultMap" type="ProductAttributeDTO">
+    <resultMap id="selectResultMap" type="ProductAttributeResponse">
         <id property="id" column="id" />
         <result property="attributeValue" column="attribute_value" />
         <result property="attributeName" column="attribute_name" />

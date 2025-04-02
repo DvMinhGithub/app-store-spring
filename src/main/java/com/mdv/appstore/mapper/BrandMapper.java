@@ -5,16 +5,16 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.mdv.appstore.model.dto.BrandDTO;
-import com.mdv.appstore.model.request.BrandRequest;
+import com.mdv.appstore.dto.request.BrandRequest;
+import com.mdv.appstore.dto.response.BrandResponse;
 
 @Mapper
 public interface BrandMapper {
     void createBrand(@Param("brand") BrandRequest brand);
 
-    List<BrandDTO> findAll();
+    List<BrandResponse> findAll();
 
-    BrandDTO findById(@Param("id") Long id);
+    BrandResponse findById(@Param("id") Long id);
 
     void updateBrand(@Param("id") Long id, @Param("brand") BrandRequest brand);
 

@@ -15,13 +15,13 @@
         )
     </insert>
 
-    <resultMap id="selectInventoryTransactions" type="InventoryTransactionDTO">
+    <resultMap id="selectInventoryTransactions" type="InventoryTransactionResponse">
         <id property="id" column="id" />
         <result property="productId" column="product_id" />
         <result property="quantity" column="quantity" />
         <result property="type" column="type" />
         <result property="transactionDate" column="transaction_date" />
-        <association property="supplier" javaType="SupplierDTO" columnPrefix="s_">
+        <association property="supplier" javaType="SupplierResponse" columnPrefix="s_">
             <id property="id" column="id" />
             <result property="name" column="name" />
         </association>

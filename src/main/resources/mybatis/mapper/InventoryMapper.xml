@@ -7,13 +7,13 @@
         VALUES (#{i.productId}, #{i.importPrice}, #{i.quantity}, #{i.supplierId}, #{i.batchCode})
     </insert>    
 
-    <resultMap id="selectInventory" type="InventoryDTO">
+    <resultMap id="selectInventory" type="InventoryResponse">
         <id property="id" column="id" />
         <result property="productId" column="product_id" />
         <result property="importPrice" column="import_price" />
         <result property="quantity" column="quantity" />
         <result property="batchCode" column="batch_code" />
-        <association property="supplier" javaType="SupplierDTO" columnPrefix="s_">
+        <association property="supplier" javaType="SupplierResponse" columnPrefix="s_">
             <id property="id" column="id" />
             <result property="name" column="name" />
             <result property="phone" column="phone" />

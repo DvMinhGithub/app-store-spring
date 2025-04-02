@@ -10,9 +10,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 
-import com.mdv.appstore.model.dto.UserDTO;
-import com.mdv.appstore.model.request.UserUpdateRequest;
-import com.mdv.appstore.model.response.ApiResponse;
+import com.mdv.appstore.dto.request.UserUpdateRequest;
+import com.mdv.appstore.dto.response.ApiResponse;
+import com.mdv.appstore.dto.response.UserResponse;
 import com.mdv.appstore.service.UserService;
 
 @RestController
@@ -22,12 +22,12 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ApiResponse<List<UserDTO>> findAll() {
+    public ApiResponse<List<UserResponse>> findAll() {
         return ApiResponse.success(userService.findAll(), "Users fetched successfully");
     }
 
     @GetMapping({"/search"})
-    public ApiResponse<UserDTO> findByEmailOrPhone(
+    public ApiResponse<UserResponse> findByEmailOrPhone(
             @RequestParam("email") @Nullable @Email(message = "Invalid email format") String email,
             @RequestParam("phone")
                     @Nullable

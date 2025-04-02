@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import com.mdv.appstore.dto.request.CategoryRequest;
+import com.mdv.appstore.dto.response.CategoryResponse;
 import com.mdv.appstore.exception.DataNotFoundException;
 import com.mdv.appstore.mapper.CategoryMapper;
-import com.mdv.appstore.model.dto.CategoryDTO;
-import com.mdv.appstore.model.request.CategoryRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -22,16 +22,16 @@ public class CategoryService {
         categoryMapper.insert(category);
     }
 
-    public List<CategoryDTO> findAll() {
+    public List<CategoryResponse> findAll() {
         return categoryMapper.findAll();
     }
 
-    public List<CategoryDTO> findAllActive() {
+    public List<CategoryResponse> findAllActive() {
         return categoryMapper.findAllActive();
     }
 
-    public CategoryDTO findById(Long id) {
-        CategoryDTO category = categoryMapper.findById(id);
+    public CategoryResponse findById(Long id) {
+        CategoryResponse category = categoryMapper.findById(id);
         if (category == null || category.isDeleted()) {
             throw new DataNotFoundException(CATEGORY_NOT_EXISTS);
         }
@@ -39,8 +39,8 @@ public class CategoryService {
     }
 
     public void updateCategory(Long id, CategoryRequest category) {
-        CategoryDTO categoryDTO = findById(id);
-        if (categoryDTO == null || categoryDTO.isDeleted()) {
+        CategoryResponse categoryResponse = findById(id);
+        if (categoryResponse == null || categoryResponse.isDeleted()) {
             throw new DataNotFoundException(CATEGORY_NOT_EXISTS);
         }
 
@@ -51,7 +51,7 @@ public class CategoryService {
     }
 
     public void deleteCategory(Long id) {
-        CategoryDTO category = findById(id);
+        CategoryResponse category = findById(id);
         if (category == null) {
             throw new DataNotFoundException(CATEGORY_NOT_EXISTS);
         }
@@ -59,7 +59,7 @@ public class CategoryService {
     }
 
     public void restoreCategory(Long id) {
-        CategoryDTO category = categoryMapper.findById(id);
+        CategoryResponse category = categoryMapper.findById(id);
         if (category == null) {
             throw new DataNotFoundException(CATEGORY_NOT_EXISTS);
         }

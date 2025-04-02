@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import com.mdv.appstore.model.response.ApiResponse;
+import com.mdv.appstore.dto.response.ApiResponse;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

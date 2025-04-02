@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import com.mdv.appstore.model.dto.ProductAttributeDTO;
-import com.mdv.appstore.model.response.ApiResponse;
+import com.mdv.appstore.dto.response.ApiResponse;
+import com.mdv.appstore.dto.response.ProductAttributeResponse;
 import com.mdv.appstore.service.ProductAtrributeService;
 
 @RestController
@@ -22,8 +22,8 @@ public class ProductAtrributeController {
             "Product attribute fetched successfully";
 
     @GetMapping
-    public ApiResponse<List<ProductAttributeDTO>> findAll() {
-        return ApiResponse.<List<ProductAttributeDTO>>builder()
+    public ApiResponse<List<ProductAttributeResponse>> findAll() {
+        return ApiResponse.<List<ProductAttributeResponse>>builder()
                 .code(HttpStatus.OK.value())
                 .message(PRODUCT_ATTRIBUTE_FETCHED_SUCCESSFULLY_MESSAGE)
                 .data(productAtrributeService.findAll())
@@ -31,8 +31,8 @@ public class ProductAtrributeController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<ProductAttributeDTO> findById(@PathVariable("id") Long id) {
-        return ApiResponse.<ProductAttributeDTO>builder()
+    public ApiResponse<ProductAttributeResponse> findById(@PathVariable("id") Long id) {
+        return ApiResponse.<ProductAttributeResponse>builder()
                 .code(HttpStatus.OK.value())
                 .message(PRODUCT_ATTRIBUTE_FETCHED_SUCCESSFULLY_MESSAGE)
                 .data(productAtrributeService.findById(id))
@@ -40,9 +40,9 @@ public class ProductAtrributeController {
     }
 
     @GetMapping("/product/{productId}")
-    public ApiResponse<List<ProductAttributeDTO>> findAttributesByProductId(
+    public ApiResponse<List<ProductAttributeResponse>> findAttributesByProductId(
             @PathVariable("productId") Long productId) {
-        return ApiResponse.<List<ProductAttributeDTO>>builder()
+        return ApiResponse.<List<ProductAttributeResponse>>builder()
                 .code(HttpStatus.OK.value())
                 .message(PRODUCT_ATTRIBUTE_FETCHED_SUCCESSFULLY_MESSAGE)
                 .data(productAtrributeService.findAttributesByProductId(productId))
@@ -51,7 +51,7 @@ public class ProductAtrributeController {
 
     @PostMapping
     public ApiResponse<Object> createProductAttribute(
-            @RequestBody @Valid ProductAttributeDTO productAttribute) {
+            @RequestBody @Valid ProductAttributeResponse productAttribute) {
         productAtrributeService.createProductAtrribute(productAttribute);
         return ApiResponse.builder()
                 .code(HttpStatus.CREATED.value())
@@ -61,7 +61,7 @@ public class ProductAtrributeController {
 
     @PutMapping("/{id}")
     public ApiResponse<Object> updateProductAttribute(
-            @PathVariable("id") Long id, @RequestBody @Valid ProductAttributeDTO productAttribute) {
+            @PathVariable("id") Long id, @RequestBody @Valid ProductAttributeResponse productAttribute) {
         productAtrributeService.updateProductAtrribute(id, productAttribute);
         return ApiResponse.builder()
                 .code(HttpStatus.OK.value())

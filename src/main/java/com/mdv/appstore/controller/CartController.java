@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import com.mdv.appstore.model.dto.CartItemDTO;
-import com.mdv.appstore.model.request.CartItemRequest;
-import com.mdv.appstore.model.request.CartItemUpdate;
-import com.mdv.appstore.model.response.ApiResponse;
+import com.mdv.appstore.dto.request.CartItemRequest;
+import com.mdv.appstore.dto.request.CartItemUpdate;
+import com.mdv.appstore.dto.response.ApiResponse;
+import com.mdv.appstore.dto.response.CartItemResponse;
 import com.mdv.appstore.service.CartService;
 
 @RestController
@@ -20,7 +20,7 @@ public class CartController {
     private final CartService cartService;
 
     @GetMapping("/{userId}")
-    public ApiResponse<List<CartItemDTO>> getCart(@PathVariable("userId") Long userId) {
+    public ApiResponse<List<CartItemResponse>> getCart(@PathVariable("userId") Long userId) {
         return ApiResponse.success(cartService.getUserCart(userId), "Cart retrieved successfully");
     }
 

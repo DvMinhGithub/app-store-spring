@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import com.mdv.appstore.dto.response.RevenueResponse;
 import com.mdv.appstore.mapper.OrderMapper;
 import com.mdv.appstore.mapper.RevenueMapper;
-import com.mdv.appstore.model.dto.RevenueDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class RevenueService {
     private final RevenueMapper revenueMapper;
     private final OrderMapper orderMapper;
 
-    public List<RevenueDTO> getRevenueByDate(String startDate, String endDate) {
+    public List<RevenueResponse> getRevenueByDate(String startDate, String endDate) {
         return revenueMapper.findByDateRange(startDate, endDate);
     }
 
@@ -37,11 +37,11 @@ public class RevenueService {
 
         Double revenue = orderMapper.getTotalRevenue(dateStr + " 00:00:00", dateStr + " 23:59:59");
         if (revenue != null && revenue > 0) {
-            RevenueDTO revenueDTO = new RevenueDTO();
-            revenueDTO.setDate(yesterday);
-            revenueDTO.setTotalRevenue(revenue);
+            RevenueResponse revenueResponse = new RevenueResponse();
+            revenueResponse.setDate(yesterday);
+            revenueResponse.setTotalRevenue(revenue);
 
-            revenueMapper.insert(revenueDTO);
+            revenueMapper.insert(revenueResponse);
             log.info("Saved revenue for date: {}, amount: {}", dateStr, revenue);
         } else {
             log.info("No revenue to save for date: {}", dateStr);

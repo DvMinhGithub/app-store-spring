@@ -7,8 +7,8 @@ import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import com.mdv.appstore.model.request.ProductCategoryRequest;
-import com.mdv.appstore.model.response.ApiResponse;
+import com.mdv.appstore.dto.request.ProductCategoryRequest;
+import com.mdv.appstore.dto.response.ApiResponse;
 import com.mdv.appstore.service.ProductCategoryService;
 
 @RestController

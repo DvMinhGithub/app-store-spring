@@ -5,14 +5,14 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.mdv.appstore.model.dto.SupplierDTO;
-import com.mdv.appstore.model.request.SupplierRequest;
+import com.mdv.appstore.dto.request.SupplierRequest;
+import com.mdv.appstore.dto.response.SupplierResponse;
 
 @Mapper
 public interface SupplierMapper {
-    List<SupplierDTO> findAll();
+    List<SupplierResponse> findAll();
 
-    SupplierDTO findById(@Param("id") Long id);
+    SupplierResponse findById(@Param("id") Long id);
 
     void create(@Param("sr") SupplierRequest supplier);
 

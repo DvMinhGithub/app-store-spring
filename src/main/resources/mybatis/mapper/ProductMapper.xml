@@ -7,7 +7,7 @@
         VALUES (#{product.name}, #{product.price}, #{product.imageUrl}, #{product.brandId})
     </insert>
 
-    <resultMap id="selectProductResultMap" type="ProductDTO">
+    <resultMap id="selectProductResultMap" type="ProductResponse">
         <id property="id" column="id" />
         <result property="name" column="name" />
         <result property="price" column="price" />
@@ -16,7 +16,7 @@
         <result property="sold" column="sold" />
         <result property="view" column="view" />
         <result property="isDeleted" column="is_deleted" />
-        <association property="brand" javaType="BrandDTO"
+        <association property="brand" javaType="BrandResponse"
             columnPrefix="b_">
             <id property="id" column="id" />
             <result property="name" column="name" />

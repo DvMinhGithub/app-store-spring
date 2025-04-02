@@ -6,15 +6,15 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import com.mdv.appstore.dto.response.InventoryTransactionResponse;
 import com.mdv.appstore.mapper.InventoryTransactionMapper;
-import com.mdv.appstore.model.dto.InventoryTransactionDTO;
 
 @Service
 @RequiredArgsConstructor
 public class InventoryTransactionService {
     private final InventoryTransactionMapper inventoryTransactionMapper;
 
-    public List<InventoryTransactionDTO> getInventoryTransactions() {
+    public List<InventoryTransactionResponse> getInventoryTransactions() {
         return inventoryTransactionMapper.getInventoryTransactions();
     }
 }

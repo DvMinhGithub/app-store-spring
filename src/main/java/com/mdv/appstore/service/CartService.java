@@ -8,14 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import com.mdv.appstore.config.CustomUserDetailsService;
+import com.mdv.appstore.dto.request.CartItemRequest;
+import com.mdv.appstore.dto.request.CartItemUpdate;
+import com.mdv.appstore.dto.response.CartItemResponse;
+import com.mdv.appstore.dto.response.ProductResponse;
 import com.mdv.appstore.exception.DataNotFoundException;
 import com.mdv.appstore.exception.InsufficientStockException;
 import com.mdv.appstore.mapper.CartItemMapper;
-import com.mdv.appstore.model.dto.CartItemDTO;
-import com.mdv.appstore.model.dto.ProductDTO;
-import com.mdv.appstore.model.request.CartItemRequest;
-import com.mdv.appstore.model.request.CartItemUpdate;
+import com.mdv.appstore.security.user.CustomUserDetailsService;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +26,7 @@ public class CartService {
     private final ProductService productService;
     private final CustomUserDetailsService customUserDetailsService;
 
-    public List<CartItemDTO> getUserCart(Long userId) {
+    public List<CartItemResponse> getUserCart(Long userId) {
         return cartItemMapper.findByUserId(userId);
     }
 
@@ -37,7 +37,7 @@ public class CartService {
 
         validateProduct(request.getProductId(), request.getQuantity());
 
-        CartItemDTO existingItem =
+        CartItemResponse existingItem =
                 cartItemMapper.findByUserIdAndProductId(userId, request.getProductId());
 
         if (existingItem != null) {
@@ -58,8 +58,8 @@ public class CartService {
         }
     }
 
-    private ProductDTO validateProduct(Long productId, int quantity) {
-        ProductDTO product = productService.findById(productId);
+    private ProductResponse validateProduct(Long productId, int quantity) {
+        ProductResponse product = productService.findById(productId);
         if (product == null) {
             log.error("Product not found: {}", productId);
             throw new DataNotFoundException("Product not found");
@@ -85,9 +85,9 @@ public class CartService {
         int newQuantity = cartItemUpdate.getQuantity();
         Long userId = customUserDetailsService.getCurrentUserId();
 
-        CartItemDTO item = findCartItemByIdAndUserId(cartItemId, userId);
+        CartItemResponse item = findCartItemByIdAndUserId(cartItemId, userId);
 
-        ProductDTO product = validateProduct(item.getProduct().getId(), newQuantity);
+        ProductResponse product = validateProduct(item.getProduct().getId(), newQuantity);
 
         if (product.getTotalQuantity() < newQuantity) {
             log.error(
@@ -108,8 +108,8 @@ public class CartService {
                 newQuantity);
     }
 
-    private CartItemDTO findCartItemByIdAndUserId(Long cartItemId, Long userId) {
-        CartItemDTO item = cartItemMapper.findByIdAndUserId(cartItemId, userId);
+    private CartItemResponse findCartItemByIdAndUserId(Long cartItemId, Long userId) {
+        CartItemResponse item = cartItemMapper.findByIdAndUserId(cartItemId, userId);
         if (item == null) {
             log.error("Cart item not found with id: {} and user id: {}", cartItemId, userId);
             throw new DataNotFoundException("Cart item not found");

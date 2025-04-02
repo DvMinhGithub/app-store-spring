@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import com.mdv.appstore.model.dto.InventoryDTO;
-import com.mdv.appstore.model.request.InventoryRequest;
-import com.mdv.appstore.model.response.ApiResponse;
+import com.mdv.appstore.dto.request.InventoryRequest;
+import com.mdv.appstore.dto.response.ApiResponse;
+import com.mdv.appstore.dto.response.InventoryResponse;
 import com.mdv.appstore.service.InventoryService;
 
 @RestController
@@ -19,7 +19,7 @@ public class InventoryController {
     private final InventoryService inventoryService;
 
     @GetMapping
-    public ApiResponse<List<InventoryDTO>> getInventories() {
+    public ApiResponse<List<InventoryResponse>> getInventories() {
         return ApiResponse.success(
                 inventoryService.getInventories(), "Inventories fetched successfully");
     }

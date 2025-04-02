@@ -5,19 +5,19 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.mdv.appstore.model.dto.ProductAttributeDTO;
+import com.mdv.appstore.dto.response.ProductAttributeResponse;
 
 @Mapper
 public interface ProductAtrributeMapper {
-    void create(@Param("pad") ProductAttributeDTO productAtrributeDTO);
+    void create(@Param("pad") ProductAttributeResponse productAtrributeResponse);
 
-    ProductAttributeDTO findById(Long id);
+    ProductAttributeResponse findById(Long id);
 
-    List<ProductAttributeDTO> findAll();
+    List<ProductAttributeResponse> findAll();
 
-    List<ProductAttributeDTO> findAttributesByProductId(Long productId);
+    List<ProductAttributeResponse> findAttributesByProductId(Long productId);
 
-    void update(Long id, @Param("pad") ProductAttributeDTO productAtrributeDTO);
+    void update(Long id, @Param("pad") ProductAttributeResponse productAtrributeResponse);
 
     void delete(Long id);
 }

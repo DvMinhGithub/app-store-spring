@@ -2,11 +2,11 @@ package com.mdv.appstore.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.mdv.appstore.model.dto.RoleDTO;
+import com.mdv.appstore.dto.response.RoleResponse;
 
 @Mapper
 public interface RoleMapper {
-    RoleDTO findByName(String name);
+    RoleResponse findByName(String name);
 
-    void save(RoleDTO role);
+    void save(RoleResponse role);
 }

@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.mdv.appstore.model.dto.InventoryDTO;
-import com.mdv.appstore.model.request.InventoryRequest;
+import com.mdv.appstore.dto.request.InventoryRequest;
+import com.mdv.appstore.dto.response.InventoryResponse;
 
 @Mapper
 public interface InventoryMapper {
@@ -14,9 +14,9 @@ public interface InventoryMapper {
 
     void exportInventory(@Param("i") InventoryRequest inventory);
 
-    List<InventoryDTO> getInventories();
+    List<InventoryResponse> getInventories();
 
-    List<InventoryDTO> findByProductId(@Param("productId") Long productId);
+    List<InventoryResponse> findByProductId(@Param("productId") Long productId);
 
-    InventoryDTO findByBatchCode(@Param("batchCode") String batchCode);
+    InventoryResponse findByBatchCode(@Param("batchCode") String batchCode);
 }

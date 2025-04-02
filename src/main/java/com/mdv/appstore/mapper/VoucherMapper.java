@@ -5,29 +5,29 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.mdv.appstore.model.dto.VoucherDTO;
-import com.mdv.appstore.model.request.VoucherRequest;
+import com.mdv.appstore.dto.request.VoucherRequest;
+import com.mdv.appstore.dto.response.VoucherResponse;
 
 @Mapper
 public interface VoucherMapper {
     void insertVoucher(@Param("voucherRequest") VoucherRequest voucherRequest);
 
-    List<VoucherDTO> selectAllVouchers();
+    List<VoucherResponse> selectAllVouchers();
 
-    VoucherDTO selectVoucherById(@Param("id") Long id);
+    VoucherResponse selectVoucherById(@Param("id") Long id);
 
-    VoucherDTO selectVoucherByCode(String code);
+    VoucherResponse selectVoucherByCode(String code);
 
-    List<VoucherDTO> selectVouchersToActivate();
+    List<VoucherResponse> selectVouchersToActivate();
 
-    List<VoucherDTO> selectVouchersToDeactivate();
+    List<VoucherResponse> selectVouchersToDeactivate();
 
     void updateVoucherById(
             @Param("id") Long id, @Param("voucherRequest") VoucherRequest voucherRequest);
 
     void updateUsedQuantity(@Param("id") Long id);
 
-    Integer batchUpdateVoucherStatus(@Param("vouchers") List<VoucherDTO> vouchers);
+    Integer batchUpdateVoucherStatus(@Param("vouchers") List<VoucherResponse> vouchers);
 
     void deleteVoucherById(@Param("id") Long id);
 }

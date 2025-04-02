@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 
-import com.mdv.appstore.model.dto.CategoryDTO;
-import com.mdv.appstore.model.request.CategoryRequest;
-import com.mdv.appstore.model.response.ApiResponse;
+import com.mdv.appstore.dto.request.CategoryRequest;
+import com.mdv.appstore.dto.response.ApiResponse;
+import com.mdv.appstore.dto.response.CategoryResponse;
 import com.mdv.appstore.service.CategoryService;
 
 @RestController
@@ -20,8 +20,8 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("/all")
-    public ApiResponse<List<CategoryDTO>> getAllCategories() {
-        return ApiResponse.<List<CategoryDTO>>builder()
+    public ApiResponse<List<CategoryResponse>> getAllCategories() {
+        return ApiResponse.<List<CategoryResponse>>builder()
                 .code(HttpStatus.OK.value())
                 .message("All categories fetched successfully")
                 .data(categoryService.findAll())
@@ -29,8 +29,8 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ApiResponse<List<CategoryDTO>> getAllActiveCategories() {
-        return ApiResponse.<List<CategoryDTO>>builder()
+    public ApiResponse<List<CategoryResponse>> getAllActiveCategories() {
+        return ApiResponse.<List<CategoryResponse>>builder()
                 .code(HttpStatus.OK.value())
                 .message("Active categories fetched successfully")
                 .data(categoryService.findAllActive())
@@ -38,8 +38,8 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<CategoryDTO> getCategoryById(@PathVariable("id") Long id) {
-        return ApiResponse.<CategoryDTO>builder()
+    public ApiResponse<CategoryResponse> getCategoryById(@PathVariable("id") Long id) {
+        return ApiResponse.<CategoryResponse>builder()
                 .code(HttpStatus.OK.value())
                 .message("Category fetched successfully")
                 .data(categoryService.findById(id))

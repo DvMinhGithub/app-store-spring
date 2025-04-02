@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mdv.appstore.mapper.CartItemMapper">
-    <resultMap id="findAllResultMap" type="CartItemDTO">
+    <resultMap id="findAllResultMap" type="CartItemResponse">
         <id property="id" column="id" />
         <result property="quantity" column="quantity" />
         <result property="userId" column="user_id" />
-        <association property="product" javaType="ProductDTO" columnPrefix="p_"> 
+        <association property="product" javaType="ProductResponse" columnPrefix="p_"> 
             <id property="id" column="id" />
             <result property="name" column="name" />
             <result property="price" column="price" />

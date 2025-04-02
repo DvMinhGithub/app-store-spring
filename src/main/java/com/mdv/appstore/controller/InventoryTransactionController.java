@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import com.mdv.appstore.model.dto.InventoryTransactionDTO;
-import com.mdv.appstore.model.response.ApiResponse;
+import com.mdv.appstore.dto.response.ApiResponse;
+import com.mdv.appstore.dto.response.InventoryTransactionResponse;
 import com.mdv.appstore.service.InventoryTransactionService;
 
 @RestController
@@ -19,7 +19,7 @@ public class InventoryTransactionController {
     private final InventoryTransactionService inventoryTransactionService;
 
     @GetMapping
-    public ApiResponse<List<InventoryTransactionDTO>> getInventoryTransactions() {
+    public ApiResponse<List<InventoryTransactionResponse>> getInventoryTransactions() {
         return ApiResponse.success(
                 inventoryTransactionService.getInventoryTransactions(),
                 "Inventory transactions fetched successfully");

@@ -5,12 +5,12 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.mdv.appstore.model.dto.OrderDTO;
-import com.mdv.appstore.model.dto.OrderHistoryDTO;
-import com.mdv.appstore.model.dto.OrderItemDTO;
-import com.mdv.appstore.model.request.OrderCreateRequest;
-import com.mdv.appstore.model.request.OrderHistoryRequest;
-import com.mdv.appstore.model.request.OrderItemRequest;
+import com.mdv.appstore.dto.request.OrderCreateRequest;
+import com.mdv.appstore.dto.request.OrderHistoryRequest;
+import com.mdv.appstore.dto.request.OrderItemRequest;
+import com.mdv.appstore.dto.response.OrderResponse;
+import com.mdv.appstore.dto.response.OrderHistoryResponse;
+import com.mdv.appstore.dto.response.OrderItemResponse;
 
 @Mapper
 public interface OrderMapper {
@@ -21,17 +21,17 @@ public interface OrderMapper {
 
     void insertOrderHistory(@Param("orderHistoryRequest") OrderHistoryRequest orderHistoryRequest);
 
-    OrderDTO findById(@Param("id") Long id);
+    OrderResponse findById(@Param("id") Long id);
 
-    List<OrderDTO> findAll();
+    List<OrderResponse> findAll();
 
-    List<OrderDTO> findAllByUserId(@Param("userId") Long userId);
+    List<OrderResponse> findAllByUserId(@Param("userId") Long userId);
 
-    OrderItemDTO findOrderItem(Long id);
+    OrderItemResponse findOrderItem(Long id);
 
-    List<OrderItemDTO> findOrderItems(@Param("orderId") Long orderId);
+    List<OrderItemResponse> findOrderItems(@Param("orderId") Long orderId);
 
-    List<OrderHistoryDTO> findOrderHistories(@Param("orderId") Long orderId);
+    List<OrderHistoryResponse> findOrderHistories(@Param("orderId") Long orderId);
 
     Double getTotalRevenue(@Param("startDate") String startDate, @Param("endDate") String endDate);
 

@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import com.mdv.appstore.dto.request.ProductPromotionRequest;
+import com.mdv.appstore.dto.response.ProductPromotionResponse;
 import com.mdv.appstore.exception.DataNotFoundException;
 import com.mdv.appstore.mapper.ProductPromotionMapper;
-import com.mdv.appstore.model.dto.ProductPromotionDTO;
-import com.mdv.appstore.model.request.ProductPromotionRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -17,12 +17,12 @@ public class ProductPromotionService {
     private final ProductPromotionMapper productPromotionMapper;
     private final ProductService productService;
 
-    public List<ProductPromotionDTO> findAll() {
+    public List<ProductPromotionResponse> findAll() {
         return productPromotionMapper.findAll();
     }
 
-    public ProductPromotionDTO findById(Long id) {
-        ProductPromotionDTO product = productPromotionMapper.findById(id);
+    public ProductPromotionResponse findById(Long id) {
+        ProductPromotionResponse product = productPromotionMapper.findById(id);
         if (product == null) {
             throw new DataNotFoundException("Product promotion not found");
         }
@@ -44,15 +44,15 @@ public class ProductPromotionService {
         productPromotionMapper.delete(id);
     }
 
-    public List<ProductPromotionDTO> findActivePromotions() {
+    public List<ProductPromotionResponse> findActivePromotions() {
         return productPromotionMapper.findActivePromotions();
     }
 
-    public List<ProductPromotionDTO> findByProductId(Long productId) {
+    public List<ProductPromotionResponse> findByProductId(Long productId) {
         return productPromotionMapper.findByProductId(productId);
     }
 
-    public List<ProductPromotionDTO> findActivePromotionsByProductId(Long productId) {
+    public List<ProductPromotionResponse> findActivePromotionsByProductId(Long productId) {
         return productPromotionMapper.findActivePromotionsByProductId(productId);
     }
 }

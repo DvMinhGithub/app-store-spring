@@ -5,16 +5,16 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.mdv.appstore.model.dto.CategoryDTO;
-import com.mdv.appstore.model.request.CategoryRequest;
+import com.mdv.appstore.dto.request.CategoryRequest;
+import com.mdv.appstore.dto.response.CategoryResponse;
 
 @Mapper
 public interface CategoryMapper {
-    List<CategoryDTO> findAll();
+    List<CategoryResponse> findAll();
 
-    List<CategoryDTO> findAllActive();
+    List<CategoryResponse> findAllActive();
 
-    CategoryDTO findById(Long id);
+    CategoryResponse findById(Long id);
 
     boolean existsByName(String name);
 

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import com.mdv.appstore.model.dto.RevenueDTO;
-import com.mdv.appstore.model.response.ApiResponse;
+import com.mdv.appstore.dto.response.ApiResponse;
+import com.mdv.appstore.dto.response.RevenueResponse;
 import com.mdv.appstore.service.RevenueService;
 
 @RestController
@@ -27,7 +27,7 @@ public class RevenueController {
     }
 
     @GetMapping("/list")
-    public ApiResponse<List<RevenueDTO>> getRevenueByDate(
+    public ApiResponse<List<RevenueResponse>> getRevenueByDate(
             @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
         return ApiResponse.success(
                 revenueService.getRevenueByDate(startDate, endDate), "Get revenue list successful");

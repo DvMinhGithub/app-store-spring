@@ -8,9 +8,9 @@ import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import com.mdv.appstore.model.dto.ProductPromotionDTO;
-import com.mdv.appstore.model.request.ProductPromotionRequest;
-import com.mdv.appstore.model.response.ApiResponse;
+import com.mdv.appstore.dto.request.ProductPromotionRequest;
+import com.mdv.appstore.dto.response.ApiResponse;
+import com.mdv.appstore.dto.response.ProductPromotionResponse;
 import com.mdv.appstore.service.ProductPromotionService;
 
 @RestController
@@ -21,14 +21,14 @@ public class ProductPromotionController {
     private final ProductPromotionService productPromotionService;
 
     @GetMapping
-    public ApiResponse<List<ProductPromotionDTO>> findAll() {
-        List<ProductPromotionDTO> data = productPromotionService.findAll();
+    public ApiResponse<List<ProductPromotionResponse>> findAll() {
+        List<ProductPromotionResponse> data = productPromotionService.findAll();
         return ApiResponse.success(data, SUCCESS_MESSAGE);
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<ProductPromotionDTO> findById(@PathVariable("id") @NonNull Long id) {
-        ProductPromotionDTO data = productPromotionService.findById(id);
+    public ApiResponse<ProductPromotionResponse> findById(@PathVariable("id") @NonNull Long id) {
+        ProductPromotionResponse data = productPromotionService.findById(id);
         return ApiResponse.success(data, SUCCESS_MESSAGE);
     }
 
@@ -53,22 +53,22 @@ public class ProductPromotionController {
     }
 
     @GetMapping("/active")
-    public ApiResponse<List<ProductPromotionDTO>> findActivePromotions() {
-        List<ProductPromotionDTO> data = productPromotionService.findActivePromotions();
+    public ApiResponse<List<ProductPromotionResponse>> findActivePromotions() {
+        List<ProductPromotionResponse> data = productPromotionService.findActivePromotions();
         return ApiResponse.success(data, SUCCESS_MESSAGE);
     }
 
     @GetMapping("/product/{productId}")
-    public ApiResponse<List<ProductPromotionDTO>> findByProductId(
+    public ApiResponse<List<ProductPromotionResponse>> findByProductId(
             @PathVariable("productId") @NonNull Long productId) {
-        List<ProductPromotionDTO> data = productPromotionService.findByProductId(productId);
+        List<ProductPromotionResponse> data = productPromotionService.findByProductId(productId);
         return ApiResponse.success(data, SUCCESS_MESSAGE);
     }
 
     @GetMapping("/product/{productId}/active")
-    public ApiResponse<List<ProductPromotionDTO>> findActivePromotionsByProductId(
+    public ApiResponse<List<ProductPromotionResponse>> findActivePromotionsByProductId(
             @PathVariable @NonNull Long productId) {
-        List<ProductPromotionDTO> data =
+        List<ProductPromotionResponse> data =
                 productPromotionService.findActivePromotionsByProductId(productId);
         return ApiResponse.success(data, SUCCESS_MESSAGE);
     }

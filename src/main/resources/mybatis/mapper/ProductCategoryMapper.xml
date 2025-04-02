@@ -7,7 +7,7 @@
         VALUES (#{productId}, #{categoryId})
     </insert>
 
-    <resultMap id="selectProductResultMap" type="ProductDTO">
+    <resultMap id="selectProductResultMap" type="ProductResponse">
         <id property="id" column="id" />
         <result property="name" column="name" />
         <result property="price" column="price" />
@@ -15,13 +15,13 @@
         <result property="isDeleted" column="is_deleted" />
         <result property="sold" column="sold"/>
         <result property="view" column="view"/>
-        <association property="brand" javaType="BrandDTO" columnPrefix="b_">
+        <association property="brand" javaType="BrandResponse" columnPrefix="b_">
             <id property="id" column="b_id" />
             <result property="name" column="b_name" />
         </association>
     </resultMap>
 
-    <select id="getCategoriesByProductId" resultType="CategoryDTO">
+    <select id="getCategoriesByProductId" resultType="CategoryResponse">
         SELECT
             c.id,
             c.name

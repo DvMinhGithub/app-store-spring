@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 
-import com.mdv.appstore.model.dto.BrandDTO;
-import com.mdv.appstore.model.request.BrandRequest;
-import com.mdv.appstore.model.response.ApiResponse;
+import com.mdv.appstore.dto.request.BrandRequest;
+import com.mdv.appstore.dto.response.ApiResponse;
+import com.mdv.appstore.dto.response.BrandResponse;
 import com.mdv.appstore.service.BrandService;
 
 @RestController
@@ -28,8 +28,8 @@ public class BrandController {
     }
 
     @GetMapping
-    public ApiResponse<List<BrandDTO>> getAllBrands() {
-        return ApiResponse.<List<BrandDTO>>builder()
+    public ApiResponse<List<BrandResponse>> getAllBrands() {
+        return ApiResponse.<List<BrandResponse>>builder()
                 .code(HttpStatus.OK.value())
                 .message("Brand fetched successfully")
                 .data(brandService.findAll())
@@ -37,8 +37,8 @@ public class BrandController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<BrandDTO> getBrandById(@PathVariable("id") Long id) {
-        return ApiResponse.<BrandDTO>builder()
+    public ApiResponse<BrandResponse> getBrandById(@PathVariable("id") Long id) {
+        return ApiResponse.<BrandResponse>builder()
                 .code(HttpStatus.OK.value())
                 .message("Brand fetched successfully")
                 .data(brandService.findById(id))

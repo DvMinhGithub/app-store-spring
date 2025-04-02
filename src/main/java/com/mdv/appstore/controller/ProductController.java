@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import com.mdv.appstore.model.dto.ProductDTO;
-import com.mdv.appstore.model.request.ProductRequest;
-import com.mdv.appstore.model.response.ApiResponse;
+import com.mdv.appstore.dto.request.ProductRequest;
+import com.mdv.appstore.dto.response.ApiResponse;
+import com.mdv.appstore.dto.response.ProductResponse;
 import com.mdv.appstore.service.ProductService;
 
 @RestController
@@ -28,12 +28,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public ApiResponse<List<ProductDTO>> findAll() {
+    public ApiResponse<List<ProductResponse>> findAll() {
         return ApiResponse.success(productService.findAll(), "Products fetched successfully");
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<ProductDTO> findById(@PathVariable("id") Long id) {
+    public ApiResponse<ProductResponse> findById(@PathVariable("id") Long id) {
         return ApiResponse.success(productService.findById(id), "Product fetched successfully");
     }
 

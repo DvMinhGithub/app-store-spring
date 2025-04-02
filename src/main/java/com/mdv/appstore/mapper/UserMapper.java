@@ -5,16 +5,16 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.mdv.appstore.model.dto.UserDTO;
-import com.mdv.appstore.model.request.UserUpdateRequest;
+import com.mdv.appstore.dto.request.UserUpdateRequest;
+import com.mdv.appstore.dto.response.UserResponse;
 
 @Mapper
 public interface UserMapper {
-    List<UserDTO> findAll();
+    List<UserResponse> findAll();
 
-    UserDTO findById(@Param("id") Long id);
+    UserResponse findById(@Param("id") Long id);
 
-    UserDTO findByEmailOrPhone(@Param("email") String email, @Param("phone") String phone);
+    UserResponse findByEmailOrPhone(@Param("email") String email, @Param("phone") String phone);
 
     void updateUser(@Param("id") Long id, @Param("u") UserUpdateRequest user);
 

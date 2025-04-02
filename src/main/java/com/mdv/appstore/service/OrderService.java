@@ -10,7 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import com.mdv.appstore.config.CustomUserDetailsService;
+import com.mdv.appstore.dto.request.OrderCreateRequest;
+import com.mdv.appstore.dto.request.OrderHistoryRequest;
+import com.mdv.appstore.dto.request.OrderItemRequest;
+import com.mdv.appstore.dto.request.OrderStatusRequest;
+import com.mdv.appstore.dto.response.CartItemResponse;
+import com.mdv.appstore.dto.response.OrderResponse;
+import com.mdv.appstore.dto.response.OrderHistoryResponse;
+import com.mdv.appstore.dto.response.OrderItemResponse;
+import com.mdv.appstore.dto.response.RevenueResponse;
+import com.mdv.appstore.dto.response.VoucherResponse;
 import com.mdv.appstore.enums.OrderStatus;
 import com.mdv.appstore.exception.CartEmptyException;
 import com.mdv.appstore.exception.DataNotFoundException;
@@ -24,16 +33,7 @@ import com.mdv.appstore.mapper.ProductMapper;
 import com.mdv.appstore.mapper.RevenueMapper;
 import com.mdv.appstore.mapper.UserMapper;
 import com.mdv.appstore.mapper.VoucherMapper;
-import com.mdv.appstore.model.dto.CartItemDTO;
-import com.mdv.appstore.model.dto.OrderDTO;
-import com.mdv.appstore.model.dto.OrderHistoryDTO;
-import com.mdv.appstore.model.dto.OrderItemDTO;
-import com.mdv.appstore.model.dto.RevenueDTO;
-import com.mdv.appstore.model.dto.VoucherDTO;
-import com.mdv.appstore.model.request.OrderCreateRequest;
-import com.mdv.appstore.model.request.OrderHistoryRequest;
-import com.mdv.appstore.model.request.OrderItemRequest;
-import com.mdv.appstore.model.request.OrderStatusRequest;
+import com.mdv.appstore.security.user.CustomUserDetailsService;
 
 @Service
 @RequiredArgsConstructor
@@ -47,8 +47,8 @@ public class OrderService {
     private final RevenueMapper revenueMapper;
     private final CustomUserDetailsService customUserDetailsService;
 
-    public OrderDTO getOrderById(Long id) {
-        OrderDTO order = orderMapper.findById(id);
+    public OrderResponse getOrderById(Long id) {
+        OrderResponse order = orderMapper.findById(id);
         if (order == null) {
             throw new DataNotFoundException(String.format("Order with ID %d not found", id));
         }
@@ -61,18 +61,18 @@ public class OrderService {
         orderCreateRequest.setUserId(userId);
         orderCreateRequest.setOrderCode(generateOrderCode());
 
-        List<CartItemDTO> cartItems =
+        List<CartItemResponse> cartItems =
                 cartItemMapper.findAllByIdsAndUserId(orderCreateRequest.getCartItemIds(), userId);
         if (cartItems.isEmpty()) {
             throw new CartEmptyException("Cart is empty");
         }
 
         double totalPriceOrder = 0;
-        for (CartItemDTO cartItem : cartItems) {
+        for (CartItemResponse cartItem : cartItems) {
             totalPriceOrder += cartItem.getProduct().getPrice() * cartItem.getQuantity();
         }
 
-        VoucherDTO voucher = voucherMapper.selectVoucherByCode(orderCreateRequest.getVoucherCode());
+        VoucherResponse voucher = voucherMapper.selectVoucherByCode(orderCreateRequest.getVoucherCode());
 
         if (voucher != null) {
             Boolean isVoucherActive = voucher.getIsActive();
@@ -106,8 +106,8 @@ public class OrderService {
     }
 
     private void saveOrderDetailsAndProcessCartItems(
-            OrderCreateRequest orderCreateRequest, List<CartItemDTO> cartItems) {
-        for (CartItemDTO cartItem : cartItems) {
+            OrderCreateRequest orderCreateRequest, List<CartItemResponse> cartItems) {
+        for (CartItemResponse cartItem : cartItems) {
             OrderItemRequest orderItemRequest =
                     OrderItemRequest.builder()
                             .orderId(orderCreateRequest.getId())
@@ -132,7 +132,7 @@ public class OrderService {
         return "ORDER-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
 
-    public List<OrderDTO> getOrdersByUserId(Long userId) {
+    public List<OrderResponse> getOrdersByUserId(Long userId) {
         if (userMapper.findById(userId) == null) {
             throw new DataNotFoundException(String.format("User with ID %d not found", userId));
         }
@@ -141,7 +141,7 @@ public class OrderService {
 
     @Transactional
     public void updateOrderStatus(Long id, OrderStatusRequest orderStatusRequest) {
-        OrderDTO order = getOrderById(id);
+        OrderResponse order = getOrderById(id);
         String status = orderStatusRequest.getStatus().toUpperCase();
 
         OrderStatus newOrderStatus;
@@ -158,11 +158,11 @@ public class OrderService {
                             + " to "
                             + newOrderStatus);
         } else if (newOrderStatus == OrderStatus.SUCCESS) {
-            RevenueDTO revenueDTO = new RevenueDTO();
+            RevenueResponse revenueResponse = new RevenueResponse();
             LocalDateTime createAt = order.getCreatedAt();
-            revenueDTO.setDate(createAt.toLocalDate());
-            revenueDTO.setTotalRevenue(order.getTotalPrice());
-            revenueMapper.insert(revenueDTO);
+            revenueResponse.setDate(createAt.toLocalDate());
+            revenueResponse.setTotalRevenue(order.getTotalPrice());
+            revenueMapper.insert(revenueResponse);
         }
 
         orderMapper.updateOrderStatus(id, status);
@@ -181,7 +181,7 @@ public class OrderService {
 
     @Transactional
     public void cancelOrder(Long id) {
-        OrderDTO order = getOrderById(id);
+        OrderResponse order = getOrderById(id);
 
         if (order.getStatus() != OrderStatus.PENDING) {
             throw new InvalidOrderStatusException(
@@ -191,8 +191,8 @@ public class OrderService {
         orderMapper.updateOrderStatus(id, OrderStatus.CANCEL.name());
         insertOrderHistory(id, OrderStatus.CANCEL.name());
 
-        List<OrderItemDTO> orderItems = orderMapper.findOrderItems(id);
-        for (OrderItemDTO orderItem : orderItems) {
+        List<OrderItemResponse> orderItems = orderMapper.findOrderItems(id);
+        for (OrderItemResponse orderItem : orderItems) {
             productMapper.decreaseSoldQuantity(orderItem.getProductId(), orderItem.getQuantity());
             productMapper.updateTotalQuantity(
                     orderItem.getProductId(),
@@ -202,19 +202,19 @@ public class OrderService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public List<OrderDTO> getAllOrders() {
+    public List<OrderResponse> getAllOrders() {
         return orderMapper.findAll();
     }
 
-    public OrderItemDTO getOrderItemById(Long id) {
-        OrderItemDTO orderItem = orderMapper.findOrderItem(id);
+    public OrderItemResponse getOrderItemById(Long id) {
+        OrderItemResponse orderItem = orderMapper.findOrderItem(id);
         if (orderItem == null) {
             throw new DataNotFoundException(String.format("Order item with ID %d not found", id));
         }
         return orderItem;
     }
 
-    public List<OrderHistoryDTO> getOrderHistories(Long orderId) {
+    public List<OrderHistoryResponse> getOrderHistories(Long orderId) {
         return orderMapper.findOrderHistories(orderId);
     }
 }

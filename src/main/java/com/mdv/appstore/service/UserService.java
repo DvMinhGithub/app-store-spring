@@ -6,17 +6,17 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import com.mdv.appstore.dto.request.UserUpdateRequest;
+import com.mdv.appstore.dto.response.UserResponse;
 import com.mdv.appstore.exception.DataNotFoundException;
 import com.mdv.appstore.mapper.UserMapper;
-import com.mdv.appstore.model.dto.UserDTO;
-import com.mdv.appstore.model.request.UserUpdateRequest;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserMapper userMapper;
 
-    public List<UserDTO> findAll() {
+    public List<UserResponse> findAll() {
         return userMapper.findAll();
     }
 
@@ -28,8 +28,8 @@ public class UserService {
         userMapper.deleteUser(id);
     }
 
-    public UserDTO findByEmailOrPhone(String email, String phone) {
-        UserDTO user = userMapper.findByEmailOrPhone(email, phone);
+    public UserResponse findByEmailOrPhone(String email, String phone) {
+        UserResponse user = userMapper.findByEmailOrPhone(email, phone);
         if (user == null) {
             throw new DataNotFoundException("User not exist");
         }

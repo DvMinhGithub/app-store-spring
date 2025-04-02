@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
-import com.mdv.appstore.model.dto.OrderDTO;
-import com.mdv.appstore.model.dto.OrderHistoryDTO;
-import com.mdv.appstore.model.dto.OrderItemDTO;
-import com.mdv.appstore.model.request.OrderCreateRequest;
-import com.mdv.appstore.model.request.OrderStatusRequest;
-import com.mdv.appstore.model.response.ApiResponse;
+import com.mdv.appstore.dto.request.OrderCreateRequest;
+import com.mdv.appstore.dto.request.OrderStatusRequest;
+import com.mdv.appstore.dto.response.ApiResponse;
+import com.mdv.appstore.dto.response.OrderResponse;
+import com.mdv.appstore.dto.response.OrderHistoryResponse;
+import com.mdv.appstore.dto.response.OrderItemResponse;
 import com.mdv.appstore.service.OrderService;
 
 @RestController
@@ -24,27 +24,27 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<OrderDTO> getOrderById(@PathVariable("id") Long id) {
+    public ApiResponse<OrderResponse> getOrderById(@PathVariable("id") Long id) {
         return ApiResponse.success(orderService.getOrderById(id), "Order found");
     }
 
     @GetMapping("/user/{userId}")
-    public ApiResponse<List<OrderDTO>> getOrdersByUserId(@PathVariable("userId") Long userId) {
+    public ApiResponse<List<OrderResponse>> getOrdersByUserId(@PathVariable("userId") Long userId) {
         return ApiResponse.success(orderService.getOrdersByUserId(userId), "Orders found");
     }
 
     @GetMapping
-    public ApiResponse<List<OrderDTO>> getAllOrders() {
+    public ApiResponse<List<OrderResponse>> getAllOrders() {
         return ApiResponse.success(orderService.getAllOrders(), "Orders found");
     }
 
     @GetMapping("/item/{id}")
-    public ApiResponse<OrderItemDTO> getOrderItemById(@PathVariable("id") Long id) {
+    public ApiResponse<OrderItemResponse> getOrderItemById(@PathVariable("id") Long id) {
         return ApiResponse.success(orderService.getOrderItemById(id), "Order item found");
     }
 
     @GetMapping("/{id}/history")
-    public ApiResponse<List<OrderHistoryDTO>> getOrderHistories(@PathVariable("id") Long id) {
+    public ApiResponse<List<OrderHistoryResponse>> getOrderHistories(@PathVariable("id") Long id) {
         return ApiResponse.success(orderService.getOrderHistories(id), "Order histories found");
     }
 

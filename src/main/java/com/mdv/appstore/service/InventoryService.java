@@ -7,14 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import com.mdv.appstore.dto.request.InventoryRequest;
+import com.mdv.appstore.dto.request.InventoryTransactionRequest;
+import com.mdv.appstore.dto.response.InventoryResponse;
+import com.mdv.appstore.dto.response.ProductResponse;
 import com.mdv.appstore.exception.DuplicateEntryException;
 import com.mdv.appstore.mapper.InventoryMapper;
 import com.mdv.appstore.mapper.InventoryTransactionMapper;
 import com.mdv.appstore.mapper.ProductMapper;
-import com.mdv.appstore.model.dto.InventoryDTO;
-import com.mdv.appstore.model.dto.ProductDTO;
-import com.mdv.appstore.model.request.InventoryRequest;
-import com.mdv.appstore.model.request.InventoryTransactionRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -25,11 +25,11 @@ public class InventoryService {
 
     @Transactional
     public void importInventory(InventoryRequest inventory) {
-        InventoryDTO inventoryDTO = inventoryMapper.findByBatchCode(inventory.getBatchCode());
-        if (inventoryDTO != null) {
+        InventoryResponse inventoryResponse = inventoryMapper.findByBatchCode(inventory.getBatchCode());
+        if (inventoryResponse != null) {
             throw new DuplicateEntryException("Batch code already exists");
         }
-        ProductDTO product = productMapper.findById(inventory.getProductId());
+        ProductResponse product = productMapper.findById(inventory.getProductId());
         if (product == null) {
             throw new IllegalArgumentException("Product not found");
         }
@@ -48,7 +48,7 @@ public class InventoryService {
 
     @Transactional
     public void exportInventory(InventoryRequest inventory) {
-        ProductDTO product = productMapper.findById(inventory.getProductId());
+        ProductResponse product = productMapper.findById(inventory.getProductId());
         if (product == null) {
             throw new IllegalArgumentException("Product not found");
         }
@@ -71,12 +71,12 @@ public class InventoryService {
         inventoryMapper.exportInventory(inventory);
     }
 
-    public List<InventoryDTO> getInventories() {
+    public List<InventoryResponse> getInventories() {
         return inventoryMapper.getInventories();
     }
 
-    public InventoryDTO findByBatchCode(String batchCode) {
-        InventoryDTO inventory = inventoryMapper.findByBatchCode(batchCode);
+    public InventoryResponse findByBatchCode(String batchCode) {
+        InventoryResponse inventory = inventoryMapper.findByBatchCode(batchCode);
         if (inventory == null) {
             throw new IllegalArgumentException("Inventory not found");
         }

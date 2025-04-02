@@ -5,23 +5,23 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.mdv.appstore.model.dto.CartItemDTO;
-import com.mdv.appstore.model.request.CartItemRequest;
+import com.mdv.appstore.dto.request.CartItemRequest;
+import com.mdv.appstore.dto.response.CartItemResponse;
 
 @Mapper
 public interface CartItemMapper {
 
-    List<CartItemDTO> findByUserId(@Param("userId") Long userId);
+    List<CartItemResponse> findByUserId(@Param("userId") Long userId);
 
-    List<CartItemDTO> findAllByIdsAndUserId(
+    List<CartItemResponse> findAllByIdsAndUserId(
             @Param("listId") List<Long> listId, @Param("userId") Long userId);
 
-    CartItemDTO findByUserIdAndProductId(
+    CartItemResponse findByUserIdAndProductId(
             @Param("userId") Long userId, @Param("productId") Long productId);
 
-    CartItemDTO findByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
+    CartItemResponse findByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
 
-    CartItemDTO findById(Long id);
+    CartItemResponse findById(Long id);
 
     int insert(CartItemRequest cartItem);
 

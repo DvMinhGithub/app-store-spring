@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mdv.appstore.mapper.OrderMapper">
-    <resultMap id="findAllResultMap" type="OrderDTO">
+    <resultMap id="findAllResultMap" type="OrderResponse">
         <id property="id" column="id" />
         <result property="userId" column="user_id" />
         <result property="voucherCode" column="voucher_code" />
@@ -13,7 +13,7 @@
         <result property="phone" column="phone" />
         <result property="checkoutUrl" column="checkout_url" />
         <result property="createdAt" column="created_at" />
-        <collection property="orderItems" ofType="OrderItemDTO"
+        <collection property="orderItems" ofType="OrderItemResponse"
             columnPrefix="oi_">
             <id property="id" column="id" />
             <result property="orderId" column="order_id" /> 
@@ -23,7 +23,7 @@
         </collection>
     </resultMap>
 
-    <resultMap id="findOrderItemsResultMap" type="OrderItemDTO">
+    <resultMap id="findOrderItemsResultMap" type="OrderItemResponse">
         <id property="id" column="id" />
         <result property="orderId" column="order_id" />
         <result property="productId" column="product_id" />
@@ -31,7 +31,7 @@
         <result property="priceAtOrderTime" column="price_at_order_time" />
     </resultMap>
 
-    <resultMap id="findOrderHistoriesResultMap" type="OrderHistoryDTO">
+    <resultMap id="findOrderHistoriesResultMap" type="OrderHistoryResponse">
         <id property="id" column="id" />
         <result property="orderId" column="order_id" />
         <result property="status" column="status" />
