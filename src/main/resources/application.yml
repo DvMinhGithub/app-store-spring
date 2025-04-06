@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/app_store?createDatabaseIfNotExist=true&allowMultiQueries=true
     username: root
-    password: ${DATABASE_PASSWORD}
+    password: 123456
   
   sql:
     init:
@@ -39,8 +39,8 @@ spring:
 
 server:
   port: 8080
-  servlet:
-    context-path: /
+  address: localhost
+  url: http://${server.address}:${server.port}
 
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
@@ -48,8 +48,9 @@ mybatis:
 
 file:
   upload-dir: uploads/
-  allowed-types: image/jpeg,image/png,image/gif
-  max-file-size: 5MB
+  image: 
+    allowed-extensions: jpg, jpeg, png, gif
+    path-prefix: /image/
 
 app:
   jwt:

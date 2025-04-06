@@ -34,6 +34,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.security:spring-security-core:6.4.2'
 	implementation 'io.jsonwebtoken:jjwt:0.2'
+	implementation("org.apache.commons:commons-lang3:3.17.0")
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -54,5 +55,18 @@ spotless {
 		leadingTabsToSpaces(4)
         trimTrailingWhitespace()
 		importOrder('java', 'javax', 'org', 'com', 'com.diffplug', 'all-other')
+	}
+}
+
+afterEvaluate {
+	def spotless = tasks.findByName('spotlessApply')
+	if (spotless) {
+		tasks.withType(JavaCompile) {
+			finalizedBy(spotless)
+		}
+
+		tasks.withType(GroovyCompile) {
+			finalizedBy(spotless)
+		}
 	}
 }
