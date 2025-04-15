@@ -1,0 +1,16 @@
+.git
+.gitignore
+.idea
+.vscode
+*.iml
+*.log
+logs/
+build/
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+README.md
+Dockerfile
+docker-compose.yml
+.dockerignore 
