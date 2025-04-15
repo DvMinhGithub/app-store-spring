@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: AppStore-Dev
+  
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/app_store_dev?createDatabaseIfNotExist=true&allowMultiQueries=true
+    username: root
+    password: 123456
+  
+  sql:
+    init:
+      mode: always
+      schema-locations:
+        - classpath:sql/schema.sql
+        - classpath:sql/view.sql
+      data-locations:
+        - classpath:sql/data.sql
+      continue-on-error: true
+
+  redis:
+    data:
+      host: localhost
+      port: 6379
+      password:
+      timeout: 10000
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1
+          max-idle: 8
+          min-idle: 0
+
+server:
+  port: 8080
+  address: localhost
+  url: http://${server.address}:${server.port}
+
+file:
+  upload-dir: uploads/
+
+app:
+  jwt:
+    secret: dev_secret_key_1234567890
+    expiration: 86400000
+    refresh-secret: dev_refresh_secret_key_1234567890
+    refresh-expiration: 259200000
+
+logging:
+  level:
+    root: DEBUG
+    '[com.mdv.appstore]': DEBUG
+  file:
+    name: logs/application-dev.log 

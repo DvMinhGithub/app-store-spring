@@ -1,0 +1,76 @@
+spring:
+  application:
+    name: AppStore-Prod
+  
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://db:3306/app_store?createDatabaseIfNotExist=true&allowMultiQueries=true
+    username: root
+    password: ${MYSQL_ROOT_PASSWORD}
+  
+  sql:
+    init:
+      mode: never
+      schema-locations:
+        - classpath:sql/schema.sql
+        - classpath:sql/view.sql
+      data-locations:
+        - classpath:sql/data.sql
+      continue-on-error: false
+
+  redis:
+    data:
+      host: redis
+      port: 6379
+      password:
+      timeout: 10000
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1
+          max-idle: 8
+          min-idle: 0
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 15MB
+
+server:
+  port: 8080
+  address: 0.0.0.0
+  url: http://${server.address}:${server.port}
+
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.mdv.appstore.dto
+
+file:
+  upload-dir: /app/uploads/
+  image: 
+    allowed-extensions: jpg, jpeg, png, gif
+    path-prefix: /image/
+
+app:
+  jwt:
+    secret: ${APP_JWT_SECRET}
+    expiration: ${APP_JWT_EXPIRATION}
+    refresh-secret: ${APP_JWT_REFRESH_SECRET}
+    refresh-expiration: ${APP_JWT_REFRESH_EXPIRATION}
+
+  api:
+    version: v1
+    base-url: /api/${app.api.version}
+
+logging:
+  level:
+    root: INFO
+    '[com.mdv.appstore]': INFO
+  file:
+    name: /app/logs/application-prod.log
+    max-size: 10MB
+    max-history: 10
+    total-size-cap: 100MB
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n" 
