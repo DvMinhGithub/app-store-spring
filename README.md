@@ -1,257 +1,164 @@
-# App Store Project
+# AppStore Spring Boot Application
 
-## Giới thiệu
-Dự án **App Store** là một ứng dụng quản lý cửa hàng trực tuyến, bao gồm các chức năng quản lý sản phẩm, đơn hàng, người dùng, và các hoạt động liên quan đến kho hàng. Dự án được xây dựng bằng **Spring Boot** và sử dụng **MySQL** làm cơ sở dữ liệu.
+A robust and scalable e-commerce application built with Spring Boot, providing a comprehensive API for managing products, orders, and user accounts.
 
-## Công nghệ sử dụng
-- **Spring Boot 3.4.1**: Framework chính để xây dựng ứng dụng.
-- **MySQL**: Cơ sở dữ liệu quan hệ để lưu trữ dữ liệu.
-- **MyBatis**: ORM (Object-Relational Mapping) để kết nối và thao tác với cơ sở dữ liệu.
-- **Lombok**: Giúp giảm boilerplate code trong Java.
-- **Spotless**: Công cụ để định dạng code tự động.
+## 🚀 Features
 
-## Cấu trúc dự án
-Dự án được tổ chức theo cấu trúc chuẩn của Spring Boot, bao gồm các package chính:
-- `com.mdv`: Package gốc của dự án.
-- `controller`: Chứa các lớp điều khiển (Controller) để xử lý các request HTTP.
-- `service`: Chứa các lớp dịch vụ (Service) để xử lý logic nghiệp vụ.
-- `repository`: Chứa các lớp truy vấn dữ liệu (Repository) để tương tác với cơ sở dữ liệu.
-- `model`: Chứa các lớp đối tượng (Entity) đại diện cho các bảng trong cơ sở dữ liệu.
-- `dto`: Chứa các lớp DTO (Data Transfer Object) để truyền dữ liệu giữa các lớp.
-- `config`: Chứa các lớp cấu hình (Configuration) cho ứng dụng.
+- User authentication and authorization with JWT
+- Product management with categories
+- Shopping cart functionality
+- Order processing and management
+- File upload for product images
+- Redis caching for improved performance
+- Multi-environment configuration (dev/prod)
+- RESTful API design
+- Swagger API documentation
 
-## Cơ sở dữ liệu
-Cơ sở dữ liệu của ứng dụng bao gồm các bảng sau:
+## 🛠️ Technologies
 
-### Bảng `brand`
-- `id`: Khóa chính, tự động tăng.
-- `name`: Tên thương hiệu, duy nhất.
-- `created_at`: Thời gian tạo bản ghi.
-- `updated_at`: Thời gian cập nhật bản ghi.
-- `is_deleted`: Trạng thái xóa (0: chưa xóa, 1: đã xóa).
+- Java 17
+- Spring Boot 3.x
+- Spring Security
+- Spring Data JPA
+- MyBatis
+- MySQL
+- Redis
+- Maven
+- Docker
+- Swagger/OpenAPI
 
-### Bảng `product`
-- `id`: Khóa chính, tự động tăng.
-- `name`: Tên sản phẩm.
-- `price`: Giá sản phẩm.
-- `image_url`: URL hình ảnh sản phẩm.
-- `sold`: Số lượng đã bán.
-- `view`: Số lượt xem.
-- `brand_id`: Khóa ngoại tham chiếu đến bảng `brand`.
-- `created_at`: Thời gian tạo bản ghi.
-- `updated_at`: Thời gian cập nhật bản ghi.
-- `is_deleted`: Trạng thái xóa (0: chưa xóa, 1: đã xóa).
+## 📋 Prerequisites
 
-### Bảng `product_attribute`
-- `id`: Khóa chính, tự động tăng.
-- `attribute_name`: Tên thuộc tính.
-- `attribute_value`: Giá trị thuộc tính.
-- `product_id`: Khóa ngoại tham chiếu đến bảng `product`.
+- JDK 17 or higher
+- Maven 3.8+
+- MySQL 8.0+
+- Redis 6.0+
+- Docker (optional)
 
-### Bảng `category`
-- `id`: Khóa chính, tự động tăng.
-- `name`: Tên danh mục, duy nhất.
-- `created_at`: Thời gian tạo bản ghi.
-- `updated_at`: Thời gian cập nhật bản ghi.
-- `is_deleted`: Trạng thái xóa (0: chưa xóa, 1: đã xóa).
+## 🔧 Installation & Setup
 
-### Bảng `product_category`
-- `product_id`: Khóa ngoại tham chiếu đến bảng `product`.
-- `category_id`: Khóa ngoại tham chiếu đến bảng `category`.
+1. Clone the repository
+```bash
+git clone https://github.com/DvMinhGithub/app-store-spring.git
+cd app-store-spring
+```
 
-### Bảng `user`
-- `id`: Khóa chính, tự động tăng.
-- `address`: Địa chỉ người dùng.
-- `avatar`: URL avatar người dùng.
-- `dob`: Ngày sinh người dùng.
-- `email`: Email người dùng, duy nhất.
-- `name`: Tên người dùng.
-- `password`: Mật khẩu người dùng.
-- `phone`: Số điện thoại người dùng, duy nhất.
-- `created_at`: Thời gian tạo bản ghi.
-- `updated_at`: Thời gian cập nhật bản ghi.
+2. Configure the database
+```bash
+# Create MySQL database
+mysql -u root -p
+CREATE DATABASE app_store_dev;
+```
 
-### Bảng `cart_item`
-- `id`: Khóa chính, tự động tăng.
-- `quantity`: Số lượng sản phẩm trong giỏ hàng.
-- `product_id`: Khóa ngoại tham chiếu đến bảng `product`.
-- `user_id`: Khóa ngoại tham chiếu đến bảng `user`.
+3. Configure environment variables for production
+```bash
+export MYSQL_ROOT_PASSWORD=your_password
+export APP_JWT_SECRET=your_jwt_secret
+export APP_JWT_EXPIRATION=86400000
+export APP_JWT_REFRESH_SECRET=your_refresh_secret
+export APP_JWT_REFRESH_EXPIRATION=259200000
+```
 
-### Bảng `voucher`
-- `id`: Khóa chính, tự động tăng.
-- `code`: Mã voucher, duy nhất.
-- `condition_value`: Giá trị điều kiện để sử dụng voucher.
-- `discount_price`: Giá trị giảm giá.
-- `end_time`: Thời gian kết thúc voucher.
-- `start_time`: Thời gian bắt đầu voucher.
-- `total_quantity`: Tổng số lượng voucher.
-- `used_quantity`: Số lượng voucher đã sử dụng.
-- `created_at`: Thời gian tạo bản ghi.
-- `updated_at`: Thời gian cập nhật bản ghi.
-- `is_active`: Trạng thái kích hoạt (0: không kích hoạt, 1: kích hoạt).
+4. Build the project
+```bash
+mvn clean install
+```
 
-### Bảng `order`
-- `id`: Khóa chính, tự động tăng.
-- `order_code`: Mã đơn hàng, duy nhất.
-- `address`: Địa chỉ giao hàng.
-- `created_at`: Thời gian tạo đơn hàng.
-- `phone`: Số điện thoại người nhận.
-- `status`: Trạng thái đơn hàng (CANCEL, SUCCESS, PENDING, RETURN).
-- `total_price`: Tổng giá trị đơn hàng.
-- `voucher_code`: Mã voucher sử dụng (nếu có).
-- `user_id`: Khóa ngoại tham chiếu đến bảng `user`.
+5. Run the application
+```bash
+# Development
+mvn spring-boot:run -Dspring.profiles.active=dev
 
-### Bảng `order_line`
-- `id`: Khóa chính, tự động tăng.
-- `price_at_order_time`: Giá sản phẩm tại thời điểm đặt hàng.
-- `quantity`: Số lượng sản phẩm.
-- `order_id`: Khóa ngoại tham chiếu đến bảng `order`.
-- `product_id`: Khóa ngoại tham chiếu đến bảng `product`.
+# Production
+mvn spring-boot:run -Dspring.profiles.active=prod
+```
 
-### Bảng `supplier`
-- `id`: Khóa chính, tự động tăng.
-- `name`: Tên nhà cung cấp.
-- `phone`: Số điện thoại nhà cung cấp.
-- `address`: Địa chỉ nhà cung cấp.
-- `is_deleted`: Trạng thái xóa (0: chưa xóa, 1: đã xóa).
-- `created_at`: Thời gian tạo bản ghi.
-- `updated_at`: Thời gian cập nhật bản ghi.
+## 🏗️ Project Structure
 
-### Bảng `inventory`
-- `id`: Khóa chính, tự động tăng.
-- `import_price`: Giá nhập hàng.
-- `quantity`: Số lượng hàng tồn kho.
-- `product_id`: Khóa ngoại tham chiếu đến bảng `product`.
-- `created_at`: Thời gian tạo bản ghi.
-- `supplier_id`: Khóa ngoại tham chiếu đến bảng `supplier`.
-- `batch_code`: Mã lô hàng, duy nhất.
+```
+src/
+├── main/
+│   ├── java/
+│   │   └── com/mdv/appstore/
+│   │       ├── config/         # Configuration classes
+│   │       ├── controller/     # REST controllers
+│   │       ├── dto/           # Data Transfer Objects
+│   │       ├── entity/        # JPA entities
+│   │       ├── mapper/        # MyBatis mappers
+│   │       ├── repository/    # JPA repositories
+│   │       ├── service/       # Business logic
+│   │       └── util/          # Utility classes
+│   └── resources/
+│       ├── mybatis/          # MyBatis mapper XML files
+│       ├── sql/              # SQL scripts
+│       └── application.yml   # Configuration files
+```
 
-### Bảng `role`
-- `id`: Khóa chính, tự động tăng.
-- `name`: Tên vai trò (CUSTOMER, EMPLOYEE, ADMIN).
+## 🔐 Environment Configuration
 
-### Bảng `user_role`
-- `user_id`: Khóa ngoại tham chiếu đến bảng `user`.
-- `role_id`: Khóa ngoại tham chiếu đến bảng `role`.
+The application supports multiple environments:
 
-### Bảng `review`
-- `id`: Khóa chính, tự động tăng.
-- `user_id`: Khóa ngoại tham chiếu đến bảng `user`.
-- `product_id`: Khóa ngoại tham chiếu đến bảng `product`.
-- `rating`: Đánh giá (từ 1 đến 5).
-- `review_date`: Ngày đánh giá.
-- `comment`: Bình luận đánh giá.
+- **Development** (`application-dev.yml`)
+  - Local database
+  - Debug logging
+  - Development JWT keys
 
-### Bảng `product_promotion`
-- `id`: Khóa chính, tự động tăng.
-- `product_id`: Khóa ngoại tham chiếu đến bảng `product`.
-- `end_time`: Thời gian kết thúc khuyến mãi.
-- `start_time`: Thời gian bắt đầu khuyến mãi.
-- `discount_price`: Giá giảm giá.
-- `is_active`: Trạng thái kích hoạt (0: không kích hoạt, 1: kích hoạt).
+- **Production** (`application-prod.yml`)
+  - Production database
+  - Environment variables for sensitive data
+  - Info level logging
+  - Secure JWT configuration
 
-### Bảng `daily_revenue`
-- `id`: Khóa chính, tự động tăng.
-- `date`: Ngày thống kê doanh thu.
-- `total_revenue`: Tổng doanh thu trong ngày.
+## 📚 API Documentation
 
-### Bảng `order_history`
-- `id`: Khóa chính, tự động tăng.
-- `order_id`: Khóa ngoại tham chiếu đến bảng `order`.
-- `status`: Trạng thái đơn hàng (CANCEL, SUCCESS, PENDING, RETURN).
-- `changed_at`: Thời gian thay đổi trạng thái.
-- `changed_by`: Người thay đổi trạng thái (tham chiếu đến bảng `user`).
+API documentation is available through Swagger UI:
+- Development: `http://localhost:8080/api/v1/swagger-ui.html`
+- Production: `https://your-domain.com/api/v1/swagger-ui.html`
 
-### Bảng `payment`
-- `id`: Khóa chính, tự động tăng.
-- `order_id`: Khóa ngoại tham chiếu đến bảng `order`.
-- `method`: Phương thức thanh toán (CASH, CREDIT_CARD, PAYPAL).
-- `amount`: Số tiền thanh toán.
-- `status`: Trạng thái thanh toán (PENDING, SUCCESS, FAILED).
-- `created_at`: Thời gian tạo bản ghi.
+## 🐳 Docker Support
 
-### Bảng `inventory_transaction`
-- `id`: Khóa chính, tự động tăng.
-- `product_id`: Khóa ngoại tham chiếu đến bảng `product`.
-- `quantity`: Số lượng hàng.
-- `type`: Loại giao dịch (IMPORT, EXPORT).
-- `transaction_date`: Thời gian giao dịch.
-- `supplier_id`: Khóa ngoại tham chiếu đến bảng `supplier`.
+Build and run with Docker:
 
-## Cài đặt và chạy ứng dụng
+```bash
+# Build the image
+docker build -t app-store-spring .
 
-### Yêu cầu hệ thống
+# Run the container
+docker run -p 8080:8080 \
+  -e SPRING_PROFILES_ACTIVE=prod \
+  -e MYSQL_ROOT_PASSWORD=your_password \
+  app-store-spring
+```
 
--   Java 21
--   MySQL
--   Gradle
+## 🧪 Testing
 
-### Các bước cài đặt
+Run tests with Maven:
 
-1.  **Clone dự án**:
+```bash
+# Run all tests
+mvn test
 
-    ```bash
-    git clone [https://github.com/DvMinhGithub/app-store-spring.git](https://github.com/DvMinhGithub/app-store-spring.git)
-    cd app-store
-    ```
+# Run specific test class
+mvn test -Dtest=UserServiceTest
+```
 
-2.  **Cấu hình cơ sở dữ liệu**:
+## 📝 Contributing
 
-    -   Tạo một database mới trong MySQL với tên `app_store`.
-    -   Cập nhật thông tin kết nối cơ sở dữ liệu trong file `src/main/resources/application.yml`:
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-        ```yaml
-        spring:
-          datasource:
-            url: jdbc:mysql://localhost:3306/app_store
-            username: your-username
-            password: your-password
-        ```
+## 📄 License
 
-3.  **Xây dựng ứng dụng bằng Gradle**:
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-    ```bash
-    ./gradlew build
-    ```
+## 👥 Authors
 
-4.  **Chạy ứng dụng**:
+- DvMinhGithub - Initial work - [YourGithub](https://github.com/DvMinhGithub)
 
-    ```bash
-    ./gradlew bootRun
-    ```
+## 🙏 Acknowledgments
 
-5.  **Truy cập ứng dụng**:
-
-    -   Mở trình duyệt và truy cập `http://localhost:8080`.
-
-### Cấu hình bổ sung
-
--   **Profile**:
-
-    -   Nếu bạn muốn chạy ứng dụng với một profile cụ thể (ví dụ: `dev`, `prod`), bạn có thể thêm tham số `-Dspring.profiles.active` khi chạy ứng dụng:
-
-        ```bash
-        ./gradlew bootRun -Dspring.profiles.active=dev
-        ```
-
--   **Cổng**:
-
-    -   Để thay đổi cổng mặc định (8080), hãy cập nhật thuộc tính `server.port` trong `application.yml`:
-
-        ```yaml
-        server:
-          port: 8081
-        ```
-
-### Các lệnh Gradle thông dụng
-
--   `./gradlew build`: Xây dựng ứng dụng.
--   `./gradlew bootRun`: Chạy ứng dụng.
--   `./gradlew test`: Chạy các unit test.
--   `./gradlew clean`: Xóa thư mục build.
-
-### Lưu ý
-
--   Đảm bảo rằng MySQL server đang chạy trước khi khởi động ứng dụng.
--   Nếu bạn gặp lỗi kết nối cơ sở dữ liệu, hãy kiểm tra lại thông tin kết nối trong `application.yml`.
--   Nếu bạn có bất kỳ vấn đề nào, vui lòng kiểm tra phần Issues trên GitHub hoặc liên hệ với người quản lý dự án.
+- Spring Boot team
+- All contributors and supporters
