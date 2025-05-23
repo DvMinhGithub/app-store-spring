@@ -24,7 +24,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     public void createProduct(ProductRequest productRequest) throws IOException {
-        String imageUrl = fileService.storeFile(productRequest.getImage());
+        String imageUrl = fileService.uploadSingleFile(productRequest.getImage());
         ProductCreateResponse productCreateResponse = ProductCreateResponse.builder()
                 .name(productRequest.getName())
                 .price(productRequest.getPrice())

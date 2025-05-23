@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.mdv.appstore.security.jwt.JwtAuthEntryPoint;
 import com.mdv.appstore.security.jwt.JwtAuthFilter;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
@@ -35,13 +36,9 @@ public class SecurityConfig {
         "/vouchers/validate/{code}"
     };
 
-    private static final String[] PUBLIC_POST_ENDPOINTS = {
-        "/auth/**"
-    };
+    private static final String[] PUBLIC_POST_ENDPOINTS = {"/auth/**"};
 
-    private static final String[] ADMIN_GET_ENDPOINTS = {
-        "/revenue/**"
-    };
+    private static final String[] ADMIN_GET_ENDPOINTS = {"/revenue/**"};
 
     private final JwtAuthFilter jwtAuthFilter;
     private final JwtAuthEntryPoint jwtAuthEntryPoint;
@@ -60,38 +57,38 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) 
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
             throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    private String[] getPublicGetEndpoints(String [] endpoints) {
-        return Arrays.stream(endpoints)
-                .map(endpoint -> apiBaseUrl + endpoint)
-                .toArray(String[]::new);
+    private String[] getPublicGetEndpoints(String[] endpoints) {
+        return Arrays.stream(endpoints).map(endpoint -> apiBaseUrl + endpoint).toArray(String[]::new);
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         String[] publicGetEndpoints = getPublicGetEndpoints(PUBLIC_GET_ENDPOINTS);
-        
+
         String[] publicPostEndpoints = getPublicGetEndpoints(PUBLIC_POST_ENDPOINTS);
-                
+
         String[] adminGetEndpoints = getPublicGetEndpoints(ADMIN_GET_ENDPOINTS);
 
-        http
-            .csrf(AbstractHttpConfigurer::disable)
-            .cors(Customizer.withDefaults())
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.GET, publicGetEndpoints).permitAll()
-                .requestMatchers(HttpMethod.POST, publicPostEndpoints).permitAll()
-                .requestMatchers(HttpMethod.GET, adminGetEndpoints).hasAnyAuthority("ADMIN", "EMPLOYEE")
-                .anyRequest().authenticated())
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-            .exceptionHandling(exception -> exception
-                .authenticationEntryPoint(jwtAuthEntryPoint));
+        http.csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET, publicGetEndpoints)
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/image/**")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.POST, publicPostEndpoints)
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, adminGetEndpoints)
+                        .hasAnyAuthority("ADMIN", "EMPLOYEE")
+                        .anyRequest()
+                        .authenticated())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntryPoint));
 
         return http.build();
     }
