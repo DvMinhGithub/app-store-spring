@@ -2,116 +2,108 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mdv.appstore.mapper.VoucherMapper">
-
     <sql id="voucherFields">
         v.id,
         v.code,
-        v.condition_value,
-        v.discount_price,
-        v.end_time,
-        v.start_time,
-        v.total_quantity,
-        v.used_quantity,
-        v.is_active
+        v.discount_type,
+        v.discount_value,
+        v.min_order_amount,
+        v.start_date,
+        v.end_date,
+        v.max_uses,
+        v.current_uses,
+        v.is_active,
+        v.created_at,
+        v.updated_at
     </sql>
 
-    <insert id="insertVoucher">
-        INSERT INTO voucher (
+    <insert id="insertVoucher" useGeneratedKeys="true" keyProperty="id" parameterType="VoucherCreateRequest">
+        INSERT INTO vouchers (
             code,
-            condition_value,
-            discount_price,
-            end_time,
-            start_time,
-            total_quantity
+            discount_type,
+            discount_value,
+            min_order_amount,
+            start_date,
+            end_date,
+            max_uses
         )
         VALUES (
-            #{voucherRequest.code},
-            #{voucherRequest.conditionValue},
-            #{voucherRequest.discountPrice},
-            #{voucherRequest.endTime},
-            #{voucherRequest.startTime},
-            #{voucherRequest.totalQuantity}
+            #{code},
+            #{discountType},
+            #{discountValue},
+            #{minOrderAmount},
+            #{startDate},
+            #{endDate},
+            #{maxUses}
         )
     </insert>
 
-    <resultMap id="selectVoucher" type="VoucherResponse">
+    <resultMap id="voucherResultMap" type="VoucherResponse">
         <id property="id" column="id"/>
         <result property="code" column="code"/>
-        <result property="conditionValue" column="condition_value"/>
-        <result property="discountPrice" column="discount_price"/>
-        <result property="endTime" column="end_time"/>
-        <result property="startTime" column="start_time"/>
-        <result property="totalQuantity" column="total_quantity"/>
-        <result property="usedQuantity" column="used_quantity"/>
+        <result property="discountType" column="discount_type"/>
+        <result property="discountValue" column="discount_value"/>
+        <result property="minOrderAmount" column="min_order_amount"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="maxUses" column="max_uses"/>
+        <result property="currentUses" column="current_uses"/>
         <result property="isActive" column="is_active"/>
     </resultMap>
 
-    <select id="selectAllVouchers" resultMap="selectVoucher">
+    <select id="selectAllVouchers" resultMap="voucherResultMap">
         SELECT
             <include refid="voucherFields"/>
-        FROM voucher v
+        FROM
+            vouchers v
     </select>
 
-    <select id="selectVoucherById" resultMap="selectVoucher">
+    <select id="selectVoucherById" resultMap="voucherResultMap">
         SELECT
             <include refid="voucherFields"/>
-        FROM voucher v
-        WHERE id = #{id}
+        FROM
+            vouchers v
+        WHERE
+            v.id = #{id}
     </select>
 
-    <select id="selectVoucherByCode" resultMap="selectVoucher">
+    <select id="selectVoucherByCode" resultMap="voucherResultMap">
         SELECT
             <include refid="voucherFields"/>
-        FROM voucher v
-        WHERE code = #{code}
+        FROM
+            vouchers v
+        WHERE
+            v.code = #{code}
     </select>
 
-    <select id="selectVouchersToActivate">
-        SELECT id, code, is_active
-        FROM voucher
-        WHERE is_active = 0
-          AND start_time &lt;= CURDATE()
-          AND end_time &gt;= CURDATE()
-    </select>
-
-    <select id="selectVouchersToDeactivate">
-        SELECT *
-        FROM voucher
-        WHERE is_active = 1
-          AND end_time &lt; CURDATE()
-    </select>
-
+    <update id="activateEligibleVouchers">
+        UPDATE vouchers
+        SET 
+            is_active = TRUE,
+            updated_at = NOW()
+        WHERE is_active = FALSE
+          AND start_date &lt;= NOW()
+          AND end_date &gt;= NOW()
+    </update>
+    
     <update id="updateVoucherById">
-        UPDATE voucher
+        UPDATE vouchers
         <set>
-            <if test="voucherRequest.code != null">code = #{voucherRequest.code},</if>
-            <if test="voucherRequest.conditionValue != null">condition_value = #{voucherRequest.conditionValue},</if>
-            <if test="voucherRequest.discountPrice != null">discount_price = #{voucherRequest.discountPrice},</if>
-            <if test="voucherRequest.endTime != null">end_time = #{voucherRequest.endTime},</if>
-            <if test="voucherRequest.startTime != null">start_time = #{voucherRequest.startTime},</if>
-            <if test="voucherRequest.totalQuantity != null">total_quantity = #{voucherRequest.totalQuantity},</if>
-            <if test="voucherRequest.usedQuantity != null">used_quantity = #{voucherRequest.usedQuantity},</if>
-            <if test="voucherRequest.isActive != null">is_active = #{voucherRequest.isActive},</if>
-            updated_at = now()
+            <if test="request.code != null">code = #{request.code},</if>
+            <if test="request.discountType != null">discount_type = #{request.discountType},</if>
+            <if test="request.discountValue != null">discount_value = #{request.discountValue},</if>
+            <if test="request.minOrderAmount != null">min_order_amount = #{request.minOrderAmount},</if>
+            <if test="request.startDate != null">start_date = #{request.startDate},</if>
+            <if test="request.endDate != null">end_date = #{request.endDate},</if>
+            <if test="request.maxUses != null">max_uses = #{request.maxUses},</if>
+            <if test="request.currentUses != null">current_uses = #{request.currentUses},</if>
+            <if test="request.isActive != null">is_active = #{request.isActive},</if>
+            updated_at = NOW()
         </set>
         WHERE id = #{id}
     </update>
 
     <delete id="deleteVoucherById">
-        DELETE FROM voucher WHERE id = #{id}
+        DELETE FROM vouchers WHERE id = #{id}
     </delete>
-
-    <update id="batchUpdateVoucherStatus">
-        <foreach collection="vouchers" item="voucher" separator=";">
-            UPDATE voucher
-            SET is_active = #{voucher.isActive}
-            WHERE id = #{voucher.id}
-        </foreach>
-    </update>
-
-    <update id="updateUsedQuantity">
-        UPDATE voucher
-        SET used_quantity = used_quantity + 1
-        WHERE id = #{id}
-    </update>
 </mapper>

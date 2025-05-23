@@ -2,24 +2,23 @@ package com.mdv.appstore.service;
 
 import java.util.List;
 
-import com.mdv.appstore.dto.request.VoucherRequest;
+import com.mdv.appstore.dto.request.VoucherCreateRequest;
+import com.mdv.appstore.dto.request.VoucherUpdateRequest;
 import com.mdv.appstore.dto.response.VoucherResponse;
 
 public interface VoucherService {
 
-    void createVoucher(VoucherRequest request);
-
-    List<VoucherResponse> getAllVouchers();
+    void createVoucher(VoucherCreateRequest request);
 
     VoucherResponse getVoucherById(Long id);
 
     VoucherResponse getVoucherByCode(String code);
 
-    void updateVoucher(Long id, VoucherRequest request);
+    List<VoucherResponse> getAllVouchers();
 
-    int updateVoucherActiveStatus();
-
-    VoucherRequest toVoucherRequest(VoucherResponse voucherResponse);
+    void updateVoucher(Long id, VoucherUpdateRequest request);
 
     void deleteVoucher(Long id);
+
+    int updateVoucherActiveStatus();
 }

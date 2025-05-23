@@ -12,6 +12,7 @@ import com.mdv.appstore.dto.request.OrderCreateRequest;
 import com.mdv.appstore.dto.request.OrderHistoryRequest;
 import com.mdv.appstore.dto.request.OrderItemRequest;
 import com.mdv.appstore.dto.request.OrderStatusRequest;
+import com.mdv.appstore.dto.request.VoucherUpdateRequest;
 import com.mdv.appstore.dto.response.CartItemResponse;
 import com.mdv.appstore.dto.response.OrderHistoryResponse;
 import com.mdv.appstore.dto.response.OrderItemResponse;
@@ -73,7 +74,10 @@ public class OrderServiceImpl implements OrderService {
             totalPriceOrder += cartItem.getProduct().getPrice() * cartItem.getQuantity();
         }
 
-        VoucherResponse voucher = voucherMapper.selectVoucherByCode(orderCreateRequest.getVoucherCode());
+        VoucherResponse voucher = voucherMapper
+                .selectVoucherByCode(orderCreateRequest.getVoucherCode())
+                .orElseThrow(() -> new DataNotFoundException(
+                        String.format("Voucher with code %s not found", orderCreateRequest.getVoucherCode())));
 
         if (voucher != null) {
             Boolean isVoucherActive = voucher.getIsActive();
@@ -81,16 +85,19 @@ public class OrderServiceImpl implements OrderService {
                 throw new VoucherNotActiveException("Voucher is not active");
             }
 
-            if (voucher.getConditionValue() > totalPriceOrder) {
+            if (voucher.getMinOrderAmount() > totalPriceOrder) {
                 throw new TotalPriceLessThanConditionException("Total price is less than minimum total price");
             }
 
-            if (voucher.getDiscountPrice() > totalPriceOrder) {
+            if (voucher.getDiscountValue() > totalPriceOrder) {
                 throw new DiscountGreaterThanTotalPriceException("Discount is greater than total price");
             }
 
-            voucherMapper.updateUsedQuantity(voucher.getId());
-            totalPriceOrder -= voucher.getDiscountPrice();
+            VoucherUpdateRequest voucherUpdateRequest = new VoucherUpdateRequest();
+            voucherUpdateRequest.setCurrentUses(voucher.getCurrentUses() + 1);
+
+            voucherMapper.updateVoucherById(voucher.getId(), voucherUpdateRequest);
+            totalPriceOrder -= voucher.getDiscountValue();
         } else {
             throw new DataNotFoundException(
                     String.format("Voucher with code %s not found", orderCreateRequest.getVoucherCode()));

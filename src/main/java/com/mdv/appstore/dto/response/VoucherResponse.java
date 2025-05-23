@@ -2,7 +2,7 @@ package com.mdv.appstore.dto.response;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mdv.appstore.enums.DiscountType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,13 +18,12 @@ import lombok.experimental.FieldDefaults;
 public class VoucherResponse {
     Long id;
     String code;
-    Double conditionValue;
-    Double discountPrice;
-    LocalDate endTime;
-    LocalDate startTime;
-    Integer totalQuantity;
-    Integer usedQuantity;
-
-    @JsonProperty("isActive")
+    DiscountType discountType;
+    Double discountValue;
+    Double minOrderAmount;
+    LocalDate startDate;
+    LocalDate endDate;
+    Integer maxUses;
+    Integer currentUses;
     Boolean isActive;
 }
