@@ -6,7 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -44,7 +46,8 @@ public class FileServiceImpl implements FileService {
     @Value("${file.image.path-prefix}")
     private String imagePathPrefix;
 
-    public String storeFile(MultipartFile file) throws IOException {
+    @Override
+    public String uploadSingleFile(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new IOException("Failed to store empty file.");
         }
@@ -69,6 +72,36 @@ public class FileServiceImpl implements FileService {
         }
 
         return String.format("%s/image/%s", serverUrl, uniqueFileName);
+    }
+
+    @Override
+    public List<String> uploadMultipleFiles(List<MultipartFile> files) throws IOException {
+        List<String> urls = new ArrayList<>();
+        for (MultipartFile file : files) {
+            urls.add(uploadSingleFile(file));
+        }
+        return urls;
+    }
+
+    @Override
+    public void deleteFileByUrl(String fileUrl) throws IOException {
+        if (fileUrl == null || fileUrl.isEmpty()) {
+            throw new IOException("File URL cannot be empty");
+        }
+
+        String filename = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
+
+        Path filePath = Paths.get(uploadDir).resolve(filename).normalize();
+
+        if (!filePath.normalize().startsWith(Paths.get(uploadDir).normalize())) {
+            throw new IOException("Invalid file path: " + filePath);
+        }
+
+        if (!Files.exists(filePath)) {
+            throw new IOException("File not found: " + filePath);
+        }
+
+        Files.delete(filePath);
     }
 
     private String validateAndGetExtension(String filename) throws IOException {
