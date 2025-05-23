@@ -1,32 +1,28 @@
 package com.mdv.appstore.mapper;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.mdv.appstore.dto.request.VoucherRequest;
+import com.mdv.appstore.dto.request.VoucherCreateRequest;
+import com.mdv.appstore.dto.request.VoucherUpdateRequest;
 import com.mdv.appstore.dto.response.VoucherResponse;
 
 @Mapper
 public interface VoucherMapper {
-    void insertVoucher(@Param("voucherRequest") VoucherRequest voucherRequest);
+    void insertVoucher(VoucherCreateRequest request);
+
+    Optional<VoucherResponse> selectVoucherById(@Param("id") Long id);
+
+    Optional<VoucherResponse> selectVoucherByCode(@Param("code") String code);
 
     List<VoucherResponse> selectAllVouchers();
 
-    VoucherResponse selectVoucherById(@Param("id") Long id);
+    void updateVoucherById(@Param("id") Long id, @Param("r") VoucherUpdateRequest request);
 
-    VoucherResponse selectVoucherByCode(String code);
+    void deleteVoucherById(Long id);
 
-    List<VoucherResponse> selectVouchersToActivate();
-
-    List<VoucherResponse> selectVouchersToDeactivate();
-
-    void updateVoucherById(@Param("id") Long id, @Param("voucherRequest") VoucherRequest voucherRequest);
-
-    void updateUsedQuantity(@Param("id") Long id);
-
-    Integer batchUpdateVoucherStatus(@Param("vouchers") List<VoucherResponse> vouchers);
-
-    void deleteVoucherById(@Param("id") Long id);
+    int activateEligibleVouchers();
 }
