@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.mdv.appstore.dto.request.BrandRequest;
+import com.mdv.appstore.dto.request.PaginationRequest;
 import com.mdv.appstore.dto.response.BrandResponse;
+import com.mdv.appstore.dto.response.PaginationResponse;
 import com.mdv.appstore.exception.DataNotFoundException;
 import com.mdv.appstore.mapper.BrandMapper;
 import com.mdv.appstore.service.BrandService;
@@ -28,37 +30,55 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public List<BrandResponse> findAll() {
-        return brandMapper.findAll();
+    public PaginationResponse<BrandResponse> findAll(PaginationRequest request) {
+        int offset = (request.getPage() - 1) * request.getSize();
+        List<BrandResponse> brands = brandMapper.findAllWithPagination(offset, request.getSize(), request.getSortBy(),
+                request.getSortDirection());
+        long total = brandMapper.countAll();
+        return PaginationResponse.of(brands, total, request.getPage(), request.getSize());
     }
 
     @Override
     public BrandResponse findById(Long id) {
         BrandResponse brand = brandMapper.findById(id);
-        if (brand == null) {
+        if (brand == null || brand.getDeletedAt() != null) {
             throw new DataNotFoundException(BRAND_NOT_EXISTS);
         }
         return brand;
     }
 
     @Override
+    public List<BrandResponse> findByName(String name) {
+        return brandMapper.findByName(name);
+    }
+
+    @Override
     public void updateBrand(Long id, BrandRequest brand) {
-        if (findById(id) == null) {
+        BrandResponse old = findById(id);
+        if (old == null) {
             throw new DataNotFoundException(BRAND_NOT_EXISTS);
         }
-
-        if (brandMapper.existsByName(brand.getName())) {
+        if (!old.getName().equals(brand.getName()) && brandMapper.existsByName(brand.getName())) {
             throw new IllegalArgumentException(BRAND_ALREADY_EXISTS);
         }
         brandMapper.updateBrand(id, brand);
     }
 
     @Override
-    public void deleteBrand(Long id) {
+    public void softDeleteBrand(Long id) {
         BrandResponse brand = findById(id);
         if (brand == null) {
             throw new DataNotFoundException(BRAND_NOT_EXISTS);
         }
-        brandMapper.deleteBrand(id);
+        brandMapper.softDeleteBrand(id, java.time.LocalDateTime.now());
+    }
+
+    @Override
+    public void restoreBrand(Long id) {
+        BrandResponse brand = brandMapper.findById(id);
+        if (brand == null) {
+            throw new DataNotFoundException(BRAND_NOT_EXISTS);
+        }
+        brandMapper.restoreBrand(id);
     }
 }

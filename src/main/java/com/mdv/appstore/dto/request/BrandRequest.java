@@ -14,9 +14,11 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class BrandRequest {
+    private Long id;
+
     @NotBlank(message = "Name is required")
     @Size(max = 255, message = "Name must be less than 255 characters")
     private String name;
 
-    Boolean isDeleted;
+    private String logoUrl;
 }
