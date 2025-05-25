@@ -2,40 +2,79 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mdv.appstore.mapper.BrandMapper">
-    <select id="findAll" resultType="BrandResponse">
-        SELECT * 
-        FROM brand
+    <resultMap id="brandResultMap" type="BrandResponse">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="logoUrl" column="logo_url"/>
+        <result property="deletedAt" column="deleted_at"/>
+    </resultMap>
+
+    <sql id="brandColumns">
+        id, name, logo_url, deleted_at, created_at, updated_at
+    </sql>
+
+    <select id="findAll" resultMap="brandResultMap">
+        SELECT
+            <include refid="brandColumns"/>
+        FROM brands
+        WHERE deleted_at IS NULL
     </select>
 
-    <select id="findById">
-        SELECT * 
-        FROM brand
+    <select id="findAllWithPagination" resultMap="brandResultMap">
+        SELECT
+            <include refid="brandColumns"/>
+        FROM brands
+        WHERE deleted_at IS NULL
+        ORDER BY ${sortBy} ${sortDirection}
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countAll" resultType="long">
+        SELECT COUNT(*) FROM brands WHERE deleted_at IS NULL
+    </select>
+
+    <select id="findById" resultMap="brandResultMap">
+        SELECT
+            <include refid="brandColumns"/>
+        FROM brands
         WHERE id = #{id}
     </select>
-    
-    <select id="existsByName">
-        SELECT COUNT(*) 
-        FROM brand
-        WHERE name = #{name}
+
+    <select id="findByName" resultMap="brandResultMap">
+        SELECT 
+            <include refid="brandColumns"/>
+        FROM brands
+        WHERE deleted_at IS NULL
+        <if test="name != null and name != ''">
+            AND name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        ORDER BY name ASC
+    </select>
+
+    <select id="existsByName" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM brands WHERE name = #{name} AND deleted_at IS NULL
     </select>
 
     <insert id="createBrand">
-        INSERT INTO brand (name)
-        VALUES (#{brand.name})
+        INSERT INTO brands (name, logo_url, created_at, updated_at)
+        VALUES (#{brand.name}, #{brand.logoUrl}, NOW(6), NOW(6))
     </insert>
 
-    <update id="updateBrand"> 
-        UPDATE brand
+    <update id="updateBrand">
+        UPDATE brands
         <set>
-            <if test="brand.name != null and brand.name != ''">
-                name = #{brand.name},
-            </if>
+            <if test="brand.name != null and brand.name != ''">name = #{brand.name},</if>
+            <if test="brand.logoUrl != null and brand.logoUrl != ''">logo_url = #{brand.logoUrl},</if>
+            updated_at = NOW(6)
         </set>
-        WHERE id = #{brand.id}
+        WHERE id = #{id}
     </update>
 
-    <delete id="deleteBrand">
-        DELETE FROM brand
-        WHERE id = #{id}
-    </delete>
+    <update id="softDeleteBrand">
+        UPDATE brands SET deleted_at = #{deletedAt}, updated_at = NOW(6) WHERE id = #{id}
+    </update>
+
+    <update id="restoreBrand">
+        UPDATE brands SET deleted_at = NULL, updated_at = NOW(6) WHERE id = #{id}
+    </update>
 </mapper>
