@@ -51,6 +51,14 @@
         ORDER BY name ASC
     </select>
 
+    <select id="findByCategoryId" resultMap="brandResultMap">
+        SELECT
+            <include refid="brandColumns"/>
+        FROM brands
+        WHERE id IN (SELECT brand_id FROM brand_category_rules WHERE category_id = #{categoryId})
+        AND deleted_at IS NULL
+    </select>
+
     <select id="existsByName" resultType="boolean">
         SELECT COUNT(*) > 0 FROM brands WHERE name = #{name} AND deleted_at IS NULL
     </select>

@@ -5,52 +5,67 @@
     <resultMap id="selectCategoryResultMap" type="CategoryResponse">
         <id property="id" column="id" />
         <result property="name" column="name" />
-        <result property="isDeleted" column="is_deleted" />
     </resultMap>
 
     <select id="findAll" resultMap="selectCategoryResultMap">
         SELECT *
-        FROM category
+        FROM categories
     </select>
 
-    <select id="findAllActive">
-        SELECT *
-        FROM category
-        WHERE is_deleted = 0
-    </select>
-    
     <select id="findById" resultMap="selectCategoryResultMap">
         SELECT *
-        FROM category
+        FROM categories
         WHERE id = #{id}
     </select>
 
     <select id="existsByName">
         SELECT COUNT(*)
-        FROM category
+        FROM categories
         WHERE name = #{name}
     </select>
 
-    <insert id="insert">
-        INSERT INTO category (name)
+    <select id="findByName" resultMap="selectCategoryResultMap">
+        SELECT * FROM categories WHERE name = #{name}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO categories (name)
         VALUES (#{category.name})
+        <selectKey keyProperty="id" resultType="Long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
     </insert>
 
     <update id="update"> 
-        UPDATE category 
-        SET name = #{category.name} 
+        UPDATE categories 
+        SET name = #{category.name}
         WHERE id = #{id} 
     </update>
 
-    <update id="softDelete"> 
-        UPDATE category
-        SET is_deleted = 1
+    <delete id="delete"> 
+        DELETE FROM categories
         WHERE id = #{id}
-    </update>
+    </delete>
 
-    <update id="restore"> 
-        UPDATE category
-        SET is_deleted = 0
-        WHERE id = #{id} 
-    </update>
+    <select id="findAllWithPagination" resultMap="selectCategoryResultMap">
+        SELECT * FROM categories
+        ORDER BY ${sortBy} ${sortDirection}
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countAll" resultType="long">
+        SELECT COUNT(*) FROM categories
+    </select>
+
+    <select id="searchByNameWithPagination" resultMap="selectCategoryResultMap">
+        SELECT * FROM categories
+        WHERE name LIKE CONCAT('%', #{name}, '%')
+        ORDER BY ${sortBy} ${sortDirection}
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countByName" resultType="long">
+        SELECT COUNT(*) FROM categories
+        WHERE name LIKE CONCAT('%', #{name}, '%')
+    </select>
 </mapper>

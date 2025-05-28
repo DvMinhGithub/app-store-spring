@@ -15,14 +15,19 @@ public interface BrandMapper {
 
     List<BrandResponse> findAll();
 
-    List<BrandResponse> findAllWithPagination(@Param("offset") int offset, @Param("limit") int limit,
-            @Param("sortBy") String sortBy, @Param("sortDirection") String sortDirection);
+    List<BrandResponse> findAllWithPagination(
+            @Param("offset") int offset,
+            @Param("limit") int limit,
+            @Param("sortBy") String sortBy,
+            @Param("sortDirection") String sortDirection);
 
     long countAll();
 
     BrandResponse findById(@Param("id") Long id);
 
     List<BrandResponse> findByName(@Param("name") String name);
+
+    BrandResponse findByCategoryId(@Param("categoryId") Long categoryId);
 
     void updateBrand(@Param("id") Long id, @Param("brand") BrandRequest brand);
 
