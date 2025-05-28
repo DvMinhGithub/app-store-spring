@@ -40,8 +40,7 @@ public class BrandController {
     }
 
     @GetMapping
-    public ApiResponse<PaginationResponse<BrandResponse>> getAllBrands(
-            @Valid PaginationRequest request) {
+    public ApiResponse<PaginationResponse<BrandResponse>> getAllBrands(@Valid PaginationRequest request) {
         return ApiResponse.success(brandService.findAll(request), BRAND_FETCHED_SUCCESS);
     }
 

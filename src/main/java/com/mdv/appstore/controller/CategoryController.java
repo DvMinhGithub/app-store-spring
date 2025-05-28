@@ -2,14 +2,25 @@ package com.mdv.appstore.controller;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.mdv.appstore.dto.request.CategoryRequest;
+import com.mdv.appstore.dto.request.CreateCategoryRequest;
+import com.mdv.appstore.dto.request.PaginationRequest;
+import com.mdv.appstore.dto.request.UpdateCategoryRequest;
 import com.mdv.appstore.dto.response.ApiResponse;
 import com.mdv.appstore.dto.response.CategoryResponse;
+import com.mdv.appstore.dto.response.PaginationResponse;
 import com.mdv.appstore.service.CategoryService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,66 +30,46 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
+    private static final String CATEGORY_CREATED_SUCCESS = "Category created successfully";
+    private static final String CATEGORY_FETCHED_SUCCESS = "Category fetched successfully";
+    private static final String CATEGORY_UPDATED_SUCCESS = "Category updated successfully";
+    private static final String CATEGORY_DELETED_SUCCESS = "Category deleted successfully";
+
     @GetMapping("/all")
     public ApiResponse<List<CategoryResponse>> getAllCategories() {
-        return ApiResponse.<List<CategoryResponse>>builder()
-                .code(HttpStatus.OK.value())
-                .message("All categories fetched successfully")
-                .data(categoryService.findAll())
-                .build();
+        return ApiResponse.success(categoryService.findAll(), CATEGORY_FETCHED_SUCCESS);
     }
 
-    @GetMapping
-    public ApiResponse<List<CategoryResponse>> getAllActiveCategories() {
-        return ApiResponse.<List<CategoryResponse>>builder()
-                .code(HttpStatus.OK.value())
-                .message("Active categories fetched successfully")
-                .data(categoryService.findAllActive())
-                .build();
+    @GetMapping()
+    public ApiResponse<PaginationResponse<CategoryResponse>> getAllCategories(@Valid PaginationRequest request) {
+        return ApiResponse.success(categoryService.findAllWithPagination(request), CATEGORY_FETCHED_SUCCESS);
+    }
+
+    @GetMapping("/search")
+    public ApiResponse<PaginationResponse<CategoryResponse>> searchCategories(
+            @Valid PaginationRequest request, @RequestParam("name") String name) {
+        return ApiResponse.success(categoryService.searchByName(request, name), CATEGORY_FETCHED_SUCCESS);
     }
 
     @GetMapping("/{id}")
     public ApiResponse<CategoryResponse> getCategoryById(@PathVariable("id") Long id) {
-        return ApiResponse.<CategoryResponse>builder()
-                .code(HttpStatus.OK.value())
-                .message("Category fetched successfully")
-                .data(categoryService.findById(id))
-                .build();
+        return ApiResponse.success(categoryService.findById(id), CATEGORY_FETCHED_SUCCESS);
     }
 
     @PostMapping
-    public ApiResponse<Object> createCategory(@RequestBody CategoryRequest category) {
-        categoryService.createCategory(category);
-        return ApiResponse.builder()
-                .code(HttpStatus.CREATED.value())
-                .message("Category created successfully")
-                .build();
+    public ApiResponse<CategoryResponse> createCategory(@RequestBody @Valid CreateCategoryRequest request) {
+        return ApiResponse.success(categoryService.createCategory(request), CATEGORY_CREATED_SUCCESS);
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Object> updateCategory(@PathVariable("id") Long id, @RequestBody CategoryRequest category) {
-        categoryService.updateCategory(id, category);
-        return ApiResponse.builder()
-                .code(HttpStatus.OK.value())
-                .message("Category updated successfully")
-                .build();
-    }
-
-    @PutMapping("/restore/{id}")
-    public ApiResponse<Object> restoreCategory(@PathVariable("id") Long id) {
-        categoryService.restoreCategory(id);
-        return ApiResponse.builder()
-                .code(HttpStatus.OK.value())
-                .message("Category restored successfully")
-                .build();
+    public ApiResponse<CategoryResponse> updateCategory(
+            @PathVariable("id") Long id, @RequestBody @Valid UpdateCategoryRequest request) {
+        return ApiResponse.success(categoryService.updateCategory(id, request), CATEGORY_UPDATED_SUCCESS);
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<Object> deleteCategory(@PathVariable("id") Long id) {
+    public ApiResponse<Void> deleteCategory(@PathVariable("id") Long id) {
         categoryService.deleteCategory(id);
-        return ApiResponse.builder()
-                .code(HttpStatus.OK.value())
-                .message("Category deleted successfully")
-                .build();
+        return ApiResponse.success(CATEGORY_DELETED_SUCCESS);
     }
 }

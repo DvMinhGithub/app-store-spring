@@ -1,28 +1,48 @@
 package com.mdv.appstore.mapper;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.mdv.appstore.dto.request.CategoryRequest;
+import com.mdv.appstore.dto.request.CreateCategoryRequest;
+import com.mdv.appstore.dto.request.UpdateCategoryRequest;
 import com.mdv.appstore.dto.response.CategoryResponse;
 
 @Mapper
 public interface CategoryMapper {
+
+    Long insert(@Param("category") CreateCategoryRequest category);
+
+    void update(@Param("id") Long id, @Param("category") UpdateCategoryRequest category);
+
+    void delete(@Param("id") Long id);
+
+    Optional<CategoryResponse> findById(@Param("id") Long id);
+
     List<CategoryResponse> findAll();
 
-    List<CategoryResponse> findAllActive();
+    List<CategoryResponse> searchByName(@Param("name") String name);
 
-    CategoryResponse findById(Long id);
+    Optional<Long> findIdByName(@Param("name") String name);
 
-    boolean existsByName(String name);
+    List<CategoryResponse> findAllWithPagination(
+            @Param("offset") int offset,
+            @Param("limit") int limit,
+            @Param("sortBy") String sortBy,
+            @Param("sortDirection") String sortDirection);
 
-    void insert(@Param("category") CategoryRequest category);
+    long countAll();
 
-    void update(@Param("id") Long id, @Param("category") CategoryRequest category);
+    List<CategoryResponse> searchByNameWithPagination(
+            @Param("name") String name,
+            @Param("offset") int offset,
+            @Param("limit") int limit,
+            @Param("sortBy") String sortBy,
+            @Param("sortDirection") String sortDirection);
 
-    void restore(@Param("id") Long id);
+    long countByName(@Param("name") String name);
 
-    void softDelete(Long id);
+    boolean existsByName(@Param("name") String name);
 }

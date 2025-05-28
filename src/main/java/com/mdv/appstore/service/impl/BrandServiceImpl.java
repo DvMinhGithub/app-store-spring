@@ -32,8 +32,8 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public PaginationResponse<BrandResponse> findAll(PaginationRequest request) {
         int offset = (request.getPage() - 1) * request.getSize();
-        List<BrandResponse> brands = brandMapper.findAllWithPagination(offset, request.getSize(), request.getSortBy(),
-                request.getSortDirection());
+        List<BrandResponse> brands = brandMapper.findAllWithPagination(
+                offset, request.getSize(), request.getSortBy(), request.getSortDirection());
         long total = brandMapper.countAll();
         return PaginationResponse.of(brands, total, request.getPage(), request.getSize());
     }
